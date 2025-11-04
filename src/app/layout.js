@@ -1,3 +1,7 @@
+"use client";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "@/libs/redux-provider";
@@ -12,10 +16,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "Weekend Planner",
-  description: "Plan your weekend activities",
-};
+const queryClient = new QueryClient();
 
 export default function RootLayout({ children }) {
   return (
@@ -23,7 +24,10 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReduxProvider>{children}</ReduxProvider>
+        <QueryClientProvider client={queryClient}>
+          <ReduxProvider>{children}</ReduxProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
       </body>
     </html>
   );
