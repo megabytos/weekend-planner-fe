@@ -1,10 +1,9 @@
-"use client";
+'use client';
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
-import { add } from "@/libs/counterSlice";
-import { useAppDispatch } from "@/libs/hooks/use-app-dispatch";
-import { useAppSelector } from "@/libs/hooks/use-app-selector";
+import { add } from '@/libs/counterSlice';
+import { useAppDispatch } from '@/libs/hooks/use-app-dispatch';
+import { useAppSelector } from '@/libs/hooks/use-app-selector';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function Home() {
   const counter = useAppSelector((state) => state.counter.counter);
@@ -13,14 +12,14 @@ export default function Home() {
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    queryKey: ["todos"],
-    queryFn: async () => (await fetch("/api/users")).json(),
+    queryKey: ['todos'],
+    queryFn: async () => (await fetch('/api/users')).json(),
   });
 
   // Mutations
   const mutation = useMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
     },
   });
 
