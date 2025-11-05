@@ -2,9 +2,9 @@
 
 import { Smile } from 'lucide-react';
 
-import { add } from '@/libs/counterSlice';
-import { useAppDispatch } from '@/libs/hooks/use-app-dispatch';
-import { useAppSelector } from '@/libs/hooks/use-app-selector';
+import { add } from '@/libs/redux/counterSlice';
+import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
+import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function Home() {

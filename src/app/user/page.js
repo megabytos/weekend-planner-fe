@@ -1,7 +1,5 @@
 'use client';
 
-import { add } from '@/libs/counterSlice';
-
 export default function Event() {
   return (
     <div>
