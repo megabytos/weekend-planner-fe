@@ -1,5 +1,7 @@
 'use client';
 
+import { Smile } from 'lucide-react';
+
 import { add } from '@/libs/counterSlice';
 import { useAppDispatch } from '@/libs/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/hooks/use-app-selector';
@@ -28,6 +30,9 @@ export default function Home() {
       <h1>Weekend Planner</h1>
       <p>Counter: {counter}</p>
       <button onClick={() => dispatch(add())}>Add 1 to counter</button>
+      <hr />
+      Icon usage example:
+      <Smile className="fill-yellow stroke-red" />
     </div>
   );
 }

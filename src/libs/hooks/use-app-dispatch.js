@@ -1,6 +1,6 @@
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
 
-import { store } from "../store";
+import { store } from '../store';
 
 /**
  * @typedef {Object} CounterState
