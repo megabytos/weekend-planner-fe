@@ -1,6 +1,6 @@
 import cn from '@/utils/class-names';
 
-export default function Container({ className, children }) {
+export default function Container({ className = '', children }) {
   return (
     <div
       className={cn(

@@ -5,11 +5,11 @@
   --white-dark: #f7f6f3;
   --black: #212121;
   --blue: #5c89ff;
+  --blue-light: #e5ecff;
   --yellow: #f7f154;
   --orange: #ff9900;
   --orange-light: #e9ab52;
-  --gray: #e5ecff;
-  --gray-dark: #8c8c8c;
+  --gray: #8c8c8c;
   --pink: #ff9b9d;
   --red: #ff5449;
 
@@ -25,11 +25,11 @@
   --color-white-dark: var(--white-dark);
   --color-black: var(--black);
   --color-blue: var(--blue);
+  --color-blue-light: var(--gray);
   --color-yellow: var(--yellow);
   --color-orange: var(--orange);
   --color-orange-light: var(--orange-light);
-  --color-gray: var(--gray);
-  --color-gray-dark: var(--gray-dark);
+  --color-gray: var(--gray-dark);
   --color-pink: var(--pink);
   --color-red: var(--red);
 
