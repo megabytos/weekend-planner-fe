@@ -15,6 +15,8 @@
 
   --line-height-base: 1.2;
   --font-roboto: 'Roboto', Arial, Helvetica, sans-serif;
+
+  --container-max-width: 1440px;
 }
 
 @theme inline {
