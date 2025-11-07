@@ -32,7 +32,7 @@ export default function CustomDropdown({
       </button>
 
       {isOpen && (
-        <ul className="left-0 right-0 bg-white border border-[var(--color-white-dark)] rounded-[10px] max-h-[120px] overflow-y-auto">
+        <ul className="left-0 right-0 bg-[var(--color-white)] border border-[var(--color-white-dark)] rounded-[10px] max-h-[120px] overflow-y-auto">
           {items.map((item) => (
             <li
               key={item}
