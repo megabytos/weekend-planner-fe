@@ -2,6 +2,7 @@
 
 import { Smile } from 'lucide-react';
 
+import Container from '@/components/layout/container';
 import { add } from '@/libs/redux/counterSlice';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
@@ -26,13 +27,13 @@ export default function Home() {
   });
 
   return (
-    <div>
+    <Container>
       <h1>Weekend Planner</h1>
       <p>Counter: {counter}</p>
       <button onClick={() => dispatch(add())}>Add 1 to counter</button>
       <hr />
       Icon usage example:
       <Smile className="fill-yellow stroke-red" />
-    </div>
+    </Container>
   );
 }

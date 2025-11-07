@@ -25,11 +25,11 @@
   --color-white-dark: var(--white-dark);
   --color-black: var(--black);
   --color-blue: var(--blue);
-  --color-blue-light: var(--gray);
+  --color-blue-light: var(--blue-light);
   --color-yellow: var(--yellow);
   --color-orange: var(--orange);
   --color-orange-light: var(--orange-light);
-  --color-gray: var(--gray-dark);
+  --color-gray: var(--gray);
   --color-pink: var(--pink);
   --color-red: var(--red);
 
