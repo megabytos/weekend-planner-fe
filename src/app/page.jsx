@@ -3,6 +3,7 @@
 import { Smile } from 'lucide-react';
 
 import Container from '@/components/layout/container';
+import Icon from '@/components/ui/icon';
 import { add } from '@/libs/redux/counterSlice';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
@@ -34,6 +35,13 @@ export default function Home() {
       <hr />
       Icon usage example:
       <Smile className="fill-yellow stroke-red" />
+      <Icon
+        className="fill-[var(--color-orange)]"
+        name="logo-icon"
+        width="200"
+        height="40"
+        ariaLabel="Logo"
+      />
     </Container>
   );
 }
