@@ -11,36 +11,40 @@ export default function CustomDropdown({
     'Option 4',
     'Option 5',
     'Option 6',
+    'Option 7',
+    'Option 8',
   ],
-  label = 'City',
+  label = 'Name',
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(null);
 
+  const handleSelect = (item) => {
+    setSelected(item);
+    setIsOpen(false);
+  };
+
   return (
-    <div className="inline-block text-left w-[157px]">
+    <div className="relative inline-block text-left w-[157px]">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="font-medium text-[14px] leading-[20px] flex gap-2 items-center w-full bg-[var(--blue-light)] px-8 py-2.5 text-[var(--blue)] border border-[var(--blue-light)] rounded-[10px] hover:border-[var(--blue)] transition"
+        className="font-medium text-[14px] leading-5 flex gap-2 items-center w-full bg-light px-8 py-2.5 text-blue border border-light rounded-[10px] hover:border-blue transition"
       >
         <span>{selected || label}</span>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 stroke-[var(--blue)]" />
+          <ChevronUp className="w-5 h-5 stroke-blue" />
         ) : (
-          <ChevronDown className="w-5 h-5 stroke-[var(--blue)]" />
+          <ChevronDown className="w-5 h-5 stroke-blue" />
         )}
       </button>
 
       {isOpen && (
-        <ul className="left-0 right-0 bg-[var(--color-white)] border border-[var(--color-white-dark)] rounded-[10px] max-h-[120px] overflow-y-auto">
+        <ul className="absolute left-0 right-0 bg-white border border-white-dark rounded-[10px] max-h-[180px] overflow-y-auto z-10">
           {items.map((item) => (
             <li
               key={item}
-              onClick={() => {
-                setSelected(item);
-                setIsOpen(false);
-              }}
-              className="font-medium text-[14px] leading-[20px] px-4 py-2 hover:bg-[var(--blue-light)] cursor-pointer rounded-lg"
+              onClick={() => handleSelect(item)}
+              className="font-medium text-[14px] leading-5 px-4 py-2 hover:bg-blue-light cursor-pointer rounded-lg"
             >
               {item}
             </li>
