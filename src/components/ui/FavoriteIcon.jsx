@@ -2,7 +2,7 @@ import { Heart } from 'lucide-react';
 
 import cn from '@/utils/class-names';
 
-export function FavoriteIcon({ isFavorite }) {
+export default function FavoriteIcon({ isFavorite }) {
   return (
     <>
       <Heart
