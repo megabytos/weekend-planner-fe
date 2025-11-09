@@ -7,7 +7,7 @@ export function FavoriteIcon({ isFavorite }) {
     <>
       <Heart
         className={cn(
-          isFavorite ? 'text-(--blue) fill-(--blue)' : 'text-(--black)',
+          isFavorite ? 'text-blue fill-blue' : 'text-black',
           'w-6 h-6',
         )}
       />
