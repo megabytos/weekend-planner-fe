@@ -9,6 +9,7 @@ import { add } from '@/libs/redux/counterSlice';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import EventCard from '@/components/event-card';
 
 export default function Home() {
   const counter = useAppSelector((state) => state.counter.counter);
@@ -44,6 +45,7 @@ export default function Home() {
         ariaLabel="Logo"
       />
       <CustomDropdown />
+      <EventCard />
     </Container>
   );
 }
