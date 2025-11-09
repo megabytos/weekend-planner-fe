@@ -10,9 +10,11 @@ export default function EventDate({ dateString, locale = 'en-US' }) {
     ? eventDate.toLocaleDateString(locale, options)
     : '';
   return (
-    <div className="flex justify-start items-center gap-1 text-base leading-6 text-black">
+    <div className="flex justify-start items-center gap-1">
       <CalendarFold className="h-6 w-6" />
-      <time dateTime={formattedDate}>{formattedDate}</time>
+      <time dateTime={formattedDate} className="text-base leading-6 text-black">
+        {formattedDate}
+      </time>
     </div>
   );
 }
