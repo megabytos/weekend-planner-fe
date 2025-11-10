@@ -4,6 +4,8 @@ import Link from 'next/link';
 
 import { nanoid } from '@reduxjs/toolkit';
 
+import Dropdown from './dropdown';
+
 export default function Burger({
   items = [
     'Registration',
@@ -15,14 +17,16 @@ export default function Burger({
 }) {
   return (
     <div>
-      <ul>
-        <li className="flex items-center gap-2 px-6 py-2.5 text-blue">City</li>
-        <li className="flex items-center gap-2 px-6 py-2.5 text-blue">
-          Categories
+      <ul className="flex-col w-[157px]">
+        <li>
+          <Dropdown label="City"></Dropdown>
+        </li>
+        <li>
+          <Dropdown label="Categories"></Dropdown>
         </li>
         {items.map((item) => (
           <li
-            className="flex items-center gap-2 px-6 py-2.5 text-blue"
+            className="font-medium text-[14px] leading-5 flex items-center gap-2 px-6 py-2.5 text-blue border border-white rounded-[10px] hover:border-blue transition"
             key={nanoid()}
           >
             <Link href="#">{item}</Link>

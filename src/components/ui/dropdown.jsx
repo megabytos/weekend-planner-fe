@@ -3,7 +3,7 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
-export default function CustomDropdown({
+export default function Dropdown({
   items = [
     'Option 1',
     'Option 2',
@@ -15,6 +15,7 @@ export default function CustomDropdown({
     'Option 8',
   ],
   label = 'Name',
+  border = 'border',
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -28,7 +29,7 @@ export default function CustomDropdown({
     <div className="relative inline-block text-left w-[157px]">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="font-medium text-[14px] leading-5 flex gap-2 items-center w-full bg-light px-8 py-2.5 text-blue border border-light rounded-[10px] hover:border-blue transition"
+        className="font-medium text-[14px] leading-5 flex gap-2 items-center w-full px-6 py-2.5 text-blue border border-white rounded-[10px] hover:border-blue transition"
       >
         <span>{selected || label}</span>
         {isOpen ? (
