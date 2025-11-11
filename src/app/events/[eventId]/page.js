@@ -4,8 +4,9 @@ import Image from 'next/image';
 
 import Container from '@/components/layout/container';
 import Section from '@/components/layout/section';
-import EventAddress from '@/components/ui/event-address';
+import Address from '@/components/ui/address';
 import EventDate from '@/components/ui/event-date';
+import EventPrice from '@/components/ui/event-price';
 import FavoriteButton from '@/components/ui/favorite-button';
 import OrganizedBy from '@/components/ui/organized-by';
 import ShareButton from '@/components/ui/share-button';
@@ -44,9 +45,10 @@ export default function Event() {
           </div>
         </div>
         <h1 className="text-[22px]">Event Title</h1>
+        <EventPrice price="50 USD" />
         <div className="flex flex-col gap-2">
           <span className="font-medium">Location</span>
-          <EventAddress address="123 Main St, City, Country" />
+          <Address address="123 Main St, City, Country" />
         </div>
         <div>
           <h2 className="font-medium">Event Details</h2>
