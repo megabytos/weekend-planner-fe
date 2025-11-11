@@ -1,5 +1,5 @@
 'use client';
 
-export default function Section() {
-  return <section>Section Component</section>;
+export default function Section({ className = '', children }) {
+  return <section className={className}>{children}</section>;
 }
