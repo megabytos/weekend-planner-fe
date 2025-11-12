@@ -2,14 +2,13 @@
 
 import { Smile } from 'lucide-react';
 
+import EventCard from '@/components/event-card';
 import Container from '@/components/layout/container';
-import CustomDropdown from '@/components/ui/dropdown';
 import Icon from '@/components/ui/icon';
 import { add } from '@/libs/redux/counterSlice';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import EventCard from '@/components/event-card';
 
 export default function Home() {
   const counter = useAppSelector((state) => state.counter.counter);
@@ -44,7 +43,6 @@ export default function Home() {
         height="40"
         ariaLabel="Logo"
       />
-      <CustomDropdown />
       <EventCard />
     </Container>
   );
