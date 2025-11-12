@@ -2,22 +2,33 @@
 
 import cn from '@/utils/class-names';
 
-export default function InputBase(
-  {
-    placeholder = 'Please enter ...',
-    label = '',
-    inputType = 'text',
-    hint = '',
-    error = '',
-    hintId = '',
-    errId = '',
-    divClasses = '',
-    inputClasses = '',
-  },
-  props,
-) {
+/**
+ * InputBase component.
+ *
+ * @param {string} [placeholder='Please enter ...'] - Placeholder for the input field.
+ * @param {string} [label=''] - Label for the input field.
+ * @param {string} [inputType='text'] - Type of the input field.
+ * @param {string} [hint=''] - Hint for the input field.
+ * @param {string} [error=''] - Error message for the input field.
+ * @param {string} [hintId=''] - Id for the hint element.
+ * @param {string} [errId=''] - Id for the error element.
+ * @param {string} [divClasses=''] - Classes for the outer div element.
+ * @param {string} [inputClasses=''] - Classes for the input element.
+ * @returns {JSX.Element} - JSX element containing the input field.
+ */
+export default function InputBase({
+  placeholder = 'Please enter ...',
+  label = '',
+  inputType = 'text',
+  hint = '',
+  error = '',
+  hintId = '',
+  errId = '',
+  divClasses = '',
+  inputClasses = '',
+}) {
   return (
-    <div className={cn('w-full relative', divClasses)}>
+    <div className={cn('h-12 relative', divClasses)}>
       {label && (
         <label
           htmlFor={label}
@@ -32,11 +43,10 @@ export default function InputBase(
         aria-invalid={!!error || undefined}
         aria-describedby={cn(hintId, errId)}
         className={cn(
-          `border border-gray rounded-[10px] p-5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputClasses}`,
+          `w-full h-fullborder border-gray rounded-[10px] py-3 px-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputClasses}`,
           error ? 'border-red' : '',
         )}
       />
-      {...props}
       {(hint || error) && (
         <div className="mt-1 text-xs">
           {hint && (

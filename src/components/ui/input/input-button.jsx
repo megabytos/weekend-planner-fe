@@ -4,21 +4,44 @@ import cn from '@/utils/class-names';
 
 import InputBase from './input-base';
 
+/**
+ * InputField component.
+ *
+ * @param {string} [placeholder='Please enter ...'] - Placeholder for the input field.
+ * @param {string} [label=''] - Label for the input field.
+ * @param {string} [inputType='text'] - Type of the input field.
+ * @param {string} [hint=''] - Hint for the input field.
+ * @param {string} [error=''] - Error message for the input field.
+ * @param {string} [hintId=''] - Id for the hint element.
+ * @param {string} [errId=''] - Id for the error element.
+ * @param {boolean} [endIcon=false] - Whether to add an end icon or not.
+ * @param {function} [submitFunction=() => {}] - Function to be called when the input field is submitted.
+ * @param {string} [nestedDivClasses=''] - Classes for the nested div element.
+ * @param {string} [divClasses=''] - Classes for the outer div element.
+ * @param {string} [inputClasses=''] - Classes for the input element.
+ * @param {ReactNode} children - Children elements.
+ * @returns {JSX.Element} - JSX element containing the input field and optional end icon button.
+ * !! example <InputButton endIcon={true}>
+ * !!      <Search className="w-6 h-6" />
+ * !!     </InputButton>
+ */
 export default function InputField({
   placeholder = 'Please enter ...',
-  label,
+  label = '',
   inputType = 'text',
-  hint,
-  error,
-  hintId,
-  errId,
-  endIcon,
-  submitFunction,
+  hint = '',
+  error = '',
+  hintId = '',
+  errId = '',
+  endIcon = false,
+  submitFunction = () => {},
+  nestedDivClasses = '',
   divClasses = '',
   inputClasses = '',
+  children,
 }) {
   return (
-    <div className={cn('w-full relative', divClasses)}>
+    <div className={cn('h-12 relative', divClasses)}>
       <InputBase
         inputType={inputType}
         placeholder={placeholder}
@@ -27,17 +50,19 @@ export default function InputField({
         error={error}
         hintId={hintId}
         errId={errId}
-        divClasses={divClasses}
+        divClasses={nestedDivClasses}
         inputClasses={inputClasses}
       />
       {endIcon && (
         <button
           type="submit"
           onClick={submitFunction}
-          className="absolute right-3.5 top-1/2"
+          className="cursor-pointer absolute right-3.5 top-1/2 transform -translate-y-1/2 "
           aria-label={label}
           tabIndex={0}
-        ></button>
+        >
+          {children}
+        </button>
       )}
     </div>
   );
