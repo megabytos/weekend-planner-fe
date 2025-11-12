@@ -6,8 +6,14 @@ import { useSelector } from 'react-redux';
  */
 
 /**
+ * @typedef {Object} ModalState
+ * @property {boolean} modal
+ */
+
+/**
  * @typedef {Object} RootState
  * @property {CounterState} counter
+ * @property {ModalState} modal
  */
 
 /** @type {import('react-redux').TypedUseSelectorHook<RootState>} */

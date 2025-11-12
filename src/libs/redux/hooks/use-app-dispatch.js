@@ -8,8 +8,14 @@ import { store } from '../store';
  */
 
 /**
+ * @typedef {Object} ModalState
+ * @property {boolean} modal
+ */
+
+/**
  * @typedef {Object} RootState
  * @property {CounterState} counter
+ * @property {ModalState} modal
  */
 
 /**
