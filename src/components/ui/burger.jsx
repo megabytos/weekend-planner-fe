@@ -26,7 +26,7 @@ export default function Burger({
         </li>
         {items.map((item) => (
           <li
-            className="font-medium text-[14px] leading-5 flex items-center gap-2 px-6 py-2.5 text-blue border border-white rounded-[10px] hover:border-blue transition"
+            className="font-medium text-[14px] leading-5 flex items-center gap-2 px-6 py-2.5 text-blue border border-blue-light rounded-[10px] hover:border-blue transition"
             key={nanoid()}
           >
             <Link href="#">{item}</Link>

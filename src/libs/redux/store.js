@@ -5,9 +5,11 @@ import storage from 'redux-persist/lib/storage';
 import { configureStore } from '@reduxjs/toolkit';
 
 import counterReducer from './counterSlice';
+import modalBurgerReducer from './modal-burgerSlice';
 
 const rootReducer = combineReducers({
   counter: counterReducer,
+  modal: modalBurgerReducer,
 });
 
 const persistConfig = {
