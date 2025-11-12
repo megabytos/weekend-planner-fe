@@ -1,7 +1,10 @@
-import { CalendarFold, Eye, Heart, MapPin, Share2 } from 'lucide-react';
+import { CalendarFold } from 'lucide-react';
 import Image from 'next/image';
 
-import ButtonIcon from './ui/button-icon';
+import EventAddress from './ui/event-address';
+import FavoriteButton from './ui/favorite-button';
+import ShareButton from './ui/share-button';
+import Viewers from './ui/viewers';
 
 export default function EventCard() {
   const handleShare = () => {
@@ -25,28 +28,20 @@ export default function EventCard() {
       </div>
       <div className="flex flex-col gap-2 md:grow p-2 md:p-0 md:pl-5">
         <h3>Event title</h3>
-        <div className="flex items-center gap-2">
-          <MapPin size={20} />
-          <span>Address</span>
+        <EventAddress address="123 Main St, City, Country" />
+        <div>
+          <span>Price</span> <span>Currency</span>
         </div>
-        <div><span>Price</span>{' '}<span>Currency</span></div>
-        <footer className='flex justify-between items-center md:mt-auto'>
+        <footer className="flex justify-between items-center md:mt-auto">
           <div className="flex items-center gap-2">
             <CalendarFold size={20} />
             <span>31.12.2024</span>
           </div>
 
-          <div className='flex items-center gap-4'>
-            <div className='flex items-center gap-2'>
-            <Eye size={20} />
-            <span>123</span>
-            </div>
-            <ButtonIcon clickFunction={handleShare}>
-              <Share2 size={20}/>
-            </ButtonIcon>
-            <ButtonIcon clickFunction={handleFavorite}>
-              <Heart size={20}/>
-            </ButtonIcon>
+          <div className="flex items-center gap-4">
+            <Viewers viewers={123} />
+            <ShareButton handleShare={handleShare} />
+            <FavoriteButton isFavorite={true} handleFavorite={handleFavorite} />
           </div>
         </footer>
       </div>

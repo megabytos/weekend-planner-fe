@@ -45,7 +45,7 @@ export default function Dropdown({
             <li
               key={item}
               onClick={() => handleSelect(item)}
-              className="font-medium text-[14px] leading-5 px-4 py-2 hover:bg-blue-light cursor-pointer rounded-lg"
+              className="font-medium text-sm leading-5 px-4 py-2 hover:bg-blue-light cursor-pointer rounded-lg"
             >
               {item}
             </li>
