@@ -1,7 +1,7 @@
 import { CalendarFold } from 'lucide-react';
 import Image from 'next/image';
 
-import EventAddress from './ui/event-address';
+import Address from './ui/address';
 import FavoriteButton from './ui/favorite-button';
 import ShareButton from './ui/share-button';
 import Viewers from './ui/viewers';
@@ -28,7 +28,7 @@ export default function EventCard() {
       </div>
       <div className="flex flex-col gap-2 md:grow p-2 md:p-0 md:pl-5">
         <h3>Event title</h3>
-        <EventAddress address="123 Main St, City, Country" />
+        <Address address="123 Main St, City, Country" />
         <div>
           <span>Price</span> <span>Currency</span>
         </div>
