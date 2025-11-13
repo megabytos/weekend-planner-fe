@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux';
 
 import { store } from '../store';
+import { useFilterSelector } from './use-app-selector';
 
 /**
  * @typedef {Object} CounterState
@@ -8,8 +9,11 @@ import { store } from '../store';
  */
 
 /**
- * @typedef {Object} ModalState
- * @property {boolean} modal
+ * @typedef {Object} FilterState
+ * @property {string[]} cities
+ * @property {string[]} categories
+ * @property {string|null} date
+ * @property {string|null} price
  */
 
 /**
@@ -24,3 +28,8 @@ import { store } from '../store';
 
 /** @returns {AppDispatch} */
 export const useAppDispatch = () => useDispatch();
+export default function useFilterDispatch() {
+  const dispatch = useAppDispatch();
+  const filter = useFilterSelector();
+  return { dispatch, filter };
+}

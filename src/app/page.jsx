@@ -44,6 +44,7 @@ export default function Home() {
         ariaLabel="Logo"
       />
       <EventCard />
+      <Filter />
     </Container>
   );
 }

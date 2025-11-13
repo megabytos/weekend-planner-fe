@@ -4,16 +4,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
 export default function FilterSection({
-  items = [
-    'Option 1',
-    'Option 2',
-    'Option 3',
-    'Option 4',
-    'Option 5',
-    'Option 6',
-    'Option 7',
-    'Option 8',
-  ],
+  items = ['Option 1', 'Option 2', 'Option 3'],
   label = 'Name',
   children,
 }) {
@@ -26,34 +17,20 @@ export default function FilterSection({
   };
 
   return (
-    <div className="relative inline-block text-left w-[157px]">
+    <div className="flex flex-wrap text-left md:w-[335px] lg:w-[167px] xl:w-[320px] ">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="font-medium text-[14px] leading-5 flex gap-2 items-center w-full bg-light px-8 py-2.5 text-blue border border-light rounded-[10px] hover:border-blue transition"
+        className="font-medium text-base leading-6 flex gap-2 items-center w-full text-black transition"
       >
         <span>{selected || label}</span>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 stroke-blue" />
+          <ChevronUp className="w-6 h-6 stroke-black" />
         ) : (
-          <ChevronDown className="w-5 h-5 stroke-blue" />
+          <ChevronDown className="w-6 h-6 stroke-black" />
         )}
       </button>
 
-      {isOpen && (
-        <ul className="absolute left-0 right-0 bg-white border border-white-dark rounded-[10px] max-h-[180px] overflow-y-auto z-10">
-          {items.map((item) => (
-            <li
-              key={item}
-              onClick={() => handleSelect(item)}
-              className="font-medium text-[14px] leading-5 px-4 py-2 hover:bg-blue-light cursor-pointer rounded-lg"
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {children}
+      {isOpen && children}
     </div>
   );
 }

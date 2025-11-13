@@ -1,21 +1,76 @@
-// components/ui/Pill.tsx
-import { cn } from '@/utils/class-names';
+'use client';
 
-export function Pill({ selected, children, clickFunction, classes }) {
+import {
+  selectFilter,
+  setDate,
+  setPrice,
+  toggleCategory,
+  toggleCity,
+} from '@/libs/redux/filterSlice';
+import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
+import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
+import cn from '@/utils/class-names';
+
+export const FILTER_TYPES = {
+  city: 'city',
+  category: 'category',
+  date: 'date',
+  price: 'price',
+};
+
+export default function FilterButton({ classes = '', value = '', filterType }) {
+  const dispatch = useAppDispatch();
+  const filter = useAppSelector(selectFilter);
+
+  const selected = (() => {
+    switch (filterType) {
+      case FILTER_TYPES.city:
+        return filter.cities.includes(value);
+      case FILTER_TYPES.category:
+        return filter.categories.includes(value);
+      case FILTER_TYPES.date:
+        return filter.date === value;
+      case FILTER_TYPES.price:
+        return filter.price === value;
+      default:
+        return false;
+    }
+  })();
+
+  const handleClick = () => {
+    if (!value) {
+      return;
+    }
+
+    switch (filterType) {
+      case FILTER_TYPES.city:
+        dispatch(toggleCity(value));
+        break;
+      case FILTER_TYPES.category:
+        dispatch(toggleCategory(value));
+        break;
+      case FILTER_TYPES.date:
+        dispatch(setDate(filter.date === value ? null : value));
+        break;
+      case FILTER_TYPES.price:
+        dispatch(setPrice(filter.price === value ? null : value));
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <button
       type="button"
-      onClick={clickFunction}
+      onClick={handleClick}
       className={cn(
-        'px-3 py-1.5 rounded-2xl border text-sm transition',
-        selected
-          ? 'bg-blue-50 text-blue-700 border-blue-300'
-          : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-50',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+        'px-2 py-1 rounded-[10px] border-blue-light text-sm text-blue transition hover:bg-blue-light ',
+        selected ? 'bg-blue-light' : 'bg-white',
         classes,
       )}
     >
-      {children}
+      {value}
     </button>
   );
 }

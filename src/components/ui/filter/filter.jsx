@@ -1,17 +1,19 @@
 'use client';
 
-import { FilterButton } from '@/components/ui/FilterButton';
-import { FilterSection } from '@/components/ui/FilterSection';
+import FilterButton, {
+  FILTER_TYPES,
+} from '@/components/ui/filter/filter-button';
+import FilterSection from '@/components/ui/filter/filter-section';
 
 const CITIES = [
-  'Київ',
-  'Вінниця',
-  'Тернопіль',
-  'Житомир',
-  'Одеса',
-  'Хмельницький',
-  'Львів',
-  'Кропивницький',
+  'New York',
+  'Los Angeles',
+  'Madrid',
+  'Barcelona',
+  'London',
+  'Rome',
+  'Berlin',
+  'Paris',
 ];
 const CATS = [
   'Music',
@@ -24,32 +26,51 @@ const CATS = [
   'Food & Drink',
 ];
 
-export default function Filters() {
+const DATES = ['Today', 'Tomorrow', 'This week', 'Choose date'];
+
+const PRICE = ['Free', 'Not high', 'Expensive'];
+
+export default function Filter() {
   return (
-    <div className="space-y-6">
-      <FilterSection title="Місто">
-        {CITIES.map((c) => (
-          <FilterButton />
+    <div className="flex flex-col gap-4 md:gap-6 lg:gap-8">
+      <FilterSection label="City">
+        {CITIES.map((city) => (
+          <FilterButton
+            key={city}
+            value={city}
+            filterType={FILTER_TYPES.city}
+          />
         ))}
       </FilterSection>
 
-      <FilterSection title="Category">
-        {CATS.map((c) => (
-          <FilterButton />
+      <FilterSection label="Category">
+        {CATS.map((category) => (
+          <FilterButton
+            key={category}
+            value={category}
+            filterType={FILTER_TYPES.category}
+          />
         ))}
       </FilterSection>
 
-      <FilterSection title="Date">
-        <FilterButton>Today</FilterButton>
-        <FilterButton>Tomorrow</FilterButton>
-        <FilterButton>This week</FilterButton>
-        <FilterButton>Choose date</FilterButton>
+      <FilterSection label="Date">
+        {DATES.map((date) => (
+          <FilterButton
+            key={date}
+            value={date}
+            filterType={FILTER_TYPES.date}
+          />
+        ))}
       </FilterSection>
 
-      <FilterSection title="Price">
-        <FilterButton>Free</FilterButton>
-        <FilterButton>Not high</FilterButton>
-        <FilterButton>Expensive</FilterButton>
+      <FilterSection label="Price">
+        {PRICE.map((price) => (
+          <FilterButton
+            key={price}
+            value={price}
+            filterType={FILTER_TYPES.price}
+          />
+        ))}
       </FilterSection>
     </div>
   );
