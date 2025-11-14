@@ -4,12 +4,18 @@ import storage from 'redux-persist/lib/storage';
 
 import { configureStore } from '@reduxjs/toolkit';
 
+import authReducer from './auth-slice';
 import counterReducer from './counterSlice';
+import filterReducer from './filter-slice';
 import modalBurgerReducer from './modal-burgerSlice';
+import searchReducer from './search-slice';
 
 const rootReducer = combineReducers({
   counter: counterReducer,
   modal: modalBurgerReducer,
+  filter: filterReducer,
+  search: searchReducer,
+  auth: authReducer,
 });
 
 const persistConfig = {

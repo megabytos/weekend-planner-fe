@@ -4,6 +4,7 @@ import { Smile } from 'lucide-react';
 
 import EventCard from '@/components/event-card';
 import Container from '@/components/layout/container';
+import CustomDropdown from '@/components/ui/dropdown';
 import Icon from '@/components/ui/icon';
 import { add } from '@/libs/redux/counterSlice';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';

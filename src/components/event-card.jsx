@@ -39,6 +39,18 @@ export default function EventCard() {
           </div>
 
           <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Eye size={20} />
+              <span>123</span>
+            </div>
+            <ButtonIcon clickFunction={handleShare}>
+              <Share2 size={20} />
+            </ButtonIcon>
+            <ButtonIcon clickFunction={handleFavorite}>
+              <Heart size={20} />
+            </ButtonIcon>
+          </div>
+          <div className="flex items-center gap-4">
             <Viewers viewers={123} />
             <ShareButton handleShare={handleShare} />
             <FavoriteButton isFavorite={true} handleFavorite={handleFavorite} />
