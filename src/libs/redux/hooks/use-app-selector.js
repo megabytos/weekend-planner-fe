@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-import { selectFilter } from '../filterSlice';
+import { selectFilter } from '../filter-slice';
 import { store } from '../store';
 
 /**
@@ -28,5 +28,3 @@ import { store } from '../store';
 /** @type {import('react-redux').TypedUseSelectorHook<RootState>} */
 
 export const useAppSelector = useSelector;
-
-export const useFilterSelector = () => useAppSelector(selectFilter);

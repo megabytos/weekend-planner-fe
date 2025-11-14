@@ -33,6 +33,7 @@ const PRICE = ['Free', 'Not high', 'Expensive'];
 export default function Filter() {
   return (
     <div className="flex flex-col gap-4 md:gap-6 lg:gap-8">
+      <FilterButton value="clear" filterType={FILTER_TYPES.clear} />
       <FilterSection label="City">
         {CITIES.map((city) => (
           <FilterButton

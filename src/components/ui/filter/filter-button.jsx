@@ -1,12 +1,13 @@
 'use client';
 
 import {
+  resetFilters,
   selectFilter,
   setDate,
   setPrice,
   toggleCategory,
   toggleCity,
-} from '@/libs/redux/filterSlice';
+} from '@/libs/redux/filter-slice';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import cn from '@/utils/class-names';
@@ -16,6 +17,7 @@ export const FILTER_TYPES = {
   category: 'category',
   date: 'date',
   price: 'price',
+  clear: 'clear',
 };
 
 export default function FilterButton({ classes = '', value = '', filterType }) {
@@ -54,6 +56,9 @@ export default function FilterButton({ classes = '', value = '', filterType }) {
         break;
       case FILTER_TYPES.price:
         dispatch(setPrice(filter.price === value ? null : value));
+        break;
+      case FILTER_TYPES.clear:
+        dispatch(resetFilters());
         break;
       default:
         break;

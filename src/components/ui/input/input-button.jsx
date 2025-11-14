@@ -14,7 +14,6 @@ import InputBase from './input-base';
  * @param {string} [error=''] - Error message for the input field.
  * @param {string} [hintId=''] - Id for the hint element.
  * @param {string} [errId=''] - Id for the error element.
- * @param {boolean} [endIcon=false] - Whether to add an end icon or not.
  * @param {function} [submitFunction=() => {}] - Function to be called when the input field is submitted.
  * @param {string} [nestedDivClasses=''] - Classes for the nested div element.
  * @param {string} [divClasses=''] - Classes for the outer div element.
@@ -25,7 +24,7 @@ import InputBase from './input-base';
  * !!      <Search className="w-6 h-6" />
  * !!     </InputButton>
  */
-export default function InputField({
+export default function InputButton({
   placeholder = 'Please enter ...',
   label = '',
   inputType = 'text',
@@ -33,7 +32,6 @@ export default function InputField({
   error = '',
   hintId = '',
   errId = '',
-  endIcon = false,
   submitFunction = () => {},
   nestedDivClasses = '',
   divClasses = '',
@@ -53,17 +51,16 @@ export default function InputField({
         divClasses={nestedDivClasses}
         inputClasses={inputClasses}
       />
-      {endIcon && (
-        <button
-          type="submit"
-          onClick={submitFunction}
-          className="cursor-pointer absolute right-3.5 top-1/2 transform -translate-y-1/2 "
-          aria-label={label}
-          tabIndex={0}
-        >
-          {children}
-        </button>
-      )}
+
+      <button
+        type="submit"
+        onClick={submitFunction}
+        className="cursor-pointer absolute right-3.5 top-1/2 transform -translate-y-1/2 "
+        aria-label={label}
+        tabIndex={0}
+      >
+        {children}
+      </button>
     </div>
   );
 }

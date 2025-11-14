@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux';
 
 import { store } from '../store';
 import { useFilterSelector } from './use-app-selector';
+import { useSearchSelector } from './use-app-selector';
 
 /**
  * @typedef {Object} CounterState
@@ -28,8 +29,3 @@ import { useFilterSelector } from './use-app-selector';
 
 /** @returns {AppDispatch} */
 export const useAppDispatch = () => useDispatch();
-export default function useFilterDispatch() {
-  const dispatch = useAppDispatch();
-  const filter = useFilterSelector();
-  return { dispatch, filter };
-}
