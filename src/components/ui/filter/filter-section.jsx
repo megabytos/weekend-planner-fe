@@ -9,20 +9,14 @@ export default function FilterSection({
   children,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
-
-  const handleSelect = (item) => {
-    setSelected(item);
-    setIsOpen(false);
-  };
 
   return (
     <div className="flex flex-wrap text-left md:w-[335px] lg:w-[167px] xl:w-[320px] ">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={setIsOpen((prev) => !prev)}
         className="font-medium text-base leading-6 flex gap-2 items-center w-full text-black transition"
       >
-        <span>{selected || label}</span>
+        <span>{label}</span>
         {isOpen ? (
           <ChevronUp className="w-6 h-6 stroke-black" />
         ) : (

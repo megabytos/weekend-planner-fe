@@ -49,6 +49,7 @@ export default function EventCard() {
             <ButtonIcon clickFunction={handleFavorite}>
               <Heart size={20} />
             </ButtonIcon>
+          </div>
           <div className="flex items-center gap-4">
             <Viewers viewers={123} />
             <ShareButton handleShare={handleShare} />

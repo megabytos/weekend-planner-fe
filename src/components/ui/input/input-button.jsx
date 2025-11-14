@@ -55,7 +55,7 @@ export default function InputButton({
       <button
         type="submit"
         onClick={submitFunction}
-        className="cursor-pointer absolute right-3.5 top-1/2 transform -translate-y-1/2 "
+        className="cursor-pointer absolute right-3.5 top-1/2 transform translate-y-1/2 "
         aria-label={label}
         tabIndex={0}
       >
