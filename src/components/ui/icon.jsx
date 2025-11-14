@@ -8,7 +8,7 @@ export default function Icon({ className, name, width, height, ariaLabel }) {
       height={height}
       aria-label={ariaLabel}
     >
-      <use href={`/pictures/svg/sprite.svg#${name}`} />
+      <use href={`/svg/sprite.svg#${name}`} />
     </svg>
   );
 }

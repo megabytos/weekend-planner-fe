@@ -4,7 +4,7 @@ import { Smile } from 'lucide-react';
 
 import EventCard from '@/components/event-card';
 import Container from '@/components/layout/container';
-import CustomDropdown from '@/components/ui/dropdown';
+import SliderContainer from '@/components/layout/slider-container';
 import Icon from '@/components/ui/icon';
 import { add } from '@/libs/redux/counterSlice';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
@@ -31,6 +31,7 @@ export default function Home() {
 
   return (
     <Container>
+      <SliderContainer></SliderContainer>
       <h1>Weekend Planner</h1>
       <p>Counter: {counter}</p>
       <button onClick={() => dispatch(add())}>Add 1 to counter</button>

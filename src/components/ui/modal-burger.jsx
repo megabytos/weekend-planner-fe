@@ -5,7 +5,7 @@ import Container from '../layout/container';
 import Burger from './burger';
 import ButtonIcon from './button-icon';
 
-export const ModalBurger = ({ isOpen, onClose }) => {
+export default function ModalBurger({ isOpen, onClose }) {
   if (!isOpen) return null;
   return createPortal(
     <Container className="fixed top-0 right-0 w-full h-full bg-white-dark/50 z-2">
@@ -23,4 +23,4 @@ export const ModalBurger = ({ isOpen, onClose }) => {
     </Container>,
     document.getElementById('modal'),
   );
-};
+}
