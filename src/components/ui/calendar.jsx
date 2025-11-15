@@ -115,15 +115,11 @@ export default function Calendar({ onSelect = null }) {
           type="button"
           aria-label="Previous month"
         >
-          <ChevronLeft 
-            className="w-4 h-4" 
-            style={{ color: 'var(--black)' }}
-          />
+          <ChevronLeft className="w-4 h-4 stroke-black" />
         </button>
 
         <span 
-          className="w-[125px] h-[19px] font-inter font-semibold text-[16px] leading-[120%] flex items-center justify-center text-center"
-          style={{ color: 'var(--black)' }}
+          className="w-[125px] h-[19px] font-inter font-semibold text-[16px] leading-[120%] flex items-center justify-center text-center text-black"
         >
           {currentDate.toLocaleString('en-US', {
             month: 'long',
@@ -137,10 +133,7 @@ export default function Calendar({ onSelect = null }) {
           type="button"
           aria-label="Next month"
         >
-          <ChevronRight 
-            className="w-4 h-4" 
-            style={{ color: 'var(--black)' }}
-          />
+          <ChevronRight className="w-4 h-4 stroke-black" />
         </button>
       </div>
 
@@ -149,8 +142,7 @@ export default function Calendar({ onSelect = null }) {
         {weekdays.map((day) => (
           <div
             key={day}
-            className="w-[41px] h-[14px] font-inter font-semibold text-[12px] leading-[120%] flex items-center justify-center text-center"
-            style={{ color: '#475467' }}
+            className="w-[41px] h-[14px] font-inter font-semibold text-[12px] leading-[120%] flex items-center justify-center text-center text-[#475467]"
           >
             {day}
           </div>
