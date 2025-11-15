@@ -1,10 +1,12 @@
 'use client';
 
 import Image from 'next/image';
+import { useMemo } from 'react';
 
 import Container from '@/components/layout/container';
 import Section from '@/components/layout/section';
 import Address from '@/components/ui/address';
+import Breadcrumbs from '@/components/ui/breadcrumbs';
 import EventDate from '@/components/ui/event-date';
 import EventPrice from '@/components/ui/event-price';
 import FavoriteButton from '@/components/ui/favorite-button';
@@ -21,17 +23,28 @@ export default function Event() {
     // Favorite functionality here
   };
 
+  // Will be replaced with real data fetching logic
+  const breadcrumbs = useMemo(
+    () => [
+      { label: 'Events', href: '/events' },
+      { label: 'Event Title', href: '/events/1' },
+    ],
+    [],
+  );
+
   return (
     <Section>
-      <Container className="flex flex-col gap-4 lg:max-w-5xl">
-        <div>Breadcrumbs</div>
+      <Container className="flex flex-col gap-4 py-4 md:py-5 lg:py-8 lg:max-w-5xl lg:gap-8">
+        <div className="">
+          <Breadcrumbs items={breadcrumbs} />
+        </div>
         <div className="rounded-xl overflow-hidden">
           <Image
             src="/images/event-placeholder.jpg"
             alt="Event"
             width={335}
             height={200}
-            className="w-full h-auto max-h-[480px] md:max-h-[360px] дп:max-h-[360px] object-cover"
+            className="w-full h-auto max-h-[480px] md:max-h-[360px] lg:max-h-[360px] object-cover"
           />
         </div>
         <div className="flex justify-between items-center">
