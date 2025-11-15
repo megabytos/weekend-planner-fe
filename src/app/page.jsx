@@ -5,6 +5,7 @@ import { Smile } from 'lucide-react';
 import EventCard from '@/components/event-card';
 import Container from '@/components/layout/container';
 import SliderContainer from '@/components/layout/slider-container';
+import EventPoster from '@/components/ui/event-poster';
 import Icon from '@/components/ui/icon';
 import { add } from '@/libs/redux/counterSlice';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
@@ -29,9 +30,14 @@ export default function Home() {
     },
   });
 
+  const events = Array(5).fill({ url: '/images/event-placeholder.jpg' });
+
   return (
     <Container>
-      <SliderContainer></SliderContainer>
+      <SliderContainer
+        items={events}
+        renderItem={(e) => <EventPoster slide={e} />}
+      />
       <h1>Weekend Planner</h1>
       <p>Counter: {counter}</p>
       <button onClick={() => dispatch(add())}>Add 1 to counter</button>
