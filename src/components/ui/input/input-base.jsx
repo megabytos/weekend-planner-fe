@@ -4,17 +4,17 @@ import cn from '@/utils/class-names';
 
 /**
  * InputBase component.
- *
- * @param {string} [placeholder='Please enter ...'] - Placeholder for the input field.
- * @param {string} [label=''] - Label for the input field.
- * @param {string} [inputType='text'] - Type of the input field.
- * @param {string} [hint=''] - Hint for the input field.
- * @param {string} [error=''] - Error message for the input field.
- * @param {string} [hintId=''] - Id for the hint element.
- * @param {string} [errId=''] - Id for the error element.
- * @param {string} [divClasses=''] - Classes for the outer div element.
- * @param {string} [inputClasses=''] - Classes for the input element.
- * @returns {JSX.Element} - JSX element containing the input field.
+ * @param {Object} props - Component props
+ * @param {string} [props.placeholder='Please enter ...'] - Placeholder for the input field.
+ * @param {string} [props.label=''] - Label for the input field.
+ * @param {string} [props.inputType='text'] - Type of the input field.
+ * @param {string} [props.hint=''] - Hint for the input field.
+ * @param {string} [props.error=''] - Error message for the input field.
+ * @param {string} [props.hintId=''] - Id for the hint element.
+ * @param {string} [props.errId=''] - Id for the error element.
+ * @param {string} [props.divClasses=''] - Classes for the outer div element.
+ * @param {string} [props.inputClasses=''] - Classes for the input element.
+ * @returns {React.JSX.Element} - JSX element containing the input field.
  */
 export default function InputBase({
   placeholder = 'Please enter ...',
@@ -28,7 +28,7 @@ export default function InputBase({
   inputClasses = '',
 }) {
   return (
-    <div className={cn('h-12 relative', divClasses)}>
+    <div className={cn('relative', divClasses)}>
       {label && (
         <label
           htmlFor={label}
@@ -43,7 +43,7 @@ export default function InputBase({
         aria-invalid={!!error || undefined}
         aria-describedby={cn(hintId, errId)}
         className={cn(
-          `w-full h-full border border-gray rounded-[10px] py-3 px-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputClasses}`,
+          `block w-full h-12 border border-gray rounded-[10px] py-3 px-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputClasses}`,
           error ? 'border-red' : '',
         )}
       />
