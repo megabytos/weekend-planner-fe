@@ -8,7 +8,7 @@ import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { openModal } from '@/libs/redux/modal-burgerSlice';
 
 import Icon from '../ui/icon';
-import { ModalBurger } from '../ui/modal-burger';
+import ModalBurger from '../ui/modal-burger';
 import Container from './container';
 
 export default function Header() {
