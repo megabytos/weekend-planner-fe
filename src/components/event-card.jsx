@@ -1,7 +1,8 @@
-import { CalendarFold } from 'lucide-react';
+import { CalendarFold, Eye, Heart, Share2 } from 'lucide-react';
 import Image from 'next/image';
 
 import Address from './ui/address';
+import ButtonIcon from './ui/button-icon';
 import FavoriteButton from './ui/favorite-button';
 import ShareButton from './ui/share-button';
 import Viewers from './ui/viewers';

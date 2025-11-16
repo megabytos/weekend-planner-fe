@@ -9,18 +9,18 @@ import InputBase from './input-base';
 
 /**
  * InputPassword component.
- *
- * @param {string} [placeholder='Password'] - Placeholder for the input field.
- * @param {string} [label=''] - Label for the input field.
- * @param {string} [inputType='password'] - Type of the input field.
- * @param {string} [hint=''] - Hint for the input field.
- * @param {string} [error=''] - Error message for the input field.
- * @param {string} [hintId=''] - Id for the hint element.
- * @param {string} [errId=''] - Id for the error element.
- * @param {string} [nestedDivClasses=''] - Classes for the nested div element.
- * @param {string} [divClasses=''] - Classes for the outer div element.
- * @param {string} [inputClasses=''] - Classes for the input element.
- * @returns {JSX.Element} - JSX element containing the input field and show/hide password button.
+ * @param {Object} props - Component props
+ * @param {string} [props.placeholder='Password'] - Placeholder for the input field.
+ * @param {string} [props.label=''] - Label for the input field.
+ * @param {string} [props.inputType='password'] - Type of the input field.
+ * @param {string} [props.hint=''] - Hint for the input field.
+ * @param {string} [props.error=''] - Error message for the input field.
+ * @param {string} [props.hintId=''] - Id for the hint element.
+ * @param {string} [props.errId=''] - Id for the error element.
+ * @param {string} [props.nestedDivClasses=''] - Classes for the nested div element.
+ * @param {string} [props.divClasses=''] - Classes for the outer div element.
+ * @param {string} [props.inputClasses=''] - Classes for the input element.
+ * @returns {React.JSX.Element} - JSX element containing the input field and show/hide password button.
  */
 export default function InputPassword({
   placeholder = 'Password',
@@ -41,7 +41,7 @@ export default function InputPassword({
   };
 
   return (
-    <div className={cn('h-12 relative', divClasses)}>
+    <div className={cn('relative', divClasses)}>
       <InputBase
         inputType={showPassword ? 'text' : inputType}
         placeholder={placeholder}
@@ -57,7 +57,7 @@ export default function InputPassword({
       <button
         type="button"
         onClick={handleClickShowPassword}
-        className="w-6 h-6 cursor-pointer absolute right-3.5 top-1/2 transform -translate-y-1/2"
+        className="w-6 h-6 cursor-pointer absolute right-3.5 top-11 transform -translate-y-1/2"
         aria-label={showPassword ? 'Hide password' : 'Show password'}
         tabIndex={0}
       >
