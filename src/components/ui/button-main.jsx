@@ -6,7 +6,7 @@ export default function ButtonMain({
   children,
   isDisabled = false,
   label = '',
-  clickFunction = () => {},
+  onClick,
   className = '',
 }) {
   return (
@@ -17,7 +17,7 @@ export default function ButtonMain({
       )}
       aria-label={label ? label : ''}
       disabled={isDisabled || false}
-      onClick={clickFunction}
+      onClick={onClick}
     >
       {children}
     </button>
