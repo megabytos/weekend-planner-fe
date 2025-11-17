@@ -20,7 +20,7 @@ import InputBase from './input-base';
  * @param {string} [props.inputClasses=''] - Classes for the input element.
  * @param {React.ReactNode} props.children - Children elements.
  * @returns {React.JSX.Element} - JSX element containing the input field and optional end icon button.
- * !! example <InputButton endIcon={true}>
+ * !! example <InputButton>
  * !!      <Search className="w-6 h-6" />
  * !!     </InputButton>
  */
@@ -55,7 +55,7 @@ export default function InputButton({
       <button
         type="submit"
         onClick={() => submitFunction?.()}
-        className="cursor-pointer absolute right-3.5 top-1/2 transform translate-y-1/2 "
+        className="cursor-pointer absolute right-3.5 top-1/2 transform -translate-y-1/2 "
         aria-label={label}
         tabIndex={0}
       >

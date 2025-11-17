@@ -43,7 +43,7 @@ export default function InputBase({
         aria-invalid={!!error || undefined}
         aria-describedby={cn(hintId, errId)}
         className={cn(
-          `block w-full h-12 border border-gray rounded-[10px] py-3 px-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputClasses}`,
+          `block w-full h-12 bg-white-dark border border-white-dark rounded-[10px] py-3 px-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputClasses}`,
           error ? 'border-red' : '',
         )}
       />
