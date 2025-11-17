@@ -33,25 +33,11 @@ export default function Home() {
   const events = Array(5).fill({ url: '/images/event-placeholder.jpg' });
 
   return (
-    <Container>
+    <Container className="py-10 ">
       <SliderContainer
         items={events}
         renderItem={(e) => <EventPoster slide={e} />}
       />
-      <h1>Weekend Planner</h1>
-      <p>Counter: {counter}</p>
-      <button onClick={() => dispatch(add())}>Add 1 to counter</button>
-      <hr />
-      Icon usage example:
-      <Smile className="fill-yellow stroke-red" />
-      <Icon
-        className="fill-orange"
-        name="logo-icon"
-        width="200"
-        height="40"
-        ariaLabel="Logo"
-      />
-      <EventCard />
     </Container>
   );
 }
