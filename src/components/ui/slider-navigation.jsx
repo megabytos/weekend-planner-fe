@@ -2,17 +2,25 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import cn from '@/utils/class-names';
 
-export default function SliderNavigation({ swiper, isBeginning, isEnd }) {
+import ButtonIcon from './button-icon';
+
+export default function SliderNavigation({
+  swiper,
+  isBeginning,
+  isEnd,
+  isCardPreview = false,
+}) {
   return (
     <>
-      <button
-        onClick={() => swiper?.slidePrev()}
+      <ButtonIcon
+        clickFunction={() => swiper?.slidePrev()}
         disabled={isBeginning}
         className={cn(
-          'absolute top-1/2 -translate-y-1/2 left-1 w-10 h-10 flex items-center justify-center rounded-full z-10 transition',
+          'absolute  left-1 w-10 h-10 flex items-center justify-center rounded-full z-10 transition',
           isBeginning
             ? 'bg-white-dark opacity-40 cursor-default'
             : 'bg-white-dark hover:bg-blue-light cursor-pointer',
+          isCardPreview ? 'top-36' : 'top-1/2 -translate-y-1/2',
         )}
       >
         <ChevronLeft
@@ -21,15 +29,16 @@ export default function SliderNavigation({ swiper, isBeginning, isEnd }) {
             isBeginning ? 'stroke-gray' : 'stroke-blue',
           )}
         />
-      </button>
-      <button
-        onClick={() => swiper?.slideNext()}
+      </ButtonIcon>
+      <ButtonIcon
+        clickFunction={() => swiper?.slideNext()}
         disabled={isEnd}
         className={cn(
-          'absolute top-1/2 -translate-y-1/2 right-1 w-10 h-10 flex items-center justify-center rounded-full z-10 transition',
+          'absolute  right-1 w-10 h-10 flex items-center justify-center rounded-full z-10 transition',
           isEnd
             ? 'bg-white-dark opacity-40 cursor-default'
             : 'bg-white-dark hover:bg-blue-light cursor-pointer',
+          isCardPreview ? 'top-36' : 'top-1/2 -translate-y-1/2',
         )}
       >
         <ChevronRight
@@ -38,7 +47,7 @@ export default function SliderNavigation({ swiper, isBeginning, isEnd }) {
             isEnd ? 'stroke-gray' : 'stroke-blue',
           )}
         />
-      </button>
+      </ButtonIcon>
     </>
   );
 }

@@ -7,7 +7,11 @@ import cn from '@/utils/class-names';
 
 import SliderNavigation from '../ui/slider-navigation';
 
-export default function SliderContainer({ items = [], renderItem }) {
+export default function SliderContainer({
+  items = [],
+  renderItem,
+  isCardPreview = false,
+}) {
   const [swiper, setSwiper] = useState(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
@@ -59,6 +63,7 @@ export default function SliderContainer({ items = [], renderItem }) {
         swiper={swiper}
         isBeginning={isBeginning}
         isEnd={isEnd}
+        isCardPreview={isCardPreview}
       />
     </div>
   );
