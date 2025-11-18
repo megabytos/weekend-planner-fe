@@ -7,10 +7,15 @@ import Container from '@/components/layout/container';
 import ButtonMain from '@/components/ui/button-main';
 import InputBase from '@/components/ui/input/input-base';
 import InputPassword from '@/components/ui/input/input-password';
+import { useAuth } from '@/context/auth-context';
 
 export default function SignInPage() {
-  const handleSignIn = () => {
-    // Handle sign-in logic here
+  const { login } = useAuth();
+
+  const handleSignIn = (e) => {
+    e.preventDefault();
+
+    login();
   };
 
   return (
