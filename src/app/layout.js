@@ -32,6 +32,7 @@ export default function RootLayout({ children }) {
           </ReduxProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
+        <div id="modal-root"></div>
       </body>
     </html>
   );

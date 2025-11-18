@@ -6,7 +6,7 @@ import { nanoid } from '@reduxjs/toolkit';
 
 import Dropdown from './dropdown';
 
-export default function Burger({
+export default function ModalMenuItems({
   items = [
     'Registration',
     'Add an event',
@@ -16,7 +16,7 @@ export default function Burger({
   ],
 }) {
   return (
-    <div>
+    <nav>
       <ul className="flex-col w-[157px]">
         <li>
           <Dropdown label="City"></Dropdown>
@@ -33,6 +33,6 @@ export default function Burger({
           </li>
         ))}
       </ul>
-    </div>
+    </nav>
   );
 }

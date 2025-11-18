@@ -1,26 +1,31 @@
 'use client';
 
-import { CircleUser, LogIn, Menu, UserRoundPlus } from 'lucide-react';
+import { CircleUser, LogIn, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { useAuth } from '@/context/auth-context';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
-import { openModal } from '@/libs/redux/modal-burgerSlice';
+import { closeModal, openModal } from '@/libs/redux/modal-menu-slice';
 
 import Icon from '../ui/icon';
-import ModalBurger from '../ui/modal-burger';
+import Modal from '../ui/modal';
+import ModalMenu from '../ui/modal-menu';
 import Container from './container';
 
 export default function Header() {
-  const modal = useAppSelector((state) => state.modal.modal);
+  const isModalMenuOpen = useAppSelector((state) => state.modalMenu.isOpen);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { user } = useAuth();
 
   const handleOpenModal = () => {
     dispatch(openModal());
+  };
+
+  const handleCloseModal = () => {
+    dispatch(closeModal());
   };
 
   return (
@@ -90,7 +95,13 @@ export default function Header() {
           </ul>
         </div>
       </Container>
-      <div id="modal"></div>
+      <Modal
+        isOpen={isModalMenuOpen}
+        onClose={handleCloseModal}
+        className="flex justify-end"
+      >
+        <ModalMenu onClose={handleCloseModal} />
+      </Modal>
     </header>
   );
 }

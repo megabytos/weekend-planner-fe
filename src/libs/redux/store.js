@@ -7,12 +7,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth-slice';
 import counterReducer from './counterSlice';
 import filterReducer from './filter-slice';
-import modalBurgerReducer from './modal-burgerSlice';
+import modalMenuReducer from './modal-menu-slice';
 import searchReducer from './search-slice';
 
 const rootReducer = combineReducers({
   counter: counterReducer,
-  modal: modalBurgerReducer,
+  modalMenu: modalMenuReducer,
   filter: filterReducer,
   search: searchReducer,
   auth: authReducer,
