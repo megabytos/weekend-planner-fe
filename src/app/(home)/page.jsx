@@ -1,13 +1,8 @@
 'use client';
 
-import { Smile } from 'lucide-react';
-
-import EventCard from '@/components/event-card';
 import Container from '@/components/layout/container';
 import SliderContainer from '@/components/layout/slider-container';
 import EventPoster from '@/components/ui/event-poster';
-import Icon from '@/components/ui/icon';
-import { add } from '@/libs/redux/counterSlice';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';

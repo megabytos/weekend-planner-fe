@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
-import { closeModal, openModal } from '@/libs/redux/modal-menu-slice';
+import { closeModal, openModal } from '@/libs/redux/slices/modal-menu-slice';
 
 import Icon from '../ui/icon';
 import Modal from '../ui/modal';

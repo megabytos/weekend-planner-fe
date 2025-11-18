@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 const weekdays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 const TOTAL_DAYS = 42;
@@ -17,18 +17,18 @@ export default function Calendar({ onSelect = null }) {
   const calendarDays = useMemo(() => {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
-    
+
     const startDayOfWeek = (firstDay.getDay() + 6) % 7;
     const daysInMonth = lastDay.getDate();
-    
+
     const prevMonth = month === 0 ? 11 : month - 1;
     const prevYear = month === 0 ? year - 1 : year;
     const prevMonthLastDay = new Date(prevYear, prevMonth + 1, 0);
     const daysInPrevMonth = prevMonthLastDay.getDate();
-    
+
     const nextMonth = month === 11 ? 0 : month + 1;
     const nextYear = month === 11 ? year + 1 : year;
-    
+
     const days = [];
 
     for (let i = 0; i < startDayOfWeek; i++) {
@@ -41,7 +41,7 @@ export default function Calendar({ onSelect = null }) {
         date: new Date(prevYear, prevMonth, day),
       });
     }
-    
+
     for (let day = 1; day <= daysInMonth; day++) {
       days.push({
         day,
@@ -51,7 +51,7 @@ export default function Calendar({ onSelect = null }) {
         date: new Date(year, month, day),
       });
     }
-    
+
     const remainingDays = TOTAL_DAYS - days.length;
     for (let day = 1; day <= remainingDays; day++) {
       days.push({
@@ -62,7 +62,7 @@ export default function Calendar({ onSelect = null }) {
         date: new Date(nextYear, nextMonth, day),
       });
     }
-    
+
     return days;
   }, [year, month]);
 
@@ -101,7 +101,7 @@ export default function Calendar({ onSelect = null }) {
   };
 
   return (
-    <div 
+    <div
       className="box-border w-[335px] h-[273px] flex flex-col items-center p-4 gap-5 bg-white rounded-[10px]"
       style={{
         border: '1px solid var(--blue)',
@@ -118,9 +118,7 @@ export default function Calendar({ onSelect = null }) {
           <ChevronLeft className="w-4 h-4 stroke-black" />
         </button>
 
-        <span 
-          className="w-[125px] h-[19px] font-inter font-semibold text-[16px] leading-[120%] flex items-center justify-center text-center text-black"
-        >
+        <span className="w-[125px] h-[19px] font-inter font-semibold text-[16px] leading-[120%] flex items-center justify-center text-center text-black">
           {currentDate.toLocaleString('en-US', {
             month: 'long',
             year: 'numeric',
@@ -138,11 +136,11 @@ export default function Calendar({ onSelect = null }) {
       </div>
 
       {/* Weekdays */}
-      <div className="grid grid-cols-7 p-0 w-[287px] h-[14px] drop-shadow-[0px_0px_1px_rgba(0,0,0,0.25),0px_1px_1px_rgba(0,0,0,0.05)]">
+      <div className="grid grid-cols-7 p-0 w-[287px] h-3.5 drop-shadow-[0px_0px_1px_rgba(0,0,0,0.25),0px_1px_1px_rgba(0,0,0,0.05)]">
         {weekdays.map((day) => (
           <div
             key={day}
-            className="w-[41px] h-[14px] font-inter font-semibold text-[12px] leading-[120%] flex items-center justify-center text-center text-[#475467]"
+            className="w-[41px] h-3.5 font-inter font-semibold text-[12px] leading-[120%] flex items-center justify-center text-center text-[#475467]"
           >
             {day}
           </div>
@@ -151,19 +149,22 @@ export default function Calendar({ onSelect = null }) {
 
       {/* Days grid */}
       <div className="w-[293px] h-[163px] overflow-hidden">
-        <div className="grid grid-cols-7" style={{ 
-          gridTemplateRows: 'repeat(6, 27.17px)',
-          gap: 0
-        }}>
+        <div
+          className="grid grid-cols-7"
+          style={{
+            gridTemplateRows: 'repeat(6, 27.17px)',
+            gap: 0,
+          }}
+        >
           {calendarDays.map((dayItem, i) => {
             const isCurrent = isToday(dayItem);
             const isPicked = isSelected(dayItem);
             const isOtherMonth = !dayItem.isCurrentMonth;
 
             return (
-              <div 
-                key={i} 
-                className="flex items-center justify-center" 
+              <div
+                key={i}
+                className="flex items-center justify-center"
                 style={{ height: '27.17px', width: '41px' }}
               >
                 <button
@@ -175,15 +176,15 @@ export default function Calendar({ onSelect = null }) {
                     ${!isPicked && !dayItem.isCurrentMonth ? 'cursor-default' : ''}
                   `}
                   style={{
-                    color: isPicked 
-                      ? 'white' 
-                      : isOtherMonth 
-                        ? '#9CA3AF' 
+                    color: isPicked
+                      ? 'white'
+                      : isOtherMonth
+                        ? '#9CA3AF'
                         : 'var(--black)',
-                    backgroundColor: isPicked 
-                      ? 'var(--blue)' 
-                      : isCurrent 
-                        ? 'var(--blue-light)' 
+                    backgroundColor: isPicked
+                      ? 'var(--blue)'
+                      : isCurrent
+                        ? 'var(--blue-light)'
                         : 'transparent',
                   }}
                   aria-label={`${dayItem.isCurrentMonth ? 'Current month' : 'Other month'} day ${dayItem.day}`}

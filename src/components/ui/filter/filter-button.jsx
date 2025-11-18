@@ -1,5 +1,7 @@
 'use client';
 
+import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
+import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import {
   resetFilters,
   selectFilter,
@@ -7,9 +9,7 @@ import {
   setPrice,
   toggleCategory,
   toggleCity,
-} from '@/libs/redux/filter-slice';
-import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
-import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
+} from '@/libs/redux/slices/filter-slice';
 import cn from '@/utils/class-names';
 
 export const FILTER_TYPES = {

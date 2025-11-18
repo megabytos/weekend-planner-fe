@@ -1,9 +1,16 @@
+// @ts-nocheck
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet/dist/leaflet.css';
+import { useEffect, useRef, useState } from 'react';
+
+// @ts-nocheck
+
+// @ts-nocheck
+
+// @ts-nocheck
 
 export default function Map() {
   const mapContainerRef = useRef(null);
@@ -30,8 +37,8 @@ export default function Map() {
       ([LModule]) => {
         const L = LModule.default || LModule;
 
-
-        if (L.Icon.Default.prototype._getIconUrl) delete L.Icon.Default.prototype._getIconUrl;
+        if (L.Icon.Default.prototype._getIconUrl)
+          delete L.Icon.Default.prototype._getIconUrl;
         L.Icon.Default.mergeOptions({
           iconRetinaUrl:
             'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
@@ -65,9 +72,8 @@ export default function Map() {
             maxZoom: 20,
             attribution:
               'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | © OpenStreetMap contributors',
-          }
+          },
         ).addTo(map);
-
 
         const markers = L.markerClusterGroup();
 
@@ -85,7 +91,7 @@ export default function Map() {
         setTimeout(() => map.invalidateSize(), 150);
 
         mapRef.current = map;
-      }
+      },
     );
   }, [isClient, places]);
 

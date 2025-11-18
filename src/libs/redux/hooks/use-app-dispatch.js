@@ -1,12 +1,15 @@
 import { useDispatch } from 'react-redux';
 
 import { store } from '../store';
-import { useFilterSelector } from './use-app-selector';
-import { useSearchSelector } from './use-app-selector';
 
 /**
  * @typedef {Object} CounterState
  * @property {number} counter
+ */
+
+/**
+ * @typedef {Object} ModalMenuState
+ * @property {boolean} isOpen
  */
 
 /**
@@ -18,9 +21,7 @@ import { useSearchSelector } from './use-app-selector';
  */
 
 /**
- * @typedef {Object} RootState
- * @property {CounterState} counter
- * @property {ModalState} modal
+ * @typedef {ReturnType<typeof store.getState>} RootState
  */
 
 /**

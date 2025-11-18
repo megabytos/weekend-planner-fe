@@ -1,344 +1,345 @@
 {
-    "meta": {
-        "took_ms": 36,
-        "total_hits": 21,
-        "echo": {
-            "target": "both",
-            "geo": {
-                "city_id": 1
-            },
-            "page_size": 20
-        }
+  "meta": {
+    "took_ms": 36,
+    "total_hits": 21,
+    "echo": {
+      "target": "both",
+      "geo": {
+        "city_id": 1
+      },
+      "page_size": 20
+    }
+  },
+
+  "items": [
+    {
+      "type": "place",
+      "id": "1",
+      "name": "Cafe Mock",
+      "category_code": "cafe",
+      "price_tier": 1,
+      "open_now": true,
+      "location": {
+        "lat": 50.4503,
+        "lon": 30.5236
+      },
+      "city_id": 1,
+      "popularity": 10,
+      "recsys_score": 2
     },
-    "items": [
-        {
-            "type": "place",
-            "id": "1",
-            "name": "Cafe Mock",
-            "category_code": "cafe",
-            "price_tier": 1,
-            "open_now": true,
-            "location": {
-                "lat": 50.4503,
-                "lon": 30.5236
-            },
-            "city_id": 1,
-            "popularity": 10,
-            "recsys_score": 2
-        },
-        {
-            "type": "place",
-            "id": "3",
-            "name": "Cafe Mock",
-            "category_code": "cafe",
-            "price_tier": 1,
-            "open_now": true,
-            "open_until": "23:00",
-            "location": {
-                "lat": 50.4503,
-                "lon": 30.5236
-            },
-            "city_id": 1,
-            "popularity": 10,
-            "recsys_score": 2
-        },
-        {
-            "type": "place",
-            "id": "12",
-            "name": "Central Park 24/7",
-            "category_code": "park",
-            "price_tier": 0,
-            "open_now": true,
-            "location": {
-                "lat": 50.461,
-                "lon": 30.525
-            },
-            "city_id": 1,
-            "popularity": 9,
-            "recsys_score": 1.8
-        },
-        {
-            "type": "place",
-            "id": "4",
-            "name": "Night Bar 24",
-            "category_code": "cafe",
-            "price_tier": 2,
-            "open_now": false,
-            "location": {
-                "lat": 50.451,
-                "lon": 30.524
-            },
-            "city_id": 1,
-            "popularity": 9,
-            "recsys_score": 1.8
-        },
-        {
-            "type": "event",
-            "occ_id": "11",
-            "event_id": "5",
-            "title": "Street Food Fest",
-            "category_code": "concert",
-            "start_at": "2025-11-24T00:18:13.155Z",
-            "end_at": "2025-11-24T06:18:13.155Z",
-            "location": {
-                "lat": 50.4605,
-                "lon": 30.5202
-            },
-            "is_free": true,
-            "currency": "UAH",
-            "price_min": 0,
-            "popularity": 9,
-            "recsys_score": 1.8
-        },
-        {
-            "type": "place",
-            "id": "7",
-            "name": "City Park",
-            "category_code": "park",
-            "price_tier": 0,
-            "open_now": true,
-            "location": {
-                "lat": 50.454,
-                "lon": 30.5166
-            },
-            "city_id": 1,
-            "popularity": 8,
-            "recsys_score": 1.6
-        },
-        {
-            "type": "place",
-            "id": "2",
-            "name": "Park Mock",
-            "category_code": "park",
-            "price_tier": 0,
-            "open_now": true,
-            "location": {
-                "lat": 50.454,
-                "lon": 30.5166
-            },
-            "city_id": 1,
-            "popularity": 8,
-            "recsys_score": 1.6
-        },
-        {
-            "type": "event",
-            "occ_id": "3",
-            "event_id": "6",
-            "title": "Rock Evening",
-            "category_code": "concert",
-            "start_at": "2025-11-15T12:18:13.155Z",
-            "end_at": "2025-11-15T15:18:13.155Z",
-            "location": {
-                "lat": 50.4515,
-                "lon": 30.5245
-            },
-            "is_free": false,
-            "currency": "UAH",
-            "price_min": 500,
-            "price_max": 1200,
-            "popularity": 8,
-            "recsys_score": 1.6
-        },
-        {
-            "type": "place",
-            "id": "6",
-            "name": "Early Bird Coffee",
-            "category_code": "cafe",
-            "price_tier": 1,
-            "open_now": false,
-            "location": {
-                "lat": 50.447,
-                "lon": 30.526
-            },
-            "city_id": 1,
-            "popularity": 7,
-            "recsys_score": 1.4
-        },
-        {
-            "type": "place",
-            "id": "5",
-            "name": "Museum of History",
-            "category_code": "museum",
-            "price_tier": 1,
-            "open_now": true,
-            "open_until": "20:00",
-            "location": {
-                "lat": 50.449,
-                "lon": 30.521
-            },
-            "city_id": 1,
-            "popularity": 7,
-            "recsys_score": 1.4
-        },
-        {
-            "type": "event",
-            "occ_id": "10",
-            "event_id": "3",
-            "title": "Online Coding Workshop",
-            "category_code": "concert",
-            "start_at": "2025-11-22T07:18:13.155Z",
-            "end_at": "2025-11-22T10:18:13.155Z",
-            "is_free": true,
-            "currency": "UAH",
-            "price_min": 0,
-            "price_max": 0,
-            "popularity": 7,
-            "recsys_score": 1.4
-        },
-        {
-            "type": "event",
-            "occ_id": "2",
-            "event_id": "11",
-            "title": "Night Astronomy",
-            "category_code": "concert",
-            "start_at": "2025-11-26T10:18:13.155Z",
-            "end_at": "2025-11-26T13:18:13.155Z",
-            "location": {
-                "lat": 50.4612,
-                "lon": 30.5252
-            },
-            "is_free": true,
-            "currency": "UAH",
-            "price_min": 0,
-            "popularity": 7,
-            "recsys_score": 1.4
-        },
-        {
-            "type": "place",
-            "id": "10",
-            "name": "Riverside Walk",
-            "category_code": "park",
-            "price_tier": 0,
-            "open_now": true,
-            "location": {
-                "lat": 50.457,
-                "lon": 30.52
-            },
-            "city_id": 1,
-            "popularity": 6,
-            "recsys_score": 1.2
-        },
-        {
-            "type": "place",
-            "id": "11",
-            "name": "Family Cafe",
-            "category_code": "cafe",
-            "price_tier": 1,
-            "open_now": true,
-            "open_until": "22:00",
-            "location": {
-                "lat": 50.444,
-                "lon": 30.515
-            },
-            "city_id": 1,
-            "popularity": 6,
-            "recsys_score": 1.2
-        },
-        {
-            "type": "event",
-            "occ_id": "9",
-            "event_id": "8",
-            "title": "Sunrise Run",
-            "category_code": "concert",
-            "start_at": "2025-11-16T18:18:13.155Z",
-            "end_at": "2025-11-16T20:18:13.155Z",
-            "location": {
-                "lat": 50.457,
-                "lon": 30.52
-            },
-            "is_free": true,
-            "currency": "UAH",
-            "price_min": 0,
-            "popularity": 6,
-            "recsys_score": 1.2
-        },
-        {
-            "type": "event",
-            "occ_id": "8",
-            "event_id": "7",
-            "title": "Park Yoga",
-            "category_code": "concert",
-            "start_at": "2025-11-17T21:18:13.155Z",
-            "end_at": "2025-11-17T23:18:13.155Z",
-            "location": {
-                "lat": 50.4542,
-                "lon": 30.5168
-            },
-            "is_free": true,
-            "currency": "UAH",
-            "price_min": 0,
-            "price_max": 0,
-            "popularity": 6,
-            "recsys_score": 1.2
-        },
-        {
-            "type": "place",
-            "id": "8",
-            "name": "Late Owl Diner",
-            "category_code": "cafe",
-            "price_tier": 2,
-            "open_now": true,
-            "open_until": "00:00",
-            "location": {
-                "lat": 50.452,
-                "lon": 30.528
-            },
-            "city_id": 1,
-            "popularity": 5,
-            "recsys_score": 1
-        },
-        {
-            "type": "event",
-            "occ_id": "4",
-            "event_id": "10",
-            "title": "Coffee Tasting",
-            "category_code": "cafe",
-            "start_at": "2025-11-18T22:18:13.155Z",
-            "end_at": "2025-11-19T00:18:13.155Z",
-            "location": {
-                "lat": 50.447,
-                "lon": 30.526
-            },
-            "is_free": false,
-            "currency": "UAH",
-            "price_min": 150,
-            "price_max": 300,
-            "popularity": 5,
-            "recsys_score": 1
-        },
-        {
-            "type": "event",
-            "occ_id": "6",
-            "event_id": "4",
-            "title": "Museum Lecture",
-            "category_code": "museum",
-            "start_at": "2025-11-20T06:18:13.155Z",
-            "end_at": "2025-11-20T08:18:13.155Z",
-            "location": {
-                "lat": 50.449,
-                "lon": 30.521
-            },
-            "is_free": false,
-            "currency": "UAH",
-            "price_min": 100,
-            "price_max": 200,
-            "popularity": 5,
-            "recsys_score": 1
-        },
-        {
-            "type": "place",
-            "id": "9",
-            "name": "Open Air Museum",
-            "category_code": "museum",
-            "price_tier": 1,
-            "open_now": false,
-            "location": {
-                "lat": 50.46,
-                "lon": 30.51
-            },
-            "city_id": 1,
-            "popularity": 4,
-            "recsys_score": 0.8
-        }
-    ]
+    {
+      "type": "place",
+      "id": "3",
+      "name": "Cafe Mock",
+      "category_code": "cafe",
+      "price_tier": 1,
+      "open_now": true,
+      "open_until": "23:00",
+      "location": {
+        "lat": 50.4503,
+        "lon": 30.5236
+      },
+      "city_id": 1,
+      "popularity": 10,
+      "recsys_score": 2
+    },
+    {
+      "type": "place",
+      "id": "12",
+      "name": "Central Park 24/7",
+      "category_code": "park",
+      "price_tier": 0,
+      "open_now": true,
+      "location": {
+        "lat": 50.461,
+        "lon": 30.525
+      },
+      "city_id": 1,
+      "popularity": 9,
+      "recsys_score": 1.8
+    },
+    {
+      "type": "place",
+      "id": "4",
+      "name": "Night Bar 24",
+      "category_code": "cafe",
+      "price_tier": 2,
+      "open_now": false,
+      "location": {
+        "lat": 50.451,
+        "lon": 30.524
+      },
+      "city_id": 1,
+      "popularity": 9,
+      "recsys_score": 1.8
+    },
+    {
+      "type": "event",
+      "occ_id": "11",
+      "event_id": "5",
+      "title": "Street Food Fest",
+      "category_code": "concert",
+      "start_at": "2025-11-24T00:18:13.155Z",
+      "end_at": "2025-11-24T06:18:13.155Z",
+      "location": {
+        "lat": 50.4605,
+        "lon": 30.5202
+      },
+      "is_free": true,
+      "currency": "UAH",
+      "price_min": 0,
+      "popularity": 9,
+      "recsys_score": 1.8
+    },
+    {
+      "type": "place",
+      "id": "7",
+      "name": "City Park",
+      "category_code": "park",
+      "price_tier": 0,
+      "open_now": true,
+      "location": {
+        "lat": 50.454,
+        "lon": 30.5166
+      },
+      "city_id": 1,
+      "popularity": 8,
+      "recsys_score": 1.6
+    },
+    {
+      "type": "place",
+      "id": "2",
+      "name": "Park Mock",
+      "category_code": "park",
+      "price_tier": 0,
+      "open_now": true,
+      "location": {
+        "lat": 50.454,
+        "lon": 30.5166
+      },
+      "city_id": 1,
+      "popularity": 8,
+      "recsys_score": 1.6
+    },
+    {
+      "type": "event",
+      "occ_id": "3",
+      "event_id": "6",
+      "title": "Rock Evening",
+      "category_code": "concert",
+      "start_at": "2025-11-15T12:18:13.155Z",
+      "end_at": "2025-11-15T15:18:13.155Z",
+      "location": {
+        "lat": 50.4515,
+        "lon": 30.5245
+      },
+      "is_free": false,
+      "currency": "UAH",
+      "price_min": 500,
+      "price_max": 1200,
+      "popularity": 8,
+      "recsys_score": 1.6
+    },
+    {
+      "type": "place",
+      "id": "6",
+      "name": "Early Bird Coffee",
+      "category_code": "cafe",
+      "price_tier": 1,
+      "open_now": false,
+      "location": {
+        "lat": 50.447,
+        "lon": 30.526
+      },
+      "city_id": 1,
+      "popularity": 7,
+      "recsys_score": 1.4
+    },
+    {
+      "type": "place",
+      "id": "5",
+      "name": "Museum of History",
+      "category_code": "museum",
+      "price_tier": 1,
+      "open_now": true,
+      "open_until": "20:00",
+      "location": {
+        "lat": 50.449,
+        "lon": 30.521
+      },
+      "city_id": 1,
+      "popularity": 7,
+      "recsys_score": 1.4
+    },
+    {
+      "type": "event",
+      "occ_id": "10",
+      "event_id": "3",
+      "title": "Online Coding Workshop",
+      "category_code": "concert",
+      "start_at": "2025-11-22T07:18:13.155Z",
+      "end_at": "2025-11-22T10:18:13.155Z",
+      "is_free": true,
+      "currency": "UAH",
+      "price_min": 0,
+      "price_max": 0,
+      "popularity": 7,
+      "recsys_score": 1.4
+    },
+    {
+      "type": "event",
+      "occ_id": "2",
+      "event_id": "11",
+      "title": "Night Astronomy",
+      "category_code": "concert",
+      "start_at": "2025-11-26T10:18:13.155Z",
+      "end_at": "2025-11-26T13:18:13.155Z",
+      "location": {
+        "lat": 50.4612,
+        "lon": 30.5252
+      },
+      "is_free": true,
+      "currency": "UAH",
+      "price_min": 0,
+      "popularity": 7,
+      "recsys_score": 1.4
+    },
+    {
+      "type": "place",
+      "id": "10",
+      "name": "Riverside Walk",
+      "category_code": "park",
+      "price_tier": 0,
+      "open_now": true,
+      "location": {
+        "lat": 50.457,
+        "lon": 30.52
+      },
+      "city_id": 1,
+      "popularity": 6,
+      "recsys_score": 1.2
+    },
+    {
+      "type": "place",
+      "id": "11",
+      "name": "Family Cafe",
+      "category_code": "cafe",
+      "price_tier": 1,
+      "open_now": true,
+      "open_until": "22:00",
+      "location": {
+        "lat": 50.444,
+        "lon": 30.515
+      },
+      "city_id": 1,
+      "popularity": 6,
+      "recsys_score": 1.2
+    },
+    {
+      "type": "event",
+      "occ_id": "9",
+      "event_id": "8",
+      "title": "Sunrise Run",
+      "category_code": "concert",
+      "start_at": "2025-11-16T18:18:13.155Z",
+      "end_at": "2025-11-16T20:18:13.155Z",
+      "location": {
+        "lat": 50.457,
+        "lon": 30.52
+      },
+      "is_free": true,
+      "currency": "UAH",
+      "price_min": 0,
+      "popularity": 6,
+      "recsys_score": 1.2
+    },
+    {
+      "type": "event",
+      "occ_id": "8",
+      "event_id": "7",
+      "title": "Park Yoga",
+      "category_code": "concert",
+      "start_at": "2025-11-17T21:18:13.155Z",
+      "end_at": "2025-11-17T23:18:13.155Z",
+      "location": {
+        "lat": 50.4542,
+        "lon": 30.5168
+      },
+      "is_free": true,
+      "currency": "UAH",
+      "price_min": 0,
+      "price_max": 0,
+      "popularity": 6,
+      "recsys_score": 1.2
+    },
+    {
+      "type": "place",
+      "id": "8",
+      "name": "Late Owl Diner",
+      "category_code": "cafe",
+      "price_tier": 2,
+      "open_now": true,
+      "open_until": "00:00",
+      "location": {
+        "lat": 50.452,
+        "lon": 30.528
+      },
+      "city_id": 1,
+      "popularity": 5,
+      "recsys_score": 1
+    },
+    {
+      "type": "event",
+      "occ_id": "4",
+      "event_id": "10",
+      "title": "Coffee Tasting",
+      "category_code": "cafe",
+      "start_at": "2025-11-18T22:18:13.155Z",
+      "end_at": "2025-11-19T00:18:13.155Z",
+      "location": {
+        "lat": 50.447,
+        "lon": 30.526
+      },
+      "is_free": false,
+      "currency": "UAH",
+      "price_min": 150,
+      "price_max": 300,
+      "popularity": 5,
+      "recsys_score": 1
+    },
+    {
+      "type": "event",
+      "occ_id": "6",
+      "event_id": "4",
+      "title": "Museum Lecture",
+      "category_code": "museum",
+      "start_at": "2025-11-20T06:18:13.155Z",
+      "end_at": "2025-11-20T08:18:13.155Z",
+      "location": {
+        "lat": 50.449,
+        "lon": 30.521
+      },
+      "is_free": false,
+      "currency": "UAH",
+      "price_min": 100,
+      "price_max": 200,
+      "popularity": 5,
+      "recsys_score": 1
+    },
+    {
+      "type": "place",
+      "id": "9",
+      "name": "Open Air Museum",
+      "category_code": "museum",
+      "price_tier": 1,
+      "open_now": false,
+      "location": {
+        "lat": 50.46,
+        "lon": 30.51
+      },
+      "city_id": 1,
+      "popularity": 4,
+      "recsys_score": 0.8
+    }
+  ]
 }
