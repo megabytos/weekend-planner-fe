@@ -4,17 +4,19 @@ import cn from '@/utils/class-names';
 
 export default function Button({
   children,
-  isDisabled,
-  label,
-  clickFunction,
-  classes,
+  isDisabled = false,
+  label = '',
+  onClick = () => {},
+  className = '',
+  ...rest
 }) {
   return (
     <button
-      className={cn(classes)}
+      className={cn(className)}
       aria-label={label ? label : ''}
       disabled={isDisabled || false}
-      onClick={clickFunction}
+      onClick={onClick}
+      {...rest}
     >
       {children}
     </button>
