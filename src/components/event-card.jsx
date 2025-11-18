@@ -2,7 +2,7 @@ import { CalendarFold, Eye, Heart, Share2 } from 'lucide-react';
 import Image from 'next/image';
 
 import Address from './ui/address';
-import ButtonIcon from './ui/button-icon';
+import Button from './ui/button';
 import FavoriteButton from './ui/favorite-button';
 import ShareButton from './ui/share-button';
 import Viewers from './ui/viewers';
@@ -44,12 +44,12 @@ export default function EventCard() {
               <Eye size={20} />
               <span>123</span>
             </div>
-            <ButtonIcon clickFunction={handleShare}>
+            <Button onClick={handleShare}>
               <Share2 size={20} />
-            </ButtonIcon>
-            <ButtonIcon clickFunction={handleFavorite}>
+            </Button>
+            <Button onClick={handleFavorite}>
               <Heart size={20} />
-            </ButtonIcon>
+            </Button>
           </div>
           <div className="flex items-center gap-4">
             <Viewers viewers={123} />

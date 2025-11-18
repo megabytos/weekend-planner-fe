@@ -9,6 +9,7 @@ import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { closeModal, openModal } from '@/libs/redux/slices/modal-menu-slice';
 
+import Button from '../ui/button';
 import Icon from '../ui/icon';
 import Modal from '../ui/modal';
 import ModalMenu from '../ui/modal-menu';
@@ -70,26 +71,25 @@ export default function Header() {
           <ul className="flex gap-4 items-center">
             {!user && (
               <li>
-                <button onClick={() => router.push('/sign-in')}>
+                <Button onClick={() => router.push('/sign-in')}>
                   <LogIn size={24} className="stroke-blue-light" />
-                </button>
+                </Button>
               </li>
             )}
             <li className="md:hidden">
-              <button>
+              <Button>
                 <Menu
                   size={24}
                   className="stroke-blue-light"
                   onClick={handleOpenModal}
                 />
-              </button>
-              <ModalBurger isOpen={modal} onClose={handleOpenModal} />
+              </Button>
             </li>
             {user && (
               <li>
-                <button>
+                <Button onClick={() => router.push('/user')}>
                   <CircleUser size={24} className="stroke-blue-light" />
-                </button>
+                </Button>
               </li>
             )}
           </ul>

@@ -2,7 +2,7 @@
 
 import { LogOut } from 'lucide-react';
 
-import ButtonIcon from '@/components/ui/button-icon';
+import Button from '@/components/ui/button';
 import { useAuth } from '@/context/auth-context';
 
 export default function Event() {
@@ -15,15 +15,15 @@ export default function Event() {
   return (
     <div>
       <h1>User Page</h1>
-      <ButtonIcon
-        clickFunction={handleLogout}
+      <Button
+        onClick={handleLogout}
         type="button"
         aria-label="Log Out"
         className="flex items-center gap-2"
       >
         <span>Log Out</span>
         <LogOut className="stroke-orange" />
-      </ButtonIcon>
+      </Button>
     </div>
   );
 }
