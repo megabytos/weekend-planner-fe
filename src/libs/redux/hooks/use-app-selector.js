@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-import { selectFilter } from '../filter-slice';
+import { selectFilter } from '../slices/filter-slice';
 import { store } from '../store';
 
 /**
@@ -9,8 +9,8 @@ import { store } from '../store';
  */
 
 /**
- * @typedef {Object} ModalState
- * @property {boolean} modal
+ * @typedef {Object} ModalMenuState
+ * @property {boolean} isOpen
  */
 
 /**
