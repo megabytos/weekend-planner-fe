@@ -44,7 +44,15 @@ export default function Header() {
             <ul className="flex gap-4">
               <li>
                 <Link
-                  href="#"
+                  href="/ideas"
+                  className="text-sm lg:text-lg text-blue-light font-bold"
+                >
+                  Generate Ideas
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
                   className="text-sm lg:text-lg text-blue-light font-bold"
                 >
                   About
@@ -52,7 +60,7 @@ export default function Header() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/add-event"
                   className="text-sm lg:text-lg text-blue-light font-bold"
                 >
                   Add event
@@ -60,7 +68,7 @@ export default function Header() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/favorites"
                   className="text-sm lg:text-lg text-blue-light font-bold"
                 >
                   Favorites

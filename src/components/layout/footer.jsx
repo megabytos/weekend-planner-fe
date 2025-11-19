@@ -14,7 +14,7 @@ export default function Footer() {
               <h3 className="text-center font-bold md:text-left">Services</h3>
               <ul className="flex flex-col gap-2 items-center mt-3 md:items-start">
                 <li>
-                  <Link href="#">Ideas generation</Link>
+                  <Link href="/ideas">Ideas generation</Link>
                 </li>
               </ul>
             </div>
@@ -44,13 +44,13 @@ export default function Footer() {
               <h3 className="text-center font-bold md:text-left">Contacts</h3>
               <ul className="flex flex-col gap-2 items-center mt-3 md:items-start">
                 <li>
-                  <Link href="#">About Us</Link>
+                  <Link href="/about">About Us</Link>
                 </li>
                 <li>
-                  <Link href="#">Support</Link>
+                  <Link href="/support">Support</Link>
                 </li>
                 <li>
-                  <Link href="#">Privacy Policy</Link>
+                  <Link href="/privacy-policy">Privacy Policy</Link>
                 </li>
               </ul>
             </div>

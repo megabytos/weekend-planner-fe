@@ -1,5 +1,7 @@
 'use client';
 
+import { Fragment } from 'react/jsx-runtime';
+
 import FilterButton, {
   FILTER_TYPES,
 } from '@/components/ui/filter/filter-button';
@@ -44,41 +46,33 @@ export default function Filter() {
 
       <FilterSection label="City">
         {CITIES.map((city) => (
-          <FilterButton
-            key={city}
-            value={city}
-            filterType={FILTER_TYPES.city}
-          />
+          <Fragment key={city}>
+            <FilterButton value={city} filterType={FILTER_TYPES.city} />
+          </Fragment>
         ))}
       </FilterSection>
 
       <FilterSection label="Category">
         {CATS.map((category) => (
-          <FilterButton
-            key={category}
-            value={category}
-            filterType={FILTER_TYPES.category}
-          />
+          <Fragment key={category}>
+            <FilterButton value={category} filterType={FILTER_TYPES.category} />
+          </Fragment>
         ))}
       </FilterSection>
 
       <FilterSection label="Date">
         {DATES.map((date) => (
-          <FilterButton
-            key={date}
-            value={date}
-            filterType={FILTER_TYPES.date}
-          />
+          <Fragment key={date}>
+            <FilterButton value={date} filterType={FILTER_TYPES.date} />
+          </Fragment>
         ))}
       </FilterSection>
 
       <FilterSection label="Price">
         {PRICE.map((price) => (
-          <FilterButton
-            key={price}
-            value={price}
-            filterType={FILTER_TYPES.price}
-          />
+          <Fragment key={price}>
+            <FilterButton value={price} filterType={FILTER_TYPES.price} />
+          </Fragment>
         ))}
       </FilterSection>
     </div>

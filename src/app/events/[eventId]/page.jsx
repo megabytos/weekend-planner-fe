@@ -14,7 +14,7 @@ import OrganizedBy from '@/components/ui/organized-by';
 import ShareButton from '@/components/ui/share-button';
 import Viewers from '@/components/ui/viewers';
 
-export default function Event() {
+export default function EventPage() {
   const handleShare = () => {
     // Share functionality here
   };

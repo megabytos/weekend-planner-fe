@@ -1,16 +1,9 @@
-// @ts-nocheck
 'use client';
 
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef, useState } from 'react';
-
-// @ts-nocheck
-
-// @ts-nocheck
-
-// @ts-nocheck
 
 export default function Map() {
   const mapContainerRef = useRef(null);
@@ -37,8 +30,11 @@ export default function Map() {
       ([LModule]) => {
         const L = LModule.default || LModule;
 
+        // @ts-ignore
         if (L.Icon.Default.prototype._getIconUrl)
+          // @ts-ignore
           delete L.Icon.Default.prototype._getIconUrl;
+        // @ts-ignore
         L.Icon.Default.mergeOptions({
           iconRetinaUrl:
             'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
@@ -75,6 +71,7 @@ export default function Map() {
           },
         ).addTo(map);
 
+        // @ts-ignore
         const markers = L.markerClusterGroup();
 
         places.forEach((item) => {

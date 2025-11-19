@@ -5,7 +5,7 @@ import { LogOut } from 'lucide-react';
 import Button from '@/components/ui/button';
 import { useAuth } from '@/context/auth-context';
 
-export default function Event() {
+export default function UserPage() {
   const { logout } = useAuth();
 
   const handleLogout = () => {
