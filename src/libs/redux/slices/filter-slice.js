@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  cities: [],
+  city: '',
   categories: [],
-  date: null,
-  price: null,
+  date: '',
+  price: '',
 };
 
 const filterSlice = createSlice({
@@ -12,12 +12,7 @@ const filterSlice = createSlice({
   initialState,
   reducers: {
     toggleCity: (state, { payload }) => {
-      const index = state.cities.indexOf(payload);
-      if (index === -1) {
-        state.cities.push(payload);
-      } else {
-        state.cities.splice(index, 1);
-      }
+      state.city = payload;
     },
     toggleCategory: (state, { payload }) => {
       const index = state.categories.indexOf(payload);

@@ -26,6 +26,7 @@ export default function InputBase({
   errId = '',
   divClasses = '',
   inputClasses = '',
+  ...inputProps
 }) {
   return (
     <div className={cn('relative', divClasses)}>
@@ -46,6 +47,7 @@ export default function InputBase({
           `block w-full h-12 bg-white-dark border border-white-dark rounded-[10px] py-3 px-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputClasses}`,
           error ? 'border-red' : '',
         )}
+        {...inputProps}
       />
       {(hint || error) && (
         <div className="mt-1 text-xs">

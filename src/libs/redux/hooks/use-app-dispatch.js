@@ -21,6 +21,11 @@ import { store } from '../store';
  */
 
 /**
+ * @typedef {Object} SearchState
+ * @property {string} search
+ */
+
+/**
  * @typedef {ReturnType<typeof store.getState>} RootState
  */
 
