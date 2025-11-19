@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 
 import Container from '@/components/layout/container';
 import SliderContainer from '@/components/layout/slider-container';
-import ButtonMain from '@/components/ui/button-main';
+import ButtonMain from '@/components/ui/buttons/button-main';
 import EventCardPreview from '@/components/ui/event-card-preview';
 import EventPoster from '@/components/ui/event-poster';
 import InputButton from '@/components/ui/input/input-button';
@@ -41,7 +41,10 @@ export default function Home() {
     <Container className="py-5 md:py-8 items-cente">
       <div className="font-medium flex flex-col justify-self-center gap-4 md:gap-5 lg:gap-8 max-w-[335px] md:max-w-[728px] lg:max-w-[1376px]">
         <div className="content-center text-center">
-          <InputButton placeholder="Search events" onClick={handleSearch}>
+          <InputButton
+            placeholder="Search events"
+            submitFunction={handleSearch}
+          >
             <Search />
           </InputButton>
         </div>
