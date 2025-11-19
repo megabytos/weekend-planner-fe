@@ -13,14 +13,6 @@ export default function SliderContainer({
   isCardPreview = false,
 }) {
   const [swiper, setSwiper] = useState(null);
-  const [isBeginning, setIsBeginning] = useState(true);
-  const [isEnd, setIsEnd] = useState(false);
-
-  const updateNavState = (swiper) => {
-    if (!swiper) return;
-    setIsBeginning(swiper.isBeginning);
-    setIsEnd(swiper.isEnd);
-  };
 
   return (
     <div
@@ -31,19 +23,9 @@ export default function SliderContainer({
       <Swiper
         onSwiper={(swiper) => {
           setSwiper(swiper);
-          updateNavState(swiper);
-        }}
-        onSlideChange={(swiper) => updateNavState(swiper)}
-        onResize={(swiper) => swiper.update()}
-        onReachEnd={(swiper) => {
-          setIsEnd(true);
-          setIsBeginning(swiper.isBeginning);
-        }}
-        onFromEdge={(swiper) => {
-          setIsEnd(swiper.isEnd);
-          setIsBeginning(swiper.isBeginning);
         }}
         slidesPerView="auto"
+        loop={true}
         watchSlidesProgress
         watchOverflow
         spaceBetween={20}
@@ -59,12 +41,7 @@ export default function SliderContainer({
           </SwiperSlide>
         ))}
       </Swiper>
-      <SliderNavigation
-        swiper={swiper}
-        isBeginning={isBeginning}
-        isEnd={isEnd}
-        isCardPreview={isCardPreview}
-      />
+      <SliderNavigation swiper={swiper} isCardPreview={isCardPreview} />
     </div>
   );
 }

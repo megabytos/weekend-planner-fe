@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function EventPoster({ item }) {
-  console.log(item);
   return (
     <div className="poster-container w-[335px] h-[266px] md:w-[246px] lg:w-[496px]">
       <Link href="#">
