@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 import Container from '@/components/layout/container';
-import ButtonMain from '@/components/ui/button-main';
+import ButtonMain from '@/components/ui/buttons/button-main';
 import InputBase from '@/components/ui/input/input-base';
 import InputPassword from '@/components/ui/input/input-password';
 

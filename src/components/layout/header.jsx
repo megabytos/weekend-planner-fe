@@ -9,7 +9,7 @@ import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { closeModal, openModal } from '@/libs/redux/slices/modal-menu-slice';
 
-import Button from '../ui/button';
+import Button from '../ui/buttons/button';
 import Logo from '../ui/logo';
 import Modal from '../ui/modal';
 import ModalMenu from '../ui/modal-menu';

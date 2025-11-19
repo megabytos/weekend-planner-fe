@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react';
 import EventCard from '@/components/event-card';
 import Container from '@/components/layout/container';
 import Breadcrumbs from '@/components/ui/breadcrumbs';
-import Button from '@/components/ui/button';
+import Button from '@/components/ui/buttons/button';
 import Filter from '@/components/ui/filter/filter';
 import InputButton from '@/components/ui/input/input-button';
 import Map from '@/components/ui/map';

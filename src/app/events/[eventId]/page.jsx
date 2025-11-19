@@ -7,11 +7,11 @@ import Container from '@/components/layout/container';
 import Section from '@/components/layout/section';
 import Address from '@/components/ui/address';
 import Breadcrumbs from '@/components/ui/breadcrumbs';
+import FavoriteButton from '@/components/ui/buttons/favorite-button';
+import ShareButton from '@/components/ui/buttons/share-button';
 import EventDate from '@/components/ui/event-date';
 import EventPrice from '@/components/ui/event-price';
-import FavoriteButton from '@/components/ui/favorite-button';
 import OrganizedBy from '@/components/ui/organized-by';
-import ShareButton from '@/components/ui/share-button';
 import Viewers from '@/components/ui/viewers';
 
 export default function EventPage() {

@@ -2,9 +2,9 @@ import { CalendarFold, Eye, Heart, Share2 } from 'lucide-react';
 import Image from 'next/image';
 
 import Address from './ui/address';
-import Button from './ui/button';
-import FavoriteButton from './ui/favorite-button';
-import ShareButton from './ui/share-button';
+import Button from './ui/buttons/button';
+import FavoriteButton from './ui/buttons/favorite-button';
+import ShareButton from './ui/buttons/share-button';
 import Viewers from './ui/viewers';
 
 export default function EventCard() {
