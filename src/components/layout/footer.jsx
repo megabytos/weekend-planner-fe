@@ -1,10 +1,11 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 import Logo from '../ui/logo';
 import Container from './container';
-import { footerNavLinks } from './data';
+import { footerNavLinks, socialLinksData } from './data';
 import FooterNavLink from './footer-nav-link';
 
 export default function Footer() {
@@ -52,7 +53,25 @@ export default function Footer() {
           </nav>
           <div className="flex gap-8 flex-col sm:flex-row sm:justify-between items-center self-stretch">
             <Logo color="orange" />
-            <div>Social Media</div>
+            <ul className="flex gap-4">
+              {socialLinksData.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block relative hover:-translate-y-0.5 transition-transform"
+                  >
+                    <Image
+                      src={link.icon}
+                      alt={link.alt}
+                      width={24}
+                      height={24}
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="mt-4 text-xs">© 2025 WeekendPlanner</div>
         </div>

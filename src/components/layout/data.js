@@ -20,6 +20,24 @@ export const footerNavLinks = {
   contacts: [
     { href: '/about', text: 'About Us' },
     { href: '/support', text: 'Support' },
-    { href: '/privacy', text: 'Privacy Policy' },
+    { href: '/privacy-policy', text: 'Privacy Policy' },
   ],
 };
+
+export const socialLinksData = [
+  {
+    href: 'https://www.facebook.com/',
+    icon: '/svg/facebook-white.svg',
+    alt: 'Facebook icon',
+  },
+  {
+    href: 'https://www.pinterest.com/',
+    icon: '/svg/pinterest-white.svg',
+    alt: 'Pinterest icon',
+  },
+  {
+    href: 'https://www.instagram.com/',
+    icon: '/svg/instagram-white.svg',
+    alt: 'Instagram icon',
+  },
+];
