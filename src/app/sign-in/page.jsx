@@ -26,7 +26,7 @@ export default function SignInPage() {
         <InputPassword label="Password" />
         <Link
           href="#"
-          className="flex gap-1 justify-end items-center text-sm text-blue text-right"
+          className="flex gap-1 justify-end items-center text-sm text-blue text-right hover:opacity-80"
         >
           <span>Forgot password?</span>
           <ArrowRight size={16} />
@@ -34,6 +34,12 @@ export default function SignInPage() {
         <ButtonMain onClick={handleSignIn} className="mx-auto max-w-[384px]">
           Sign In
         </ButtonMain>
+        <Link
+          href="/sign-up"
+          className="flex gap-1 justify-center items-center text-sm text-blue text-right underline hover:opacity-80"
+        >
+          <span>Create account</span>
+        </Link>
       </form>
     </Container>
   );

@@ -20,8 +20,8 @@ export default function SignUpPage() {
         <InputBase label="Email" />
         <InputPassword label="Password" />
         <Link
-          href="#"
-          className="flex gap-1 justify-end items-center text-sm text-blue text-right"
+          href="/sign-in"
+          className="flex gap-1 justify-end items-center text-sm text-blue text-right hover:opacity-80"
         >
           <span>Already have an account?</span>
           <ArrowRight size={16} />

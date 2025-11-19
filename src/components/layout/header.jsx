@@ -1,6 +1,6 @@
 'use client';
 
-import { CircleUser, LogIn, Menu } from 'lucide-react';
+import { CircleUser, LogIn, Menu, UserPen } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -47,24 +47,34 @@ export default function Header() {
           </nav>
           <ul className="flex gap-4 items-center">
             {!user && (
-              <li>
-                <Button
-                  onClick={() => router.push('/sign-in')}
-                  className="[:hover&>svg]:stroke-orange-light"
-                >
-                  <LogIn size={24} className="stroke-blue-light" />
-                </Button>
-              </li>
+              <>
+                <li>
+                  <Link
+                    href="/sign-in"
+                    className="[:hover&>svg]:stroke-orange-light"
+                  >
+                    <LogIn size={24} className="stroke-blue-light" />
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/sign-up"
+                    className="[:hover&>svg]:stroke-orange-light"
+                  >
+                    <UserPen size={24} className="stroke-blue-light" />
+                  </Link>
+                </li>
+              </>
             )}
 
             {user && (
               <li>
-                <Button
-                  onClick={() => router.push('/user')}
+                <Link
+                  href="/user"
                   className="[:hover&>svg]:stroke-orange-light"
                 >
                   <CircleUser size={24} className="stroke-blue-light" />
-                </Button>
+                </Link>
               </li>
             )}
             <li className="md:hidden">
