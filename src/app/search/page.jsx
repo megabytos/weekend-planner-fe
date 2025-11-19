@@ -2,23 +2,64 @@
 
 import { Search } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import EventCard from '@/components/event-card';
 import Container from '@/components/layout/container';
 import Breadcrumbs from '@/components/ui/breadcrumbs';
-import Button from '@/components/ui/buttons/button';
 import Filter from '@/components/ui/filter/filter';
 import InputButton from '@/components/ui/input/input-button';
 import Map from '@/components/ui/map';
+import Tabs from '@/components/ui/tabs';
+import DEFAULT_TABS from '@/constants/tabs';
+import VIEWPORT from '@/constants/viewport';
+import getViewportType from '@/utils/get-view-port';
+import normalizeTabs from '@/utils/normalize-tabs';
 
 export default function SearchPage() {
-  const [activeTab, setActiveTab] = useState(['events', 'map']);
+  const [viewport, setViewport] = useState(VIEWPORT.MOBILE);
+  const [activeTab, setActiveTab] = useState([DEFAULT_TABS.EVENTS]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewport(getViewportType());
+    };
+
+    setViewport(getViewportType());
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    setActiveTab((prev) => {
+      const normalized = normalizeTabs(prev, viewport);
+      const hasSameLength = normalized.length === prev.length;
+      const isSame =
+        hasSameLength && normalized.every((tab) => prev.includes(tab));
+
+      return isSame ? prev : normalized;
+    });
+  }, [viewport]);
 
   const handleTabClick = (tab) => {
-    setActiveTab((prev) =>
-      prev.includes(tab) ? prev.filter((t) => t !== tab) : [...prev, tab],
-    );
+    if (viewport === VIEWPORT.DESKTOP) {
+      setActiveTab((prev) => {
+        if (tab === DEFAULT_TABS.FILTERS) {
+          return prev;
+        }
+
+        if (prev.includes(tab)) {
+          const nextTabs = prev.filter((t) => t !== tab);
+          return nextTabs.length ? nextTabs : prev;
+        }
+
+        return [...prev, tab];
+      });
+      return;
+    }
+
+    setActiveTab([tab]);
   };
 
   const checkActiveTab = (tab) => activeTab.includes(tab);
@@ -46,68 +87,25 @@ export default function SearchPage() {
         <Breadcrumbs items={breadcrumbs} />
       </div>
 
-      <div className="relative">
-        <h1 className="text-base leading-6 text-black font-medium md:text-[22px] md:leading-7">
-          Events in {address}
-        </h1>
-
-        <ul className="absolute right-0 top-1/2 -translate-y-1/2 flex gap-2">
-          <li>
-            <Button
-              isDisabled={false}
-              clickFunction={() => handleTabClick('events')}
-              label="Events"
-              classes={
-                'text-black font-light text-xs md:text-sm md:font-medium md:leading-6 lg:text-sm lg:font-medium lg:leading-6 hover:text-blue hover:underline' +
-                (checkActiveTab('events') ? ' text-blue underline' : '')
-              }
-            >
-              Events
-            </Button>
-          </li>
-
-          <li>
-            <Button
-              isDisabled={false}
-              clickFunction={() => handleTabClick('map')}
-              label="Map"
-              classes={
-                'text-black font-light text-xs md:text-sm md:font-medium md:leading-6 lg:text-sm lg:font-medium lg:leading-6 hover:text-blue hover:underline' +
-                (checkActiveTab('map') ? ' text-blue underline' : '')
-              }
-            >
-              Map
-            </Button>
-          </li>
-
-          <li className="md:hidden lg:hidden">
-            <Button
-              isDisabled={false}
-              clickFunction={() => handleTabClick('filters')}
-              label="Filters"
-              classes={
-                'text-black font-light text-xs md:text-sm md:font-medium md:leading-6 lg:text-sm lg:font-medium lg:leading-6 hover:text-blue hover:underline' +
-                (checkActiveTab('filters')
-                  ? ' text-blue underline width-[700px]'
-                  : '')
-              }
-            >
-              Filters
-            </Button>
-          </li>
-        </ul>
-      </div>
+      <Tabs
+        address={address}
+        handleTabClick={handleTabClick}
+        checkActiveTab={checkActiveTab}
+      />
 
       <div className="flex flex-col md:flex-row gap-4">
         <section
           className={
-            (checkActiveTab('filters') ? 'block' : 'hidden') + ' md:block'
+            (checkActiveTab(DEFAULT_TABS.FILTERS) ? 'block' : 'hidden') +
+            ' md:block'
           }
         >
           <Filter />
         </section>
 
-        <section className={checkActiveTab('events') ? 'block' : 'hidden'}>
+        <section
+          className={checkActiveTab(DEFAULT_TABS.EVENTS) ? 'block' : 'hidden'}
+        >
           <div className="space-y-4">
             {/* * Temporary until data is connected*/}
             {[1, 2, 3, 4, 5].map((event) => (
@@ -118,7 +116,9 @@ export default function SearchPage() {
           </div>
         </section>
 
-        <section className={checkActiveTab('map') ? 'block' : 'hidden'}>
+        <section
+          className={checkActiveTab(DEFAULT_TABS.MAP) ? 'block' : 'hidden'}
+        >
           <div className="h-64 rounded-xl border">
             <Map />
           </div>
