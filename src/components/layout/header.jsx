@@ -1,6 +1,6 @@
 'use client';
 
-import { CircleUser, LogIn, Menu } from 'lucide-react';
+import { CircleUser, LogIn, Menu, UserPen } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -9,11 +9,13 @@ import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { closeModal, openModal } from '@/libs/redux/slices/modal-menu-slice';
 
-import Button from '../ui/button';
-import Icon from '../ui/icon';
+import Button from '../ui/buttons/button';
+import Logo from '../ui/logo';
 import Modal from '../ui/modal';
 import ModalMenu from '../ui/modal-menu';
 import Container from './container';
+import { headerNavLinks } from './data';
+import HeaderNavLink from './header-nav-link';
 
 export default function Header() {
   const isModalMenuOpen = useAppSelector((state) => state.modalMenu.isOpen);
@@ -33,65 +35,56 @@ export default function Header() {
     <header className="bg-blue">
       <Container>
         <div className="flex justify-between items-center h-[68px]">
-          <Icon
-            className="fill-yellow"
-            name="logo-icon"
-            width="200"
-            height="40"
-            ariaLabel="Logo"
-          />
+          <Logo />
           <nav className="hidden md:flex gap-4 ml-auto mr-4">
             <ul className="flex gap-4">
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm lg:text-lg text-blue-light font-bold"
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm lg:text-lg text-blue-light font-bold"
-                >
-                  Add event
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm lg:text-lg text-blue-light font-bold"
-                >
-                  Favorites
-                </Link>
-              </li>
+              {headerNavLinks.map((link) => (
+                <li key={link.href}>
+                  <HeaderNavLink href={link.href} text={link.text} />
+                </li>
+              ))}
             </ul>
           </nav>
           <ul className="flex gap-4 items-center">
             {!user && (
+              <>
+                <li>
+                  <Link
+                    href="/sign-in"
+                    className="[:hover&>svg]:stroke-orange-light"
+                  >
+                    <LogIn size={24} className="stroke-blue-light" />
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/sign-up"
+                    className="[:hover&>svg]:stroke-orange-light"
+                  >
+                    <UserPen size={24} className="stroke-blue-light" />
+                  </Link>
+                </li>
+              </>
+            )}
+
+            {user && (
               <li>
-                <Button onClick={() => router.push('/sign-in')}>
-                  <LogIn size={24} className="stroke-blue-light" />
-                </Button>
+                <Link
+                  href="/user"
+                  className="[:hover&>svg]:stroke-orange-light"
+                >
+                  <CircleUser size={24} className="stroke-blue-light" />
+                </Link>
               </li>
             )}
             <li className="md:hidden">
-              <Button>
-                <Menu
-                  size={24}
-                  className="stroke-blue-light"
-                  onClick={handleOpenModal}
-                />
+              <Button
+                onClick={handleOpenModal}
+                className="[:hover&>svg]:stroke-orange-light"
+              >
+                <Menu size={24} className="stroke-blue-light" />
               </Button>
             </li>
-            {user && (
-              <li>
-                <Button onClick={() => router.push('/user')}>
-                  <CircleUser size={24} className="stroke-blue-light" />
-                </Button>
-              </li>
-            )}
           </ul>
         </div>
       </Container>

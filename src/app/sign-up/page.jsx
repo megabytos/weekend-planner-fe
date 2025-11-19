@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 import Container from '@/components/layout/container';
-import ButtonMain from '@/components/ui/button-main';
+import ButtonMain from '@/components/ui/buttons/button-main';
 import InputBase from '@/components/ui/input/input-base';
 import InputPassword from '@/components/ui/input/input-password';
 
@@ -20,8 +20,8 @@ export default function SignUpPage() {
         <InputBase label="Email" />
         <InputPassword label="Password" />
         <Link
-          href="#"
-          className="flex gap-1 justify-end items-center text-sm text-blue text-right"
+          href="/sign-in"
+          className="flex gap-1 justify-end items-center text-sm text-blue text-right hover:opacity-80"
         >
           <span>Already have an account?</span>
           <ArrowRight size={16} />

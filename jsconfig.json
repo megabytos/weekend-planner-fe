@@ -6,6 +6,13 @@
       "@/*": ["./src/*"]
     },
     "skipLibCheck": true,
-    "module": "esnext"
-  }
+    "strict": false,
+    "checkJs": true,
+    "target": "ES2020",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Node"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

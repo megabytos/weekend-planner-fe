@@ -2,7 +2,7 @@
 
 import { X } from 'lucide-react';
 
-import Button from './button';
+import Button from './buttons/button';
 import ModalMenuItems from './modal-menu-items';
 
 export default function ModalMenu({ onClose }) {
