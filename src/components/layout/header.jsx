@@ -14,6 +14,8 @@ import Logo from '../ui/logo';
 import Modal from '../ui/modal';
 import ModalMenu from '../ui/modal-menu';
 import Container from './container';
+import { headerNavLinks } from './data';
+import HeaderNavLink from './header-nav-link';
 
 export default function Header() {
   const isModalMenuOpen = useAppSelector((state) => state.modalMenu.isOpen);
@@ -36,64 +38,43 @@ export default function Header() {
           <Logo />
           <nav className="hidden md:flex gap-4 ml-auto mr-4">
             <ul className="flex gap-4">
-              <li>
-                <Link
-                  href="/ideas"
-                  className="text-sm lg:text-lg text-blue-light font-bold"
-                >
-                  Generate Ideas
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="text-sm lg:text-lg text-blue-light font-bold"
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/add-event"
-                  className="text-sm lg:text-lg text-blue-light font-bold"
-                >
-                  Add event
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/favorites"
-                  className="text-sm lg:text-lg text-blue-light font-bold"
-                >
-                  Favorites
-                </Link>
-              </li>
+              {headerNavLinks.map((link) => (
+                <li key={link.href}>
+                  <HeaderNavLink href={link.href} text={link.text} />
+                </li>
+              ))}
             </ul>
           </nav>
           <ul className="flex gap-4 items-center">
             {!user && (
               <li>
-                <Button onClick={() => router.push('/sign-in')}>
+                <Button
+                  onClick={() => router.push('/sign-in')}
+                  className="[:hover&>svg]:stroke-orange-light"
+                >
                   <LogIn size={24} className="stroke-blue-light" />
                 </Button>
               </li>
             )}
-            <li className="md:hidden">
-              <Button>
-                <Menu
-                  size={24}
-                  className="stroke-blue-light"
-                  onClick={handleOpenModal}
-                />
-              </Button>
-            </li>
+
             {user && (
               <li>
-                <Button onClick={() => router.push('/user')}>
+                <Button
+                  onClick={() => router.push('/user')}
+                  className="[:hover&>svg]:stroke-orange-light"
+                >
                   <CircleUser size={24} className="stroke-blue-light" />
                 </Button>
               </li>
             )}
+            <li className="md:hidden">
+              <Button
+                onClick={handleOpenModal}
+                className="[:hover&>svg]:stroke-orange-light"
+              >
+                <Menu size={24} className="stroke-blue-light" />
+              </Button>
+            </li>
           </ul>
         </div>
       </Container>
