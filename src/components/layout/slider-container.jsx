@@ -7,16 +7,12 @@ import cn from '@/utils/class-names';
 
 import SliderNavigation from '../ui/slider-navigation';
 
-export default function SliderContainer({ items = [], renderItem }) {
+export default function SliderContainer({
+  items = [],
+  renderItem,
+  isCardPreview = false,
+}) {
   const [swiper, setSwiper] = useState(null);
-  const [isBeginning, setIsBeginning] = useState(true);
-  const [isEnd, setIsEnd] = useState(false);
-
-  const updateNavState = (swiper) => {
-    if (!swiper) return;
-    setIsBeginning(swiper.isBeginning);
-    setIsEnd(swiper.isEnd);
-  };
 
   return (
     <div
@@ -27,19 +23,9 @@ export default function SliderContainer({ items = [], renderItem }) {
       <Swiper
         onSwiper={(swiper) => {
           setSwiper(swiper);
-          updateNavState(swiper);
-        }}
-        onSlideChange={(swiper) => updateNavState(swiper)}
-        onResize={(swiper) => swiper.update()}
-        onReachEnd={(swiper) => {
-          setIsEnd(true);
-          setIsBeginning(swiper.isBeginning);
-        }}
-        onFromEdge={(swiper) => {
-          setIsEnd(swiper.isEnd);
-          setIsBeginning(swiper.isBeginning);
         }}
         slidesPerView="auto"
+        loop={true}
         watchSlidesProgress
         watchOverflow
         spaceBetween={20}
@@ -55,11 +41,7 @@ export default function SliderContainer({ items = [], renderItem }) {
           </SwiperSlide>
         ))}
       </Swiper>
-      <SliderNavigation
-        swiper={swiper}
-        isBeginning={isBeginning}
-        isEnd={isEnd}
-      />
+      <SliderNavigation swiper={swiper} isCardPreview={isCardPreview} />
     </div>
   );
 }
