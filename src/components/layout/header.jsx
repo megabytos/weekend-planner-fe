@@ -10,7 +10,7 @@ import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { closeModal, openModal } from '@/libs/redux/slices/modal-menu-slice';
 
 import Button from '../ui/button';
-import Icon from '../ui/icon';
+import Logo from '../ui/logo';
 import Modal from '../ui/modal';
 import ModalMenu from '../ui/modal-menu';
 import Container from './container';
@@ -33,13 +33,7 @@ export default function Header() {
     <header className="bg-blue">
       <Container>
         <div className="flex justify-between items-center h-[68px]">
-          <Icon
-            className="fill-yellow"
-            name="logo-icon"
-            width="200"
-            height="40"
-            ariaLabel="Logo"
-          />
+          <Logo />
           <nav className="hidden md:flex gap-4 ml-auto mr-4">
             <ul className="flex gap-4">
               <li>

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 
+import Logo from '../ui/logo';
 import Container from './container';
 
 export default function Footer() {
@@ -55,11 +56,11 @@ export default function Footer() {
               </ul>
             </div>
           </nav>
-          <div className="flex justify-between items-center self-stretch">
-            <div>Logo</div>
+          <div className="flex gap-8 flex-col sm:flex-row sm:justify-between items-center self-stretch">
+            <Logo color="orange" />
             <div>Social Media</div>
           </div>
-          <div className="text-xs">© 2025 WeekendPlanner</div>
+          <div className="mt-4 text-xs">© 2025 WeekendPlanner</div>
         </div>
       </Container>
     </footer>
