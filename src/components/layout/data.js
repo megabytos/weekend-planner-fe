@@ -4,3 +4,22 @@ export const headerNavLinks = [
   { href: '/add-event', text: 'Add Event' },
   { href: '/favorites', text: 'Favorites' },
 ];
+
+export const footerNavLinks = {
+  services: [
+    { href: '/ideas', text: 'Generate Ideas' },
+    { href: '/add-event', text: 'Add Event' },
+  ],
+  events: [
+    { href: '/theatres', text: 'Theatres' },
+    { href: '/concerts', text: 'Concerts' },
+    { href: '/kids', text: 'Kids' },
+    { href: '/stand-up', text: 'Stand Up' },
+    { href: '/festivals', text: 'Festivals' },
+  ],
+  contacts: [
+    { href: '/about', text: 'About Us' },
+    { href: '/support', text: 'Support' },
+    { href: '/privacy', text: 'Privacy Policy' },
+  ],
+};
