@@ -1,6 +1,7 @@
 'use client';
 
 import { Search } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import Container from '@/components/layout/container';
 import SliderContainer from '@/components/layout/slider-container';
@@ -8,47 +9,34 @@ import ButtonMain from '@/components/ui/buttons/button-main';
 import EventCardPreview from '@/components/ui/event-card-preview';
 import EventPoster from '@/components/ui/event-poster';
 import InputButton from '@/components/ui/input/input-button';
-import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
-import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function Home() {
-  const counter = useAppSelector((state) => state.counter.counter);
-  const dispatch = useAppDispatch();
-
-  const queryClient = useQueryClient();
-
-  const query = useQuery({
-    queryKey: ['todos'],
-    queryFn: async () => (await fetch('/api/users')).json(),
-  });
-
-  // Mutations
-  const mutation = useMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
-    },
-  });
-
+  const router = useRouter();
   const events = Array(5).fill({
     url: '/images/event-placeholder.jpg',
   });
 
-  const handleMainButton = () => {};
+  const handleMainButton = () => {
+    router.push('/search');
+  };
   const handleSearch = () => {};
 
   return (
     <Container className="py-5 md:py-8 items-cente">
       <div className="font-medium flex flex-col justify-self-center gap-4 md:gap-5 lg:gap-8 max-w-[335px] md:max-w-[728px] lg:max-w-[1376px]">
-        <div className="content-center text-center">
-          <InputButton
-            placeholder="Search events"
-            submitFunction={handleSearch}
-          >
-            <Search />
-          </InputButton>
-        </div>
-        <div className="flex justify-center items-center">Filters</div>
+        {false && (
+          <>
+            <div className="content-center text-center">
+              <InputButton
+                placeholder="Search events"
+                submitFunction={handleSearch}
+              >
+                <Search />
+              </InputButton>
+            </div>
+            <div className="flex justify-center items-center">Filters</div>
+          </>
+        )}
         <div className="flex justify-center items-center">
           <ButtonMain
             className="w-[335px] md:w-[354px] lg:w-2xl"
