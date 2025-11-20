@@ -79,6 +79,15 @@ export default function SearchPage() {
   };
 
   const checkActiveTab = (tab) => activeTab.includes(tab);
+  
+  useEffect(() => {
+    if (checkActiveTab(DEFAULT_TABS.MAP)) {
+      setTimeout(() => {
+        window.dispatchEvent(new Event('map-visible'));
+      }, 50);
+    }
+  }, [activeTab]);
+  
 
   // * Filter and search input logic
   const dispatch = useAppDispatch();
@@ -221,7 +230,7 @@ export default function SearchPage() {
         <section
           className={checkActiveTab(DEFAULT_TABS.MAP) ? 'block' : 'hidden'}
         >
-          <div className="h-64 rounded-xl border">
+          <div className="rounded-xl border w-full flex justify-center">
             <Map />
           </div>
         </section>
