@@ -1,4 +1,4 @@
-import Button from '@/components/ui/button';
+import Button from './buttons/button';
 
 export default function Tabs({ address, handleTabClick, checkActiveTab }) {
   return (

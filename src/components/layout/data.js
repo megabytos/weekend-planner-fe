@@ -1,4 +1,5 @@
 export const headerNavLinks = [
+  { href: '/search', text: 'Search Events' },
   { href: '/ideas', text: 'Generate Ideas' },
   { href: '/about', text: 'About' },
   { href: '/add-event', text: 'Add Event' },
@@ -7,6 +8,7 @@ export const headerNavLinks = [
 
 export const footerNavLinks = {
   services: [
+    { href: '/search', text: 'Search Events' },
     { href: '/ideas', text: 'Generate Ideas' },
     { href: '/add-event', text: 'Add Event' },
   ],
