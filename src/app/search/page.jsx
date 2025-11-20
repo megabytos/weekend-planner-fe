@@ -20,6 +20,7 @@ import { selectFilter } from '@/libs/redux/slices/filter-slice';
 import { selectSearch, setSearch } from '@/libs/redux/slices/search-slice';
 import getViewportType from '@/utils/get-view-port';
 import normalizeTabs from '@/utils/normalize-tabs';
+import buildSearchParams from '@/utils/params-builder';
 
 /**
  * SearchPage
@@ -84,11 +85,11 @@ export default function SearchPage() {
   const { search: searchValue = '' } = useAppSelector(selectSearch);
   const filter = useAppSelector(selectFilter);
 
-  const [searchQuery, setSearchQuery] = useState(searchValue);
-
   const handleSearchChange = (event) => {
     dispatch(setSearch(event.target.value));
   };
+  // submit search query
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchSubmit = () => {
     setPage(1);
@@ -105,17 +106,8 @@ export default function SearchPage() {
 
   // * Search
   const searchParams = useMemo(
-    () => ({
-      kind: 'events',
-      page,
-      pageSize: 10,
-      q: searchQuery || '',
-      when: filter.date || 'this_weekend',
-      categories: filter.categories || [],
-      budget: filter.price,
-      location: filter.city || [],
-    }),
-    [page, searchQuery],
+    () => buildSearchParams({ page, searchQuery, filter }),
+    [page, searchQuery, filter],
   );
 
   const { data, isLoading, isError, isFetching } = useSearchQuery(searchParams);
@@ -132,7 +124,7 @@ export default function SearchPage() {
     setEvents((prev) =>
       page === 1 ? fetchedEvents : [...prev, ...fetchedEvents],
     );
-
+    console.log(data);
     if (data.page && data.pageSize && typeof data.total === 'number') {
       setHasMore(data.page * data.pageSize < data.total);
     } else {
@@ -143,7 +135,7 @@ export default function SearchPage() {
   // * Observer
   useEffect(() => {
     const node = loadMoreRef.current;
-    if (!node) {
+    if (!node || !hasMore) {
       return undefined;
     }
 
@@ -179,7 +171,8 @@ export default function SearchPage() {
       <InputButton
         placeholder="Search"
         divClasses="mt-5"
-        value={searchQuery}
+        name="search"
+        value={searchValue}
         onChange={handleSearchChange}
         submitFunction={handleSearchSubmit}
       >
@@ -212,7 +205,7 @@ export default function SearchPage() {
           <div className="space-y-4">
             {isLoading && <p>Loading events…</p>}
             {isError && (
-              <p className="text-red-500">Failed to load events. Try again.</p>
+              <p className="text-red">Failed to load events. Try again.</p>
             )}
             {!isLoading && !isError && events.length === 0 && (
               <p>No events found for selected filters.</p>
@@ -222,8 +215,6 @@ export default function SearchPage() {
                 <EventCard event={event} />
               </div>
             ))}
-            {isFetching && page > 1 && hasMore && <p>Loading more events…</p>}
-            <div ref={loadMoreRef} className="h-1" />
           </div>
         </section>
 
@@ -235,6 +226,8 @@ export default function SearchPage() {
           </div>
         </section>
       </div>
+      {isFetching && page > 1 && hasMore && <p>Loading more events…</p>}
+      <div ref={loadMoreRef} className="h-1" />
     </Container>
   );
 }
