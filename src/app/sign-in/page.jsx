@@ -36,7 +36,7 @@ export default function SignInPage() {
         </ButtonMain>
         <Link
           href="/sign-up"
-          className="flex gap-1 justify-center items-center text-sm text-blue text-right underline hover:opacity-80"
+          className="flex justify-center items-center text-sm text-blue text-right underline hover:opacity-80"
         >
           <span>Create account</span>
         </Link>
