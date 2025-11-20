@@ -4,20 +4,15 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef, useState } from 'react';
-
-// @ts-nocheck
-
-// @ts-nocheck
-
-// @ts-nocheck
-
-// @ts-nocheck
+import L from 'leaflet';
+import 'leaflet.markercluster';
 
 // @ts-nocheck
 
 export default function Map() {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
+  const markersRef = useRef(null);
 
   const [places, setPlaces] = useState([]);
   const [isClient, setIsClient] = useState(false);
@@ -34,17 +29,12 @@ export default function Map() {
   }, []);
 
   useEffect(() => {
-    if (!isClient || !mapContainerRef.current || places.length === 0) return;
+    if (!isClient || !mapContainerRef.current) return;
 
     Promise.all([import('leaflet'), import('leaflet.markercluster')]).then(
       ([LModule]) => {
         const L = LModule.default || LModule;
 
-        // @ts-ignore
-        if (L.Icon.Default.prototype._getIconUrl)
-          // @ts-ignore
-          delete L.Icon.Default.prototype._getIconUrl;
-        // @ts-ignore
         L.Icon.Default.mergeOptions({
           iconRetinaUrl:
             'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
@@ -54,53 +44,61 @@ export default function Map() {
             'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
         });
 
-        if (mapRef.current) {
-          mapRef.current.remove();
+        if (!mapRef.current) {
+          mapRef.current = L.map(mapContainerRef.current, {
+            center: [50.45, 30.52],
+            zoom: 12,
+          });
+
+          L.tileLayer(
+            'https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=858bed30d2484145b18a126e57a541c7',
+            {
+              maxZoom: 20,
+              attribution:
+                'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | © OpenStreetMap contributors',
+            }
+          ).addTo(mapRef.current);
         }
 
-        const locations = places
-          .map((i) => i.location)
-          .filter((loc) => loc?.lat && loc?.lon);
-
-        const avgLat =
-          locations.reduce((sum, loc) => sum + loc.lat, 0) / locations.length;
-        const avgLon =
-          locations.reduce((sum, loc) => sum + loc.lon, 0) / locations.length;
-
-        const map = L.map(mapContainerRef.current, {
-          center: [avgLat, avgLon],
-          zoom: 13,
-        });
-
-        L.tileLayer(
-          'https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=858bed30d2484145b18a126e57a541c7',
-          {
-            maxZoom: 20,
-            attribution:
-              'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | © OpenStreetMap contributors',
-          },
-        ).addTo(map);
-
-        // @ts-ignore
-        const markers = L.markerClusterGroup();
-
-        places.forEach((item) => {
-          if (item.location?.lat && item.location?.lon) {
-            const marker = L.marker([item.location.lat, item.location.lon]);
-            const name = item.name || item.title || 'Место';
-            marker.bindPopup(`<b>${name}</b>`);
-            markers.addLayer(marker);
-          }
-        });
-
-        map.addLayer(markers);
-
-        setTimeout(() => map.invalidateSize(), 150);
-
-        mapRef.current = map;
-      },
+        if (!markersRef.current) {
+          markersRef.current = L.markerClusterGroup();
+          mapRef.current.addLayer(markersRef.current);
+        }
+      }
     );
-  }, [isClient, places]);
+  }, [isClient]);
+
+  useEffect(() => {
+    if (!mapRef.current || !markersRef.current || places.length === 0) return;
+
+    markersRef.current.clearLayers();
+    
+    places.forEach((item) => {
+      const loc = item.location;
+      if (loc?.lat && loc?.lon) {
+        const marker = L.marker([loc.lat, loc.lon]);
+        marker.bindPopup(`<b>${item.name || item.title}</b>`);
+        markersRef.current.addLayer(marker);
+      }
+    });
+
+    const valid = places.filter((p) => p.location?.lat && p.location?.lon);
+    if (valid.length > 0) {
+      const bounds = valid.map((p) => [p.location.lat, p.location.lon]);
+      mapRef.current.fitBounds(bounds, { padding: [40, 40] });
+    }
+  }, [places]);
+
+  useEffect(() => {
+    const handler = () => {
+      if (mapRef.current) {
+        setTimeout(() => mapRef.current.invalidateSize(), 50);
+      }
+    };
+
+    window.addEventListener('map-visible', handler);
+    return () => window.removeEventListener('map-visible', handler);
+  }, []);
 
   return (
     <div className="flex justify-center items-center bg-blue-light p-0">
