@@ -1,5 +1,6 @@
 'use client';
 
+import FILTER_TYPES from '@/constants/filter-types';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import {
@@ -12,14 +13,6 @@ import {
 } from '@/libs/redux/slices/filter-slice';
 import cn from '@/utils/class-names';
 
-export const FILTER_TYPES = {
-  city: 'city',
-  category: 'category',
-  date: 'date',
-  price: 'price',
-  clear: 'clear',
-};
-
 export default function FilterButton({ classes = '', value = '', filterType }) {
   const dispatch = useAppDispatch();
   const filter = useAppSelector(selectFilter);
@@ -27,7 +20,7 @@ export default function FilterButton({ classes = '', value = '', filterType }) {
   const selected = (() => {
     switch (filterType) {
       case FILTER_TYPES.city:
-        return filter.cities.includes(value);
+        return filter.city === value;
       case FILTER_TYPES.category:
         return filter.categories.includes(value);
       case FILTER_TYPES.date:

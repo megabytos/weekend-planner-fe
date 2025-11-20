@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux';
 
-import { selectFilter } from '../slices/filter-slice';
 import { store } from '../store';
 
 /**

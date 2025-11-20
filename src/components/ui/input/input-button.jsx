@@ -37,6 +37,7 @@ export default function InputButton({
   divClasses = '',
   inputClasses = '',
   children,
+  ...inputProps
 }) {
   return (
     <div className={cn('h-12 relative', divClasses)}>
@@ -50,11 +51,12 @@ export default function InputButton({
         errId={errId}
         divClasses={nestedDivClasses}
         inputClasses={inputClasses}
+        {...inputProps}
       />
 
       <button
-        type="submit"
-        onClick={() => submitFunction?.()}
+        type="button"
+        onClick={(event) => submitFunction?.(event)}
         className="cursor-pointer absolute right-3.5 top-1/2 transform -translate-y-1/2 "
         aria-label={label}
         tabIndex={0}

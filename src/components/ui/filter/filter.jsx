@@ -2,10 +2,9 @@
 
 import { Fragment } from 'react/jsx-runtime';
 
-import FilterButton, {
-  FILTER_TYPES,
-} from '@/components/ui/filter/filter-button';
+import FilterButton from '@/components/ui/filter/filter-button';
 import FilterSection from '@/components/ui/filter/filter-section';
+import FILTER_TYPES from '@/constants/filter-types';
 
 const CITIES = [
   'New York',
@@ -18,19 +17,16 @@ const CITIES = [
   'Paris',
 ];
 const CATS = [
-  'Music',
-  'Art',
-  'Technology',
+  'Concerts',
+  'Festivals',
   'Sports',
-  'Education',
-  'Health',
-  'Business',
-  'Food & Drink',
+  'Theatre and Arts',
+  'Family Events',
 ];
 
-const DATES = ['Today', 'Tomorrow', 'This week', 'Choose date'];
+const DATES = ['Now', 'Tonight', 'Tomorrow', 'This weekend', 'Choose date'];
 
-const PRICE = ['Free', 'Not high', 'Expensive'];
+const PRICE = ['Free', '$', '$$', '$$$', 'Unlimited'];
 
 export default function Filter() {
   return (

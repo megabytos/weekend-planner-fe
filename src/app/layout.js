@@ -21,7 +21,10 @@ const queryClient = new QueryClient();
 export default function RootLayout({ children }) {
   return (
     <html lang="uk">
-      <body className={`${roboto.variable} antialiased`}>
+      <body
+        suppressHydrationWarning
+        className={`${roboto.variable} antialiased`}
+      >
         <QueryClientProvider client={queryClient}>
           <ReduxProvider>
             <AuthProvider>
