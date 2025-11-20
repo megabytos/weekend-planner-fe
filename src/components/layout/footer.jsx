@@ -52,7 +52,7 @@ export default function Footer() {
             </div>
           </nav>
           <div className="flex gap-8 flex-col sm:flex-row sm:justify-between items-center self-stretch">
-            <Logo color="orange" />
+            <Logo />
             <ul className="flex gap-4">
               {socialLinksData.map((link) => (
                 <li key={link.href}>
