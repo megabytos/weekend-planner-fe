@@ -8,7 +8,7 @@ export default function ButtonMain({
   children,
   isDisabled = false,
   label = '',
-  onClick,
+  onClick = () => {},
   className = '',
 }) {
   return (
