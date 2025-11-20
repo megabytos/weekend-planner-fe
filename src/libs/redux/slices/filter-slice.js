@@ -12,7 +12,7 @@ const filterSlice = createSlice({
   initialState,
   reducers: {
     toggleCity: (state, { payload }) => {
-      state.city = payload;
+      state.city = state.city === payload ? '' : payload;
     },
     toggleCategory: (state, { payload }) => {
       const index = state.categories.indexOf(payload);
