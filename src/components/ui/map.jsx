@@ -10,7 +10,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 // @ts-nocheck
 
 const DEFAULT_ORIGIN = { lat: 50.45, lon: 30.52 };
-const GEOAPIFY_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY || '858bed30d2484145b18a126e57a541c7';
+const GEOAPIFY_KEY =
+  process.env.NEXT_PUBLIC_GEOAPIFY_KEY || '858bed30d2484145b18a126e57a541c7';
 
 const EVENT_COLOR = '#8b5cf6';
 const PLACE_COLOR = '#2563eb';
@@ -21,7 +22,12 @@ const MODE_MAP = {
 };
 
 function isValidCoord(lat, lon) {
-  return typeof lat === 'number' && typeof lon === 'number' && isFinite(lat) && isFinite(lon);
+  return (
+    typeof lat === 'number' &&
+    typeof lon === 'number' &&
+    isFinite(lat) &&
+    isFinite(lon)
+  );
 }
 
 function geometryToLatLngPairs(geometry) {
@@ -38,13 +44,20 @@ function geometryToLatLngPairs(geometry) {
   }
 
   if (type === 'GeometryCollection') {
-    return (geometry.geometries || []).flatMap((geo) => geometryToLatLngPairs(geo));
+    return (geometry.geometries || []).flatMap((geo) =>
+      geometryToLatLngPairs(geo),
+    );
   }
 
   return [];
 }
 
-export default function Map({ places = [], items = [], origin = null, mode = 'walking' }) {
+export default function Map({
+  places = [],
+  items = [],
+  origin = null,
+  mode = 'walking',
+}) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef(null);
@@ -79,7 +92,9 @@ export default function Map({ places = [], items = [], origin = null, mode = 'wa
           title: item.title || item.name,
           type:
             item.type ||
-            (item.kind === 'event_visit' || item.kind === 'event' ? 'event' : 'place'),
+            (item.kind === 'event_visit' || item.kind === 'event'
+              ? 'event'
+              : 'place'),
         };
       })
       .filter(Boolean);
@@ -93,8 +108,10 @@ export default function Map({ places = [], items = [], origin = null, mode = 'wa
     L.Icon.Default.mergeOptions({
       iconRetinaUrl:
         'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+      iconUrl:
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+      shadowUrl:
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
     });
 
     if (!mapRef.current) {
@@ -185,7 +202,8 @@ export default function Map({ places = [], items = [], origin = null, mode = 'wa
   }, [hasRoute, routePoints, resolvedOrigin, mode]);
 
   useEffect(() => {
-    if (!mapRef.current || !routeLayerRef.current || !markersRef.current) return;
+    if (!mapRef.current || !routeLayerRef.current || !markersRef.current)
+      return;
 
     if (!hasRoute) {
       routeLayerRef.current.clearLayers();
@@ -262,7 +280,9 @@ export default function Map({ places = [], items = [], origin = null, mode = 'wa
       });
 
       routeLayerRef.current.addLayer(polyline);
-      mapRef.current.fitBounds(L.latLngBounds(polylinePoints), { padding: [40, 40] });
+      mapRef.current.fitBounds(L.latLngBounds(polylinePoints), {
+        padding: [40, 40],
+      });
     } else {
       mapRef.current.setView(startLatLng, 12);
     }
