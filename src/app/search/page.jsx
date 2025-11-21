@@ -79,7 +79,7 @@ export default function SearchPage() {
   };
 
   const checkActiveTab = (tab) => activeTab.includes(tab);
-  
+
   useEffect(() => {
     if (checkActiveTab(DEFAULT_TABS.MAP)) {
       setTimeout(() => {
@@ -87,7 +87,6 @@ export default function SearchPage() {
       }, 50);
     }
   }, [activeTab]);
-  
 
   // * Filter and search input logic
   const dispatch = useAppDispatch();
@@ -142,16 +141,22 @@ export default function SearchPage() {
   }, [data, page]);
 
   // * Observer
+  const isInitialLoading = isLoading && page === 1;
   useEffect(() => {
     const node = loadMoreRef.current;
-    if (!node || !hasMore) {
+    if (!node || !hasMore || isInitialLoading) {
       return undefined;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        if (entry.isIntersecting && hasMore && !isFetching) {
+        if (
+          entry.isIntersecting &&
+          hasMore &&
+          !isFetching &&
+          !isInitialLoading
+        ) {
           setPage((prev) => prev + 1);
         }
       },
@@ -160,7 +165,7 @@ export default function SearchPage() {
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [hasMore, isFetching]);
+  }, [hasMore, isFetching, isInitialLoading]);
 
   // ! Temporary until data is connected
   const address = filter.city || 'city';
@@ -231,7 +236,7 @@ export default function SearchPage() {
           className={checkActiveTab(DEFAULT_TABS.MAP) ? 'block' : 'hidden'}
         >
           <div className="rounded-xl border w-full flex justify-center">
-            <Map />
+            <Map places={events} />
           </div>
         </section>
       </div>

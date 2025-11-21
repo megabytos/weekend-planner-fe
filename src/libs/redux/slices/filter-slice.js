@@ -4,6 +4,7 @@ const initialState = {
   city: '',
   categories: [],
   date: '',
+  customDate: '',
   price: '',
 };
 
@@ -24,6 +25,13 @@ const filterSlice = createSlice({
     },
     setDate: (state, { payload }) => {
       state.date = payload;
+      if (payload !== 'Choose date') {
+        state.customDate = '';
+      }
+    },
+    setCustomDate: (state, { payload }) => {
+      state.customDate = payload;
+      state.date = 'Choose date';
     },
     setPrice: (state, { payload }) => {
       state.price = payload;
@@ -32,7 +40,13 @@ const filterSlice = createSlice({
   },
 });
 
-export const { toggleCity, toggleCategory, setDate, setPrice, resetFilters } =
-  filterSlice.actions;
+export const {
+  toggleCity,
+  toggleCategory,
+  setDate,
+  setCustomDate,
+  setPrice,
+  resetFilters,
+} = filterSlice.actions;
 export default filterSlice.reducer;
 export const selectFilter = (state) => state.filter;

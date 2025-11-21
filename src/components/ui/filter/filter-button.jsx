@@ -13,7 +13,13 @@ import {
 } from '@/libs/redux/slices/filter-slice';
 import cn from '@/utils/class-names';
 
-export default function FilterButton({ classes = '', value = '', filterType }) {
+export default function FilterButton({
+  classes = '',
+  value = '',
+  filterType,
+  label = '',
+  onClick = null,
+}) {
   const dispatch = useAppDispatch();
   const filter = useAppSelector(selectFilter);
 
@@ -35,6 +41,13 @@ export default function FilterButton({ classes = '', value = '', filterType }) {
   const handleClick = () => {
     if (!value) {
       return;
+    }
+
+    if (onClick) {
+      const shouldContinue = onClick();
+      if (shouldContinue === false) {
+        return;
+      }
     }
 
     switch (filterType) {
@@ -68,7 +81,7 @@ export default function FilterButton({ classes = '', value = '', filterType }) {
         classes,
       )}
     >
-      {value}
+      {label || value}
     </button>
   );
 }

@@ -1,10 +1,17 @@
 'use client';
 
-import { Fragment } from 'react/jsx-runtime';
+import { Fragment, useMemo, useState } from 'react';
 
+import Calendar from '@/components/ui/calendar';
 import FilterButton from '@/components/ui/filter/filter-button';
 import FilterSection from '@/components/ui/filter/filter-section';
 import FILTER_TYPES from '@/constants/filter-types';
+import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
+import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
+import {
+  selectFilter,
+  setCustomDate,
+} from '@/libs/redux/slices/filter-slice';
 
 const CITIES = [
   'New York',
@@ -29,6 +36,48 @@ const DATES = ['Now', 'Tonight', 'Tomorrow', 'This weekend', 'Choose date'];
 const PRICE = ['Free', '$', '$$', '$$$', 'Unlimited'];
 
 export default function Filter() {
+  const dispatch = useAppDispatch();
+  const filter = useAppSelector(selectFilter);
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  const customDateLabel = useMemo(() => {
+    if (!filter.customDate) {
+      return 'Choose date';
+    }
+
+    const date = new Date(filter.customDate);
+    if (Number.isNaN(date.getTime())) {
+      return 'Choose date';
+    }
+
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }, [filter.customDate]);
+
+  const handleChooseDateClick = () => {
+    const isSelected = filter.date === 'Choose date';
+    if (!isSelected) {
+      setShowCalendar(true);
+      return true;
+    }
+
+    setShowCalendar((prev) => !prev);
+    return false;
+  };
+
+  const handleDateSelect = (selectedDate) => {
+    if (!selectedDate) {
+      return;
+    }
+
+    const isoDate = selectedDate.toISOString().split('T')[0];
+    dispatch(setCustomDate(isoDate));
+    setShowCalendar(false);
+  };
+
   return (
     <div className="relative flex flex-col gap-5 w-[335px] md:w-[167px] lg:w-[320px]">
       <div className="flex items-baseline gap-2">
@@ -57,11 +106,31 @@ export default function Filter() {
       </FilterSection>
 
       <FilterSection label="Date">
-        {DATES.map((date) => (
-          <Fragment key={date}>
-            <FilterButton value={date} filterType={FILTER_TYPES.date} />
-          </Fragment>
-        ))}
+        {DATES.map((date) => {
+          const isChooseDate = date === 'Choose date';
+          return (
+            <Fragment key={date}>
+              <FilterButton
+                value={date}
+                filterType={FILTER_TYPES.date}
+                label={isChooseDate ? customDateLabel : date}
+                onClick={
+                  isChooseDate
+                    ? handleChooseDateClick
+                    : () => {
+                        setShowCalendar(false);
+                        return true;
+                      }
+                }
+              />
+            </Fragment>
+          );
+        })}
+        {showCalendar && (
+          <div className="mt-3">
+            <Calendar onSelect={handleDateSelect} value={filter.customDate} />
+          </div>
+        )}
       </FilterSection>
 
       <FilterSection label="Price">

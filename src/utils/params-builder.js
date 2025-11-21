@@ -17,8 +17,11 @@ const buildSearchParams = ({ page, searchQuery, filter }) => {
     result.q = normalizedQuery;
   }
 
+  const customDate = sanitizeString(filter?.customDate);
   const normalizedDate = toLower(filter?.date);
-  if (normalizedDate) {
+  if (customDate) {
+    result.when = customDate;
+  } else if (normalizedDate && normalizedDate !== 'choose date') {
     result.when =
       normalizedDate === 'this weekend'
         ? 'this_weekend'
