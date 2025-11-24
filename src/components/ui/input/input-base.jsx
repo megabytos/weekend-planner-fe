@@ -5,6 +5,7 @@ import cn from '@/utils/class-names';
 /**
  * InputBase component.
  * @param {Object} props - Component props
+ * @param {string} [props.name] - Name attribute for the input field.
  * @param {string} [props.placeholder='Please enter ...'] - Placeholder for the input field.
  * @param {string} [props.label=''] - Label for the input field.
  * @param {string} [props.inputType='text'] - Type of the input field.

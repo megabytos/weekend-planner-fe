@@ -1,22 +1,21 @@
 'use client';
 
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { createContext, useContext, useState } from 'react';
 
+import apiClient from '@/libs/api/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const AuthContext = createContext({
   user: null,
   isLoading: false,
-  login: async () => {},
-  register: async () => {},
+  login: async (payload) => {},
+  register: async (payload) => {},
   logout: async () => {},
 });
 
 export function AuthProvider({ children }) {
   const queryClient = useQueryClient();
-  const [testUser, setTestUser] = useState(null);
   const router = useRouter();
 
   // ---------------------------------------------------------
@@ -27,7 +26,7 @@ export function AuthProvider({ children }) {
     queryKey: ['auth', 'me'],
     queryFn: async () => {
       try {
-        const response = await axios.get('/api/me', { withCredentials: true });
+        const response = await apiClient.get('/auth/refresh');
         return response.data.user || null;
       } catch (error) {
         if (error.response?.status === 401) {
@@ -43,11 +42,10 @@ export function AuthProvider({ children }) {
   // ---------------------------------------------------------
 
   const loginMutation = useMutation({
+    mutationKey: ['auth', 'me'],
     mutationFn: async (payload) => {
       try {
-        const response = await axios.post('/api/login', payload, {
-          withCredentials: true,
-        });
+        const response = await apiClient.post('/auth/login', payload);
         return response.data.user;
       } catch (error) {
         const message = error.response?.data?.message || 'Login failed';
@@ -56,12 +54,11 @@ export function AuthProvider({ children }) {
     },
 
     onSuccess: (userData) => {
-      // оновлюємо кеш
       queryClient.setQueryData(['auth', 'me'], userData);
+      router.push('/user');
     },
     onError: () => {
-      setTestUser(true);
-      router.push('/user');
+      // Add toast notification about error
     },
   });
 
@@ -70,9 +67,10 @@ export function AuthProvider({ children }) {
   // ---------------------------------------------------------
 
   const registerMutation = useMutation({
+    mutationKey: ['auth', 'me'],
     mutationFn: async (payload) => {
       try {
-        const response = await axios.post('/api/register', payload, {
+        const response = await apiClient.post('/auth/register', payload, {
           withCredentials: true,
         });
         return response.data.user;
@@ -93,7 +91,7 @@ export function AuthProvider({ children }) {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await axios.post('/api/logout', {}, { withCredentials: true });
+      await apiClient.post('/auth/logout', {}, { withCredentials: true });
       return null;
     },
 
@@ -102,15 +100,14 @@ export function AuthProvider({ children }) {
       queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
     },
     onError: () => {
-      setTestUser(null);
-      router.push('/');
+      // Add toast notification about error
     },
   });
 
   return (
     <AuthContext.Provider
       value={{
-        user: testUser,
+        user,
         isLoading,
         login: loginMutation.mutateAsync,
         register: registerMutation.mutateAsync,

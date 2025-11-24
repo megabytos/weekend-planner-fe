@@ -10,6 +10,7 @@ import InputBase from './input-base';
 /**
  * InputPassword component.
  * @param {Object} props - Component props
+ * @param {string} [props.name] - Name attribute for the input field.
  * @param {string} [props.placeholder='Password'] - Placeholder for the input field.
  * @param {string} [props.label=''] - Label for the input field.
  * @param {string} [props.inputType='password'] - Type of the input field.
@@ -23,6 +24,7 @@ import InputBase from './input-base';
  * @returns {React.JSX.Element} - JSX element containing the input field and show/hide password button.
  */
 export default function InputPassword({
+  name,
   placeholder = 'Password',
   label = '',
   inputType = 'password',
@@ -43,6 +45,7 @@ export default function InputPassword({
   return (
     <div className={cn('relative', divClasses)}>
       <InputBase
+        name={name}
         inputType={showPassword ? 'text' : inputType}
         placeholder={placeholder}
         label={label}
