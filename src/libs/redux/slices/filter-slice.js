@@ -5,7 +5,14 @@ const initialState = {
   categories: [],
   date: '',
   customDate: '',
-  price: '',
+  budgetTier: '',
+  timeBudget: '',
+  companyType: '',
+  kidsAgeGroups: [],
+  mood: '',
+  target: 'events',
+  transportMode: '',
+  indoorOutdoor: '',
 };
 
 const filterSlice = createSlice({
@@ -33,8 +40,37 @@ const filterSlice = createSlice({
       state.customDate = payload;
       state.date = 'Choose date';
     },
-    setPrice: (state, { payload }) => {
-      state.price = payload;
+    setBudgetTier: (state, { payload }) => {
+      state.budgetTier = payload;
+    },
+    setTimeBudget: (state, { payload }) => {
+      state.timeBudget = payload;
+    },
+    setCompanyType: (state, { payload }) => {
+      state.companyType = payload;
+      if (payload !== 'kids') {
+        state.kidsAgeGroups = [];
+      }
+    },
+    toggleKidsAgeGroup: (state, { payload }) => {
+      const index = state.kidsAgeGroups.indexOf(payload);
+      if (index === -1) {
+        state.kidsAgeGroups.push(payload);
+      } else {
+        state.kidsAgeGroups.splice(index, 1);
+      }
+    },
+    setMood: (state, { payload }) => {
+      state.mood = payload;
+    },
+    setTarget: (state, { payload }) => {
+      state.target = payload || 'events';
+    },
+    setTransportMode: (state, { payload }) => {
+      state.transportMode = payload;
+    },
+    setIndoorOutdoor: (state, { payload }) => {
+      state.indoorOutdoor = payload;
     },
     resetFilters: () => initialState,
   },
@@ -45,7 +81,14 @@ export const {
   toggleCategory,
   setDate,
   setCustomDate,
-  setPrice,
+  setBudgetTier,
+  setTimeBudget,
+  setCompanyType,
+  toggleKidsAgeGroup,
+  setMood,
+  setTarget,
+  setTransportMode,
+  setIndoorOutdoor,
   resetFilters,
 } = filterSlice.actions;
 export default filterSlice.reducer;

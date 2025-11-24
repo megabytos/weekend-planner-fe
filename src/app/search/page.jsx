@@ -126,8 +126,7 @@ export default function SearchPage() {
       return;
     }
 
-    const fetchedEvents =
-      data.items?.filter((item) => item.type === 'event') ?? [];
+    const fetchedEvents = data.items ?? [];
 
     setEvents((prev) =>
       page === 1 ? fetchedEvents : [...prev, ...fetchedEvents],

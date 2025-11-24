@@ -7,7 +7,6 @@ const buildSearchParams = ({ page, searchQuery, filter }) => {
   const toLower = (value) => sanitizeString(value)?.toLowerCase();
 
   const result = {
-    kind: 'events',
     page,
     pageSize: PAGE_SIZE,
   };
@@ -30,6 +29,9 @@ const buildSearchParams = ({ page, searchQuery, filter }) => {
     result.when = 'this_weekend';
   }
 
+  const target = sanitizeString(filter?.target) || 'events';
+  result.kind = target;
+
   const normalizedCategories = Array.isArray(filter?.categories)
     ? filter.categories.map((category) => toLower(category)).filter(Boolean)
     : [];
@@ -37,9 +39,43 @@ const buildSearchParams = ({ page, searchQuery, filter }) => {
     result.categories = normalizedCategories;
   }
 
-  const normalizedBudget = toLower(filter?.price);
-  if (normalizedBudget) {
-    result.budget = normalizedBudget;
+  const budgetTier = sanitizeString(filter?.budgetTier);
+  if (budgetTier) {
+    result.budgetTier = budgetTier;
+  }
+
+  const mood = sanitizeString(filter?.mood);
+  if (mood) {
+    result.mood = mood;
+  }
+
+  const transportMode = sanitizeString(filter?.transportMode);
+  if (transportMode) {
+    result.transportMode = transportMode;
+  }
+
+  const timeBudget = sanitizeString(filter?.timeBudget);
+  if (timeBudget) {
+    result.timeBudget = timeBudget;
+  }
+
+  const companyType = sanitizeString(filter?.companyType);
+  if (companyType) {
+    result.companyType = companyType;
+  }
+
+  const kidsAgeGroups = Array.isArray(filter?.kidsAgeGroups)
+    ? filter.kidsAgeGroups
+        .map((group) => sanitizeString(group))
+        .filter(Boolean)
+    : [];
+  if (kidsAgeGroups.length) {
+    result.kidsAgeGroups = kidsAgeGroups;
+  }
+
+  const indoorOutdoor = sanitizeString(filter?.indoorOutdoor);
+  if (indoorOutdoor) {
+    result.indoorOutdoor = indoorOutdoor;
   }
 
   const city = filter?.city;
