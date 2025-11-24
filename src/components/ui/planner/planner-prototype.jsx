@@ -2,20 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-/*
-  WeekendPlanner — Planner Prototype (Interactive)
-  ------------------------------------------------
-  Что можно делать:
-  - Выбирать окно дня, режим перемещения и точку старта
-  - Добавлять места/события в план (слева панель кандидатов)
-  - Менять порядок (стрелки ↑↓), задавать длительность визита для мест
-  - Нажимать "Пересчитать" для обновления таймлайна и маршрута
-  - Нажимать "Оптимизировать порядок" для жадной сортировки по расстоянию
-  - Смотреть карту справа: пины в порядке посещения + ломаная линия
-  - Видеть предупреждения: опоздание на событие, пропущенное событие и т.п.
-*/
-
-// -------------------- Utils --------------------
 const R_EARTH_KM = 6371;
 function haversineKm(a, b) {
   const dLat = ((b.lat - a.lat) * Math.PI) / 180;
@@ -40,10 +26,10 @@ function clamp(v, min, max) {
   return Math.max(min, Math.min(max, v));
 }
 
-// speeds (км/ч)
+// speeds (km/h)
 const SPEEDS = { walking: 4.5, cycling: 15, driving: 30 };
 
-// Временные пресеты
+// Time presets
 function defaultWindow() {
   const now = new Date();
   const start = new Date(now);
@@ -66,12 +52,19 @@ function tonightRange() {
 
 // -------------------- Demo Data --------------------
 const KYIV = { lat: 50.4501, lon: 30.5234 };
-const CATEGORIES = ['Еда', 'Кино', 'Музеи', 'Концерты', 'С детьми', 'Прогулки'];
+const CATEGORIES = [
+  'Food',
+  'Cinema',
+  'Museums',
+  'Concerts',
+  'With kids',
+  'Walks',
+];
 const PLACES = [
   {
     id: 'pl_1',
     name: 'PinchukArtCentre',
-    category: 'Музеи',
+    category: 'Museums',
     geo: { lat: 50.4415, lon: 30.5227 },
     priceTier: 1,
     rating: 4.7,
@@ -80,8 +73,8 @@ const PLACES = [
   },
   {
     id: 'pl_2',
-    name: 'Кинотеатр Жовтень',
-    category: 'Кино',
+    name: 'Zhovten Cinema',
+    category: 'Cinema',
     geo: { lat: 50.4633, lon: 30.5099 },
     priceTier: 2,
     rating: 4.6,
@@ -90,8 +83,8 @@ const PLACES = [
   },
   {
     id: 'pl_3',
-    name: 'Киевский зоопарк',
-    category: 'С детьми',
+    name: 'Kyiv Zoo',
+    category: 'With kids',
     geo: { lat: 50.4547, lon: 30.4477 },
     priceTier: 2,
     rating: 4.4,
@@ -101,7 +94,7 @@ const PLACES = [
   {
     id: 'pl_4',
     name: 'SkyMall Food Court',
-    category: 'Еда',
+    category: 'Food',
     geo: { lat: 50.4865, lon: 30.6001 },
     priceTier: 1,
     rating: 4.1,
@@ -111,7 +104,7 @@ const PLACES = [
   {
     id: 'pl_5',
     name: 'Mariinsky Park',
-    category: 'Прогулки',
+    category: 'Walks',
     geo: { lat: 50.4456, lon: 30.5453 },
     priceTier: 0,
     rating: 4.8,
@@ -128,8 +121,8 @@ function tonight() {
 const EVENTS = [
   {
     id: 'ev_1',
-    name: 'Концерт на Подоле',
-    category: 'Концерты',
+    name: 'Concert in Podil',
+    category: 'Concerts',
     place_id: 'pl_5',
     geo: { lat: 50.465, lon: 30.516 },
     start_at: addMinutes(new Date().toISOString(), 120),
@@ -139,8 +132,8 @@ const EVENTS = [
   },
   {
     id: 'ev_2',
-    name: 'Ночь музеев',
-    category: 'Музеи',
+    name: 'Night of Museums',
+    category: 'Museums',
     place_id: 'pl_1',
     geo: { lat: 50.4415, lon: 30.5227 },
     start_at: tonight().from,
@@ -150,8 +143,8 @@ const EVENTS = [
   },
   {
     id: 'ev_3',
-    name: 'Показ авторского кино',
-    category: 'Кино',
+    name: 'Art-house film screening',
+    category: 'Cinema',
     place_id: 'pl_2',
     geo: { lat: 50.4633, lon: 30.5099 },
     start_at: addMinutes(new Date().toISOString(), 24 * 60),
@@ -163,13 +156,13 @@ const EVENTS = [
 
 // -------------------- Main Component --------------------
 export default function PlannerPrototype() {
-  // Контекст дня
+  // Day context
   const [city] = useState('Kyiv');
   const [mode, setMode] = useState('walking');
   const [origin, setOrigin] = useState(KYIV);
   const [win, setWin] = useState(defaultWindow());
 
-  // Кандидаты и фильтры слева
+  // Candidates and filters on the left
   const [filterType, setFilterType] = useState('both');
   const [query, setQuery] = useState('');
   const filteredCandidates = useMemo(() => {
@@ -219,7 +212,7 @@ export default function PlannerPrototype() {
     );
   }, [filterType, query]);
 
-  // План: только визиты, дорога отображается как отдельные строки на таймлайне
+  // Plan: only visits, travel is displayed as separate rows on the timeline
   const [items, setItems] = useState([]); // [{id, type:'place'|'event', ref_id, name, geo, stayMin?}]
 
   function addCandidate(c) {
@@ -277,7 +270,7 @@ export default function PlannerPrototype() {
     );
   }
 
-  // Расчёт таймлайна + маршрута (упрощённо, без внешнего OSRM)
+  // Timeline + route calculation (simplified, without external OSRM)
   const [timeline, setTimeline] = useState([]); // rows: leg|visit with times
   const [metrics, setMetrics] = useState({
     distanceKm: 0,
@@ -318,13 +311,13 @@ export default function PlannerPrototype() {
 
     // Iterate items in current order
     items.forEach((it, idx) => {
-      // дорога до пункта
+      // leg to the point
       legTo(it.geo);
       if (it.kind === 'event_visit') {
         const evStart = it.start_at;
         const evEnd = it.end_at;
         if (new Date(t) > new Date(evEnd)) {
-          warnings.push(`Пропущено событие «${it.name}» (к ${fmtTime(evEnd)})`);
+          warnings.push(`Missed event "${it.name}" (by ${fmtTime(evEnd)})`);
           out.push({
             kind: 'event_visit',
             name: it.name,
@@ -332,13 +325,13 @@ export default function PlannerPrototype() {
             start_at: evStart,
             end_at: evEnd,
           });
-          t = evEnd; // двигаем маркер времени к фактическому концу события
+          t = evEnd; // move time marker to the actual end of the event
         } else if (new Date(t) > new Date(evStart)) {
           const lateMin = Math.round(
             (new Date(t).getTime() - new Date(evStart).getTime()) / 60000,
           );
           warnings.push(
-            `Опоздание на «${it.name}» на ${lateMin} мин (начало ${fmtTime(evStart)})`,
+            `Late to "${it.name}" by ${lateMin} min (starts at ${fmtTime(evStart)})`,
           );
           out.push({
             kind: 'event_visit',
@@ -355,7 +348,7 @@ export default function PlannerPrototype() {
           );
           t = evEnd;
         } else {
-          // есть ожидание до начала
+          // there is waiting time before the start
           const waitMin = Math.round(
             (new Date(evStart).getTime() - new Date(t).getTime()) / 60000,
           );
@@ -381,7 +374,7 @@ export default function PlannerPrototype() {
           t = evEnd;
         }
       } else if (it.kind === 'place_visit') {
-        // гибкая длительность
+        // flexible duration
         const end = addMinutes(t, it.stayMin || 60);
         out.push({
           kind: 'place_visit',
@@ -395,9 +388,11 @@ export default function PlannerPrototype() {
       }
     });
 
-    // Проверка окна дня
+    // Check day window
     if (new Date(t) > new Date(win.to)) {
-      warnings.push(`План выходит за пределы окна дня (до ${fmtTime(win.to)})`);
+      warnings.push(
+        `Plan goes beyond the day window (until ${fmtTime(win.to)})`,
+      );
     }
 
     setTimeline(out);
@@ -409,7 +404,7 @@ export default function PlannerPrototype() {
     });
   }
 
-  // Жадная оптимизация порядка по расстоянию (очень упрощённо)
+  // Greedy distance-based order optimization (very simplified)
   function optimize() {
     if (items.length <= 2) {
       return;
@@ -434,12 +429,12 @@ export default function PlannerPrototype() {
     setItems(route);
   }
 
-  // Пересчёт при изменениях
+  // Recalculate on changes
   useEffect(() => {
     recalc();
   }, [items, win.from, win.to, mode, origin]);
 
-  // Проекция на "карту" (демо, не геодезическая)
+  // Projection to "map" (demo, non-geodesic)
   function project(pt) {
     const latMin = 50.4,
       latMax = 50.52,
@@ -454,19 +449,19 @@ export default function PlannerPrototype() {
     <div className="w-full h-full grid grid-cols-12 gap-4 p-4">
       {/* Left: candidates */}
       <div className="col-span-3 flex flex-col gap-3">
-        <h1 className="text-2xl font-semibold">Планировщик — WeekendPlanner</h1>
+        <h1 className="text-2xl font-semibold">Planner</h1>
         <div className="grid grid-cols-2 gap-2 text-sm items-center border rounded p-3">
-          <label>Режим</label>
+          <label>Mode</label>
           <select
             className="border rounded px-2 py-1"
             value={mode}
             onChange={(e) => setMode(e.target.value)}
           >
-            <option value="walking">Пешком</option>
-            <option value="cycling">Велосипед</option>
-            <option value="driving">Авто</option>
+            <option value="walking">On foot</option>
+            <option value="cycling">Bicycle</option>
+            <option value="driving">Car</option>
           </select>
-          <label>Окно дня</label>
+          <label>Day window</label>
           <div className="flex gap-1 flex-col">
             <input
               type="datetime-local"
@@ -491,25 +486,25 @@ export default function PlannerPrototype() {
               }
             />
           </div>
-          <label>Быстро</label>
+          <label>Quick</label>
           <div className="flex gap-2">
             <button
               className="px-2 py-1 border rounded"
               onClick={() => setWin(defaultWindow())}
             >
-              +6 часов
+              +6 hours
             </button>
             <button
               className="px-2 py-1 border rounded"
               onClick={() => setWin(tonightRange())}
             >
-              Вечер
+              Evening
             </button>
           </div>
         </div>
 
         <div className="flex gap-2 items-center">
-          <div className="text-sm text-gray-600">Кандидаты</div>
+          <div className="text-sm text-gray-600">Candidates</div>
           <div className="ml-auto flex gap-2">
             {['both', 'places', 'events'].map((t) => (
               <button
@@ -524,7 +519,7 @@ export default function PlannerPrototype() {
         </div>
         <input
           className="border rounded px-2 py-1"
-          placeholder="поиск по кандидатам"
+          placeholder="search candidates"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -542,14 +537,14 @@ export default function PlannerPrototype() {
                 <div className="text-gray-600">
                   {c.type === 'event'
                     ? `${new Date(c.start_at).toLocaleString()} — ${new Date(c.end_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
-                    : `рек. ${c.defaultStayMin} мин`}{' '}
+                    : `rec. ${c.defaultStayMin} min`}{' '}
                 </div>
               </div>
               <button
                 className="px-2 py-1 border rounded"
                 onClick={() => addCandidate(c)}
               >
-                В план
+                Add to plan
               </button>
             </div>
           ))}
@@ -563,27 +558,27 @@ export default function PlannerPrototype() {
             className="px-3 py-2 rounded bg-emerald-600 text-white"
             onClick={recalc}
           >
-            Пересчитать
+            Recalculate
           </button>
           <button className="px-3 py-2 rounded border" onClick={optimize}>
-            Оптимизировать порядок
+            Optimize order
           </button>
           <div className="ml-auto text-sm text-gray-600">
-            Всего: {items.length} пункт(ов)
+            Total: {items.length} item(s)
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-3 text-sm">
           <div className="col-span-2 border rounded p-2 max-h-[64vh] overflow-auto">
             <div className="text-gray-600 mb-2">
-              Таймлайн (окно {fmtTime(win.from)}–{fmtTime(win.to)})
+              Timeline (window {fmtTime(win.from)} - {fmtTime(win.to)})
             </div>
-            {/* Плановые визиты (редактируемые) */}
+            {/* Planned visits (editable) */}
             {items.map((it, idx) => (
               <div key={idx} className="border rounded p-2 mb-2">
                 <div className="flex items-center justify-between">
                   <div className="font-medium">
-                    {it.kind === 'event_visit' ? 'Событие: ' : 'Место: '}
+                    {it.kind === 'event_visit' ? 'Event: ' : 'Place: '}
                     {it.name}
                   </div>
                   <div className="flex gap-1">
@@ -603,13 +598,13 @@ export default function PlannerPrototype() {
                       className="px-2 py-1 border rounded"
                       onClick={() => removeItem(idx)}
                     >
-                      Удалить
+                      Delete
                     </button>
                   </div>
                 </div>
                 {it.kind === 'event_visit' ? (
                   <div className="text-gray-600">
-                    {new Date(it.start_at).toLocaleString()} –{' '}
+                    {new Date(it.start_at).toLocaleString()} -{' '}
                     {new Date(it.end_at).toLocaleTimeString([], {
                       hour: '2-digit',
                       minute: '2-digit',
@@ -617,7 +612,7 @@ export default function PlannerPrototype() {
                   </div>
                 ) : (
                   <div className="flex items-center gap-2 text-gray-700">
-                    Длительность:
+                    Duration:
                     <input
                       type="number"
                       min={15}
@@ -626,7 +621,7 @@ export default function PlannerPrototype() {
                       value={it.stayMin || 60}
                       onChange={(e) => updateStay(idx, e.target.value)}
                     />{' '}
-                    мин
+                    min
                   </div>
                 )}
               </div>
@@ -634,11 +629,13 @@ export default function PlannerPrototype() {
 
             <div className="h-px bg-gray-200 my-3" />
 
-            {/* Вычисленный таймлайн (дороги + визиты) */}
-            <div className="text-gray-600 mb-1">Расчёт (дороги и визиты):</div>
+            {/* Calculated timeline (legs + visits) */}
+            <div className="text-gray-600 mb-1">
+              Calculation (legs and visits):
+            </div>
             {timeline.length === 0 && (
               <div className="text-gray-500">
-                Добавьте пункты и нажмите «Пересчитать»
+                Add items and press "Recalculate"
               </div>
             )}
             {timeline.map((r, i) => (
@@ -648,32 +645,32 @@ export default function PlannerPrototype() {
               >
                 {r.kind === 'leg' && (
                   <div>
-                    → Переход {fmtTime(r.start_at)}–{fmtTime(r.end_at)} •{' '}
-                    {Math.round(r.distanceKm * 10) / 10} км • {r.durationMin}{' '}
-                    мин
+                    → Leg {fmtTime(r.start_at)} - {fmtTime(r.end_at)} •{' '}
+                    {Math.round(r.distanceKm * 10) / 10} km • {r.durationMin}{' '}
+                    min
                   </div>
                 )}
                 {r.kind === 'wait' && (
                   <div>
-                    ⏳ Ожидание {fmtTime(r.start_at)}–{fmtTime(r.end_at)} •{' '}
-                    {r.durationMin} мин
+                    ⏳ Waiting {fmtTime(r.start_at)} - {fmtTime(r.end_at)} •{' '}
+                    {r.durationMin} min
                   </div>
                 )}
                 {r.kind === 'event_visit' && (
                   <div>
                     🎫{' '}
                     {r.status === 'missed'
-                      ? '(пропущено) '
+                      ? '(missed) '
                       : r.status === 'late'
-                        ? '(опоздание) '
+                        ? '(late) '
                         : ''}
-                    {fmtTime(r.start_at)}–{fmtTime(r.end_at)} • {r.name}
+                    {fmtTime(r.start_at)} - {fmtTime(r.end_at)} • {r.name}
                   </div>
                 )}
                 {r.kind === 'place_visit' && (
                   <div>
-                    📍 {fmtTime(r.start_at)}–{fmtTime(r.end_at)} •{' '}
-                    {r.durationMin} мин • {r.name}
+                    📍 {fmtTime(r.start_at)} - {fmtTime(r.end_at)} •{' '}
+                    {r.durationMin} min • {r.name}
                   </div>
                 )}
               </div>
@@ -681,14 +678,14 @@ export default function PlannerPrototype() {
           </div>
 
           <div className="col-span-1 border rounded p-2">
-            <div className="text-sm font-semibold mb-2">Сводка</div>
-            <div className="text-sm">Дистанция: {metrics.distanceKm} км</div>
-            <div className="text-sm">В дороге: {metrics.travelMin} мин</div>
-            <div className="text-sm">На местах: {metrics.onSiteMin} мин</div>
+            <div className="text-sm font-semibold mb-2">Summary</div>
+            <div className="text-sm">Distance: {metrics.distanceKm} km</div>
+            <div className="text-sm">On the way: {metrics.travelMin} min</div>
+            <div className="text-sm">On site: {metrics.onSiteMin} min</div>
             {metrics.warnings.length > 0 && (
               <div className="mt-2">
                 <div className="text-sm font-semibold text-amber-700">
-                  Предупреждения
+                  Warnings
                 </div>
                 <ul className="list-disc pl-5 text-sm text-amber-700">
                   {metrics.warnings.map((w, idx) => (
@@ -705,7 +702,7 @@ export default function PlannerPrototype() {
       <div className="col-span-4">
         <div className="w-full h-[78vh] border rounded relative overflow-hidden bg-[linear-gradient(45deg,#f6f6f6,#ffffff)]">
           <div className="absolute top-2 left-2 bg-white/90 rounded shadow px-3 py-2 text-sm">
-            Карта (демо). Порядок пинов соответствует таймлайну. Режим: {mode}
+            Map (demo). Pin order matches timeline. Mode: {mode}
           </div>
           {/* Route polyline */}
           <RoutePolyline origin={origin} items={items} project={project} />
@@ -719,7 +716,7 @@ export default function PlannerPrototype() {
 
 function Pins({ origin, items, project }) {
   const all = [
-    { name: 'Старт', geo: origin },
+    { name: 'Start', geo: origin },
     ...items.map((x) => ({ name: x.name, geo: x.geo })),
   ];
   return (
@@ -755,7 +752,7 @@ function RoutePolyline({ origin, items, project }) {
   if (!items || items.length === 0) return null;
   const pts = [origin, ...items.map((x) => x.geo)];
   const path = pts.map((pt) => project(pt));
-  // рендерим как многоугольник из дивов-отрезков
+  // render as a polyline made from div segments
   return (
     <>
       {path.slice(0, -1).map((p, i) => {
