@@ -14,14 +14,6 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    // Debug outbound requests
-    console.log('[apiClient][request]', {
-      method: config.method,
-      url: `${config.baseURL}${config.url}`,
-      params: config.params,
-      data: config.data,
-      headers: config.headers,
-    });
     return config;
   },
   (error) => {
@@ -32,11 +24,6 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
   (response) => {
-    console.log('[apiClient][response]', {
-      url: response.config?.url,
-      status: response.status,
-      data: response.data,
-    });
     return response;
   },
   (error) => {

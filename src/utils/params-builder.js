@@ -131,9 +131,6 @@ const buildSearchParams = ({ page, searchQuery, filter }) => {
   const limit = PAGE_SIZE;
   result.pagination = { limit, page: pageNumber };
 
-  // Debug: inspect final search payload before sending
-  console.log('buildSearchParams payload:', result);
-
   return result;
 };
 

@@ -12,14 +12,11 @@ const sanitizeParams = (params = {}) => {
 export const useSearchQuery = (params = {}, options = {}) => {
   const payload = useMemo(() => sanitizeParams(params), [params]);
 
-  console.log('[useSearchQuery] query payload:', payload);
-
   return useQuery({
     queryKey: ['search', payload],
     queryFn: () => searchEventsAndPlaces(payload),
     staleTime: 1000 * 60,
     onSuccess: (data) => {
-      console.log('[useSearchQuery] success:', data);
       options?.onSuccess?.(data);
     },
     onError: (error) => {
