@@ -4,18 +4,21 @@
 import Image from 'next/image';
 import { useMemo } from 'react';
 
-import Address from './ui/address';
-import FavoriteButton from './ui/buttons/favorite-button';
-import ShareButton from './ui/buttons/share-button';
-import EventDate from './ui/event-date';
-import EventPrice from './ui/event-price';
-import Viewers from './ui/viewers';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import {
   selectIsFavorite,
   toggleFavorite,
 } from '@/libs/redux/slices/favorites-slice';
+
+import Address from './ui/address';
+import FavoriteButton from './ui/buttons/favorite-button';
+import ShareButton from './ui/buttons/share-button';
+import EventDate from './ui/event-date';
+import EventPrice from './ui/event-price';
+import Viewers from './ui/viewers';
+
+/* eslint-disable react/jsx-no-useless-fragment */
 
 export default function EventCard({ event }) {
   if (!event) return null;
@@ -82,18 +85,7 @@ export default function EventCard({ event }) {
     primaryCategory?.name || primaryCategory?.slug || categories?.[0]?.name;
 
   const handleShare = () => {
-    const shareUrl =
-      url || (typeof window !== 'undefined' ? window.location.href : '');
-    const shareTitle = title || 'Check this out';
-
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      navigator.share({ title: shareTitle, url: shareUrl }).catch(() => {});
-      return;
-    }
-
-    if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(shareUrl).catch(() => {});
-    }
+    // Implement share functionality here
   };
 
   const handleFavorite = () => {

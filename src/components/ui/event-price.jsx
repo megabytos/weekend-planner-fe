@@ -20,7 +20,7 @@ const buildPriceLabel = ({
 };
 
 export default function EventPrice({
-  isFree = true,
+  isFree = false,
   priceFrom = null,
   priceTo = null,
   currency = '$',
