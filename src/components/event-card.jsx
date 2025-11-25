@@ -22,6 +22,8 @@ import Viewers from './ui/viewers';
 
 /* eslint-disable react/jsx-no-useless-fragment */
 
+/* eslint-disable react/jsx-no-useless-fragment */
+
 export default function EventCard({ event }) {
   if (!event) return null;
 
