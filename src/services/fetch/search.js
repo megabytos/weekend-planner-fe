@@ -7,9 +7,6 @@ export const searchEventsAndPlaces = async (params = {}) => {
     Object.entries(params).filter(([, value]) => value !== undefined),
   );
 
-  console.log('[searchEventsAndPlaces] request payload:', payload);
-
   const { data } = await apiClient.post(SEARCH_ENDPOINT, payload);
-  console.log('[searchEventsAndPlaces] response data:', data);
   return data;
 };

@@ -12,8 +12,6 @@ const sanitizeParams = (params = {}) => {
 export const useSearchQuery = (params = {}, options = {}) => {
   const payload = useMemo(() => sanitizeParams(params), [params]);
 
-  console.log('[useSearchQuery] query payload:', payload);
-
   return useQuery({
     queryKey: ['search', payload],
     queryFn: () => searchEventsAndPlaces(payload),
