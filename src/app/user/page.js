@@ -3,6 +3,7 @@
 import { LogOut } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import Container from '@/components/layout/container';
 import Section from '@/components/layout/section';
@@ -10,11 +11,17 @@ import Button from '@/components/ui/buttons/button';
 import { useAuth } from '@/context/auth-context';
 
 export default function UserPage() {
+  const router = useRouter();
+  const { user } = useAuth();
   const { logout } = useAuth();
 
   const handleLogout = () => {
     logout();
   };
+
+  if (!user) {
+    router.push('/');
+  }
 
   return (
     <Section>

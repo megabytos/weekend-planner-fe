@@ -5,11 +5,11 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import { configureStore } from '@reduxjs/toolkit';
 
 import authReducer from './slices/auth-slice';
-import counterReducer from './slices/counter-slice';
+import favoritesReducer from './slices/favorites-slice';
 import filterReducer from './slices/filter-slice';
 import modalMenuReducer from './slices/modal-menu-slice';
+import refreshTokenReducer from './slices/refresh-token-slice';
 import searchReducer from './slices/search-slice';
-import favoritesReducer from './slices/favorites-slice';
 
 const createNoopStorage = () => ({
   getItem: () => Promise.resolve(null),
@@ -23,7 +23,7 @@ const storage =
     : createNoopStorage();
 
 const rootReducer = combineReducers({
-  counter: counterReducer,
+  refreshToken: refreshTokenReducer,
   modalMenu: modalMenuReducer,
   filter: filterReducer,
   search: searchReducer,
@@ -34,7 +34,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['counter', 'favorites'],
+  whitelist: ['counter', 'favorites', 'refreshToken'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

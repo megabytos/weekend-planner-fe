@@ -1,14 +1,19 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext } from 'react';
 
 import apiClient from '@/libs/api/api-client';
+import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
+import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
+import {
+  add,
+  selectRefreshToken,
+} from '@/libs/redux/slices/refresh-token-slice';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const AuthContext = createContext({
   user: null,
-  isLoading: false,
   login: async (payload) => {},
   register: async (payload) => {},
   logout: async () => {},
@@ -17,17 +22,23 @@ const AuthContext = createContext({
 export function AuthProvider({ children }) {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { refreshToken } = useAppSelector(selectRefreshToken);
+  const dispatch = useAppDispatch();
+
+  console.log(refreshToken);
 
   // ---------------------------------------------------------
   // 1) Поточний користувач
   // ---------------------------------------------------------
 
-  const { data: user, isLoading } = useQuery({
+  const { data: user } = useQuery({
     queryKey: ['auth', 'me'],
     queryFn: async () => {
       try {
-        const response = await apiClient.get('/auth/refresh');
-        return response.data.user || null;
+        const response = await apiClient.post('/auth/refresh', {
+          refreshToken,
+        });
+        return response.data || null;
       } catch (error) {
         if (error.response?.status === 401) {
           return null;
@@ -46,7 +57,7 @@ export function AuthProvider({ children }) {
     mutationFn: async (payload) => {
       try {
         const response = await apiClient.post('/auth/login', payload);
-        return response.data.user;
+        return response.data;
       } catch (error) {
         const message = error.response?.data?.message || 'Login failed';
         throw new Error(message);
@@ -54,6 +65,7 @@ export function AuthProvider({ children }) {
     },
 
     onSuccess: (userData) => {
+      dispatch(add(userData.refreshToken));
       queryClient.setQueryData(['auth', 'me'], userData);
       router.push('/user');
     },
@@ -73,7 +85,7 @@ export function AuthProvider({ children }) {
         const response = await apiClient.post('/auth/register', payload, {
           withCredentials: true,
         });
-        return response.data.user;
+        return response.data;
       } catch (error) {
         const message = error.response?.data?.message || 'Register failed';
         throw new Error(message);
@@ -81,7 +93,9 @@ export function AuthProvider({ children }) {
     },
 
     onSuccess: (userData) => {
+      dispatch(add(userData.refreshToken));
       queryClient.setQueryData(['auth', 'me'], userData);
+      router.push('/user');
     },
   });
 
@@ -91,7 +105,13 @@ export function AuthProvider({ children }) {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await apiClient.post('/auth/logout', {}, { withCredentials: true });
+      await apiClient.post(
+        '/auth/logout',
+        {
+          refreshToken,
+        },
+        { withCredentials: true },
+      );
       return null;
     },
 
@@ -108,7 +128,6 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
-        isLoading,
         login: loginMutation.mutateAsync,
         register: registerMutation.mutateAsync,
         logout: logoutMutation.mutateAsync,
