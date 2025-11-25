@@ -1,15 +1,37 @@
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const weekdays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 const TOTAL_DAYS = 42;
+const normalizeDate = (value) => {
+  if (!value) return null;
+  if (value instanceof Date) return value;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
 
-export default function Calendar({ onSelect = null }) {
-  const today = new Date();
-  const [currentDate, setCurrentDate] = useState(today);
-  const [selectedDate, setSelectedDate] = useState(null);
+export default function Calendar({ onSelect = null, value = null }) {
+  const today = useMemo(() => new Date(), []);
+  const [currentDate, setCurrentDate] = useState(
+    () => normalizeDate(value) || today,
+  );
+  const [selectedDate, setSelectedDate] = useState(
+    () => normalizeDate(value) || null,
+  );
+
+  useEffect(() => {
+    const normalized = normalizeDate(value);
+    setSelectedDate(normalized);
+    if (normalized) {
+      setCurrentDate(
+        new Date(normalized.getFullYear(), normalized.getMonth(), 1),
+      );
+    } else {
+      setCurrentDate(today);
+    }
+  }, [today, value]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();

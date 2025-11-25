@@ -1,31 +1,23 @@
 'use client';
 
+import L from 'leaflet';
+import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef, useState } from 'react';
-import L from 'leaflet';
-import 'leaflet.markercluster';
 
 // @ts-nocheck
 
-export default function Map() {
+export default function Map({ places = [] }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef(null);
 
-  const [places, setPlaces] = useState([]);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    fetch('/search_response.json')
-      .then((res) => res.json())
-      .then((data) => setPlaces(data.items || []))
-      .catch((e) => console.error('Ошибка загрузки JSON:', e));
   }, []);
 
   useEffect(() => {
@@ -56,7 +48,7 @@ export default function Map() {
               maxZoom: 20,
               attribution:
                 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | © OpenStreetMap contributors',
-            }
+            },
           ).addTo(mapRef.current);
         }
 
@@ -64,7 +56,7 @@ export default function Map() {
           markersRef.current = L.markerClusterGroup();
           mapRef.current.addLayer(markersRef.current);
         }
-      }
+      },
     );
   }, [isClient]);
 
@@ -72,7 +64,7 @@ export default function Map() {
     if (!mapRef.current || !markersRef.current || places.length === 0) return;
 
     markersRef.current.clearLayers();
-    
+
     places.forEach((item) => {
       const loc = item.location;
       if (loc?.lat && loc?.lon) {

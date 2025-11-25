@@ -1,10 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  city: '',
+  city: null,
   categories: [],
   date: '',
-  price: '',
+  customDate: '',
+  budgetTier: '',
+  timeBudget: '',
+  companyType: '',
+  kidsAgeGroups: [],
+  mood: '',
+  target: 'events',
+  transportMode: '',
+  indoorOutdoor: '',
 };
 
 const filterSlice = createSlice({
@@ -12,7 +20,10 @@ const filterSlice = createSlice({
   initialState,
   reducers: {
     toggleCity: (state, { payload }) => {
-      state.city = state.city === payload ? '' : payload;
+      state.city =
+        state.city?.id && payload?.id && state.city.id === payload.id
+          ? null
+          : payload;
     },
     toggleCategory: (state, { payload }) => {
       const index = state.categories.indexOf(payload);
@@ -24,15 +35,64 @@ const filterSlice = createSlice({
     },
     setDate: (state, { payload }) => {
       state.date = payload;
+      if (payload !== 'Choose date') {
+        state.customDate = '';
+      }
     },
-    setPrice: (state, { payload }) => {
-      state.price = payload;
+    setCustomDate: (state, { payload }) => {
+      state.customDate = payload;
+      state.date = 'Choose date';
+    },
+    setBudgetTier: (state, { payload }) => {
+      state.budgetTier = payload;
+    },
+    setTimeBudget: (state, { payload }) => {
+      state.timeBudget = payload;
+    },
+    setCompanyType: (state, { payload }) => {
+      state.companyType = payload;
+      if (payload !== 'kids') {
+        state.kidsAgeGroups = [];
+      }
+    },
+    toggleKidsAgeGroup: (state, { payload }) => {
+      const index = state.kidsAgeGroups.indexOf(payload);
+      if (index === -1) {
+        state.kidsAgeGroups.push(payload);
+      } else {
+        state.kidsAgeGroups.splice(index, 1);
+      }
+    },
+    setMood: (state, { payload }) => {
+      state.mood = payload;
+    },
+    setTarget: (state, { payload }) => {
+      state.target = payload || 'events';
+    },
+    setTransportMode: (state, { payload }) => {
+      state.transportMode = payload;
+    },
+    setIndoorOutdoor: (state, { payload }) => {
+      state.indoorOutdoor = payload;
     },
     resetFilters: () => initialState,
   },
 });
 
-export const { toggleCity, toggleCategory, setDate, setPrice, resetFilters } =
-  filterSlice.actions;
+export const {
+  toggleCity,
+  toggleCategory,
+  setDate,
+  setCustomDate,
+  setBudgetTier,
+  setTimeBudget,
+  setCompanyType,
+  toggleKidsAgeGroup,
+  setMood,
+  setTarget,
+  setTransportMode,
+  setIndoorOutdoor,
+  resetFilters,
+} = filterSlice.actions;
 export default filterSlice.reducer;
 export const selectFilter = (state) => state.filter;

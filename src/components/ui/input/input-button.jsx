@@ -39,6 +39,18 @@ export default function InputButton({
   children,
   ...inputProps
 }) {
+  const { onKeyDown, ...restInputProps } = inputProps;
+
+  const handleKeyDown = (event) => {
+    onKeyDown?.(event);
+    if (event.defaultPrevented) {
+      return;
+    }
+    if (event.key === 'Enter') {
+      submitFunction?.(event);
+    }
+  };
+
   return (
     <div className={cn('h-12 relative', divClasses)}>
       <InputBase
@@ -51,7 +63,8 @@ export default function InputButton({
         errId={errId}
         divClasses={nestedDivClasses}
         inputClasses={inputClasses}
-        {...inputProps}
+        onKeyDown={handleKeyDown}
+        {...restInputProps}
       />
 
       <button

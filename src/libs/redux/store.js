@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 
 import { configureStore } from '@reduxjs/toolkit';
 
@@ -9,6 +9,18 @@ import counterReducer from './slices/counter-slice';
 import filterReducer from './slices/filter-slice';
 import modalMenuReducer from './slices/modal-menu-slice';
 import searchReducer from './slices/search-slice';
+import favoritesReducer from './slices/favorites-slice';
+
+const createNoopStorage = () => ({
+  getItem: () => Promise.resolve(null),
+  setItem: (_key, value) => Promise.resolve(value),
+  removeItem: () => Promise.resolve(),
+});
+
+const storage =
+  typeof window !== 'undefined'
+    ? createWebStorage('local')
+    : createNoopStorage();
 
 const rootReducer = combineReducers({
   counter: counterReducer,
@@ -16,12 +28,13 @@ const rootReducer = combineReducers({
   filter: filterReducer,
   search: searchReducer,
   auth: authReducer,
+  favorites: favoritesReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['counter'],
+  whitelist: ['counter', 'favorites'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -14,10 +14,22 @@ import { store } from '../store';
 
 /**
  * @typedef {Object} FilterState
- * @property {string[]} cities
+ * @property {string} city
  * @property {string[]} categories
  * @property {string|null} date
- * @property {string|null} price
+ * @property {string|null} customDate
+ * @property {string|null} budgetTier
+ * @property {string|null} timeBudget
+ * @property {string|null} companyType
+ * @property {string[]} kidsAgeGroups
+ * @property {string|null} mood
+ * @property {string} target
+ * @property {string|null} transportMode
+ * @property {string|null} indoorOutdoor
+ */
+/**
+ * @typedef {Object} FavoritesState
+ * @property {Object.<string, any>} items
  */
 
 /**
