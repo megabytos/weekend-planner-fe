@@ -14,11 +14,10 @@ export default function SignInPage() {
 
   const handleSignIn = (event) => {
     event.preventDefault();
-
     const formData = new FormData(event.target);
     const email = formData.get('email');
     const password = formData.get('password');
-    login({ email, password });
+    login.mutateAsync({ email, password });
   };
 
   return (
@@ -37,7 +36,12 @@ export default function SignInPage() {
           <span>Forgot password?</span>
           <ArrowRight size={16} />
         </Link>
-        <ButtonMain className="mx-auto max-w-[384px]">Sign In</ButtonMain>
+        <ButtonMain
+          isLoading={login.isPending}
+          className="mx-auto max-w-[384px]"
+        >
+          Sign In
+        </ButtonMain>
         <Link
           href="/sign-up"
           className="flex justify-center items-center text-sm text-blue text-right underline hover:opacity-80"

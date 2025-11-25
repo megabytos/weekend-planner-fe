@@ -1,6 +1,7 @@
 'use client';
 
 import { Roboto } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
 
 import Footer from '@/components/layout/footer';
 import Header from '@/components/layout/header';
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
         <QueryClientProvider client={queryClient}>
           <ReduxProvider>
             <AuthProvider>
+              <Toaster position="top-right" />
               <Header />
               <main>{children}</main>
               <Footer />

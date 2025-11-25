@@ -17,7 +17,7 @@ export default function SignUpPage() {
     const formData = new FormData(event.target);
     const email = formData.get('email');
     const password = formData.get('password');
-    register({ email, password });
+    register.mutateAsync({ email, password });
   };
 
   return (
@@ -36,7 +36,12 @@ export default function SignUpPage() {
           <span>Already have an account?</span>
           <ArrowRight size={16} />
         </Link>
-        <ButtonMain className="mx-auto max-w-[384px]">Sign Up</ButtonMain>
+        <ButtonMain
+          isLoading={register.isPending}
+          className="mx-auto max-w-[384px]"
+        >
+          Sign Up
+        </ButtonMain>
       </form>
     </Container>
   );
