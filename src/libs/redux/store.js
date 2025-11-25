@@ -10,6 +10,7 @@ import filterReducer from './slices/filter-slice';
 import modalMenuReducer from './slices/modal-menu-slice';
 import refreshTokenReducer from './slices/refresh-token-slice';
 import searchReducer from './slices/search-slice';
+import favoritesReducer from './slices/favorites-slice';
 
 const createNoopStorage = () => ({
   getItem: () => Promise.resolve(null),
