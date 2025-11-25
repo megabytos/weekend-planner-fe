@@ -1,10 +1,12 @@
 'use client';
 
+import Fuse from 'fuse.js';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 
 import Calendar from '@/components/ui/calendar';
 import FilterButton from '@/components/ui/filter/filter-button';
 import FilterSection from '@/components/ui/filter/filter-section';
+import InputBase from '@/components/ui/input/input-base';
 import {
   BUDGET_TIERS,
   CATS,
@@ -32,8 +34,12 @@ export default function Filter() {
   const dispatch = useAppDispatch();
   const filter = useAppSelector(selectFilter);
   const [showCalendar, setShowCalendar] = useState(false);
-  const [cityOptions, setCityOptions] = useState(CITIES);
+  const [cityOptions, setCityOptions] = useState(
+    CITIES.map((name, idx) => ({ id: idx + 1, name })),
+  );
+  const [citySearch, setCitySearch] = useState('');
   const [categoryOptions, setCategoryOptions] = useState(CATS);
+  const [categorySearch, setCategorySearch] = useState('');
 
   const customDateLabel = useMemo(() => {
     if (!filter.customDate) {
@@ -80,13 +86,22 @@ export default function Filter() {
       try {
         const data = await getCities();
         const items = Array.isArray(data?.items) ? data.items : data;
-        const names = Array.isArray(items)
-          ? items
-              .map((item) => item?.name || item?.title || item)
-              .filter(Boolean)
-          : [];
-        if (isMounted && names.length) {
-          setCityOptions(names);
+        const normalized =
+          Array.isArray(items) && items.length
+            ? items
+                .map((item, idx) => {
+                  if (typeof item === 'string') {
+                    return { id: idx + 1, name: item };
+                  }
+                  const { id, code, name, title, countryCode } = item || {};
+                  const label = name || title || code || String(id);
+                  if (!label) return null;
+                  return { id, code, name: label, countryCode };
+                })
+                .filter(Boolean)
+            : [];
+        if (isMounted && normalized.length) {
+          setCityOptions(normalized);
         }
       } catch (error) {
         console.error('Failed to load cities', error);
@@ -98,6 +113,30 @@ export default function Filter() {
       isMounted = false;
     };
   }, []);
+
+  const filteredCities = useMemo(() => {
+    const query = citySearch.trim();
+
+    const fuse = new Fuse(cityOptions, {
+      keys: ['name', 'code'],
+      threshold: 0.3,
+    });
+
+    return fuse.search(query).map((result) => result.item);
+  }, [cityOptions, citySearch]);
+
+  const filteredCategories = useMemo(() => {
+    const query = categorySearch.trim();
+
+    const fuse = new Fuse(
+      categoryOptions.map((item) =>
+        typeof item === 'string' ? { name: item } : item,
+      ),
+      { keys: ['name'], threshold: 0.3 },
+    );
+
+    return fuse.search(query).map((result) => result.item.name || result.item);
+  }, [categoryOptions, categorySearch]);
 
   useEffect(() => {
     let isMounted = true;
@@ -180,15 +219,33 @@ export default function Filter() {
       </div>
 
       <FilterSection label="City">
-        {cityOptions.map((city) => (
-          <Fragment key={city}>
-            <FilterButton value={city} filterType={FILTER_TYPES.city} />
+        <InputBase
+          value={citySearch}
+          onChange={(e) => setCitySearch(e.target.value)}
+          placeholder="Search city..."
+          divClasses="my-2 w-full"
+          inputClasses="h-10 text-sm"
+        />
+        {filteredCities.map((city) => (
+          <Fragment key={city?.id || city?.name}>
+            <FilterButton
+              value={city}
+              label={city?.name}
+              filterType={FILTER_TYPES.city}
+            />
           </Fragment>
         ))}
       </FilterSection>
 
       <FilterSection label="Category">
-        {categoryOptions.map((category) => (
+        <InputBase
+          value={categorySearch}
+          onChange={(e) => setCategorySearch(e.target.value)}
+          placeholder="Search category..."
+          divClasses="my-2 w-full"
+          inputClasses="h-10 text-sm"
+        />
+        {filteredCategories.map((category) => (
           <Fragment key={category}>
             <FilterButton value={category} filterType={FILTER_TYPES.category} />
           </Fragment>

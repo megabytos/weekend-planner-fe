@@ -33,7 +33,7 @@ export default function FilterButton({
   const selected = (() => {
     switch (filterType) {
       case FILTER_TYPES.city:
-        return filter.city === value;
+        return filter.city?.id === value?.id;
       case FILTER_TYPES.category:
         return filter.categories.includes(value);
       case FILTER_TYPES.date:
