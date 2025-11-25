@@ -27,6 +27,10 @@ import { store } from '../store';
  * @property {string|null} transportMode
  * @property {string|null} indoorOutdoor
  */
+/**
+ * @typedef {Object} FavoritesState
+ * @property {Object.<string, any>} items
+ */
 
 /**
  * @typedef {ReturnType<typeof store.getState>} RootState

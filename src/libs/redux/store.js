@@ -9,6 +9,7 @@ import counterReducer from './slices/counter-slice';
 import filterReducer from './slices/filter-slice';
 import modalMenuReducer from './slices/modal-menu-slice';
 import searchReducer from './slices/search-slice';
+import favoritesReducer from './slices/favorites-slice';
 
 const createNoopStorage = () => ({
   getItem: () => Promise.resolve(null),
@@ -27,12 +28,13 @@ const rootReducer = combineReducers({
   filter: filterReducer,
   search: searchReducer,
   auth: authReducer,
+  favorites: favoritesReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['counter'],
+  whitelist: ['counter', 'favorites'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

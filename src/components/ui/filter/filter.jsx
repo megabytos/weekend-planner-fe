@@ -280,7 +280,7 @@ export default function Filter() {
         )}
       </FilterSection>
 
-      <FilterSection label="Time budget">
+      <FilterSection label="Part of the day">
         {TIME_BUDGETS.map(({ value, label }) => (
           <Fragment key={value}>
             <FilterButton

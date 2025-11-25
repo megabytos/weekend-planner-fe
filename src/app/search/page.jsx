@@ -106,11 +106,14 @@ export default function SearchPage() {
             {!isLoading && !isError && events.length === 0 && (
               <p>No events found for selected filters.</p>
             )}
-            {events.map((event) => (
-              <div key={event.id}>
-                <EventCard event={event} />
-              </div>
-            ))}
+            {events.map((event, index) => {
+              const key = event?.__key;
+              return (
+                <div key={key}>
+                  <EventCard event={event} />
+                </div>
+              );
+            })}
           </div>
         </section>
 

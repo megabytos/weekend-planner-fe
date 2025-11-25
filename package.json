@@ -16,6 +16,7 @@
     "axios": "^1.13.2",
     "clsx": "^2.1.1",
     "eslint-config-prettier": "^10.1.8",
+    "nanoid": "^5.0.9",
     "fuse.js": "^7.0.0",
     "husky": "^9.1.7",
     "leaflet": "^1.9.4",

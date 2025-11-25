@@ -1,5 +1,6 @@
 'use client';
 
+import { nanoid } from 'nanoid';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useSearchQuery } from '@/hooks/use-search-query';
@@ -26,15 +27,36 @@ const useSearchData = ({ searchValue, filter }) => {
 
   const { data, isLoading, isError, isFetching } = useSearchQuery(searchParams);
 
+  // Generate a safe unique key
+  const ensureKey = useCallback((item) => {
+    if (!item) return null;
+    if (item.__key) return item;
+
+    const safeId =
+      item.id && item.id !== 'foursquare:undefined' ? item.id : null;
+    const safeSourceId =
+      item.sources?.[0]?.externalId &&
+      item.sources[0].externalId !== 'undefined'
+        ? item.sources[0].externalId
+        : null;
+    const key = safeId || safeSourceId || item.url || item.title || nanoid();
+    return { ...item, __key: key };
+  }, []);
+
   useEffect(() => {
     if (!data) {
       return;
     }
 
     const fetchedEvents = data.items ?? [];
+    const withKeys = fetchedEvents
+      .map((item) => ensureKey(item))
+      .filter(Boolean);
 
     setEvents((prev) =>
-      page === 1 ? fetchedEvents : [...prev, ...fetchedEvents],
+      page === 1
+        ? withKeys
+        : [...prev.map((item) => ensureKey(item)).filter(Boolean), ...withKeys],
     );
 
     const { pagination, total } = data;

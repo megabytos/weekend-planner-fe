@@ -34,6 +34,11 @@ import { store } from '../store';
  */
 
 /**
+ * @typedef {Object} FavoritesState
+ * @property {Object.<string, any>} items
+ */
+
+/**
  * @typedef {ReturnType<typeof store.getState>} RootState
  */
 
