@@ -1,7 +1,7 @@
 'use client';
 
-import PlannerPrototype from '../ui/planner/planner-prototype';
+import Planner from '../ui/planner/planner';
 
 export default function PlannerContainer() {
-  return <PlannerPrototype />;
+  return <Planner />;
 }
