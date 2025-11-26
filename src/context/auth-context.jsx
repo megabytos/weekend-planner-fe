@@ -103,7 +103,6 @@ export function AuthProvider({ children }) {
     onSuccess: () => {
       queryClient.setQueryData(['auth', 'me'], null);
       queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
-      router.push('/');
     },
 
     onError: (error) => {

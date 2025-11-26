@@ -21,8 +21,6 @@ export default function Header() {
   const dispatch = useAppDispatch();
   const { user } = useAuth();
 
-  console.log(user);
-
   const handleOpenModal = () => {
     dispatch(openModal());
   };
