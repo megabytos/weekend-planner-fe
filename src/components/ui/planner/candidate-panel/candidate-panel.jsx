@@ -1,31 +1,11 @@
-import CandidateFilters from "./candidate-filtters";
-import CandidateList from "./candidate-list";
+import CandidateList from './candidate-list';
 
-export default function CandidatePanel({
-  filterType,
-  setFilterType,
-  query,
-  setQuery,
-  candidates,
-  addCandidate,
-  win,
-  setWin,
-  mode,
-  setMode,
-}) {
+export default function CandidatePanel({ candidates, addCandidate }) {
   return (
-    <div className="col-span-3 flex flex-col gap-3">
-      <h1 className="text-2xl font-semibold">Planner</h1>
-      <CandidateFilters
-        mode={mode}
-        setMode={setMode}
-        win={win}
-        setWin={setWin}
-        filterType={filterType}
-        setFilterType={setFilterType}
-        query={query}
-        setQuery={setQuery}
-      />
+    <div>
+      <h1 className="font-medium text-[16px] leading-6 lg:text-[22px] lg:mb-8">
+        Candidates
+      </h1>
       <CandidateList candidates={candidates} addCandidate={addCandidate} />
     </div>
   );

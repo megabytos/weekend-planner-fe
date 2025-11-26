@@ -1,5 +1,9 @@
-import TimelineItem from "../timeline/timeline-item";
-import { fmtTime } from "@/utils/time";
+import { CalendarFold, ChevronDown, ChevronUp } from 'lucide-react';
+
+import { fmtTime } from '@/utils/time';
+
+import Button from '../../buttons/button';
+import TimelineItem from '../timeline/timeline-item';
 
 export default function Timeline({
   items,
@@ -15,72 +19,80 @@ export default function Timeline({
 }) {
   return (
     <>
-      <div className="grid grid-cols-3 gap-3 text-sm">
-        <div className="col-span-2 border rounded p-2 max-h-[64vh] overflow-auto">
-          <div className="text-gray-600 mb-2">
+      <div className="text-medium">
+        <div className="flex flex-col gap-4 md:w-[354px] lg:gap-4 lg:w-[408px]">
+          <div className="font-medium mt-8">
             Timeline (window {fmtTime(win.from)} - {fmtTime(win.to)})
           </div>
 
           {/* Planned visits (editable) */}
           {items.map((it, idx) => (
-            <div key={idx} className="border rounded p-2 mb-2">
-              <div className="flex items-center justify-between">
-                <div className="font-medium">
-                  {it.kind === "event_visit" ? "Event: " : "Place: "}
+            <div
+              key={idx}
+              className="flex bg-white-dark rounded-xl p-2 justify-between items-center"
+            >
+              <div className="flex-col items-center">
+                <div className="font-medium mb-4">
+                  {it.kind === 'event_visit' ? 'Event: ' : 'Place: '}
                   {it.name}
                 </div>
-                <div className="flex gap-1">
-                  <button
-                    className="px-2 py-1 border rounded"
-                    onClick={() => moveUp(idx)}
-                  >
-                    ↑
-                  </button>
-                  <button
-                    className="px-2 py-1 border rounded"
-                    onClick={() => moveDown(idx)}
-                  >
-                    ↓
-                  </button>
-                  <button
-                    className="px-2 py-1 border rounded"
-                    onClick={() => removeItem(idx)}
-                  >
-                    Delete
-                  </button>
+                <div className="flex gap-2 items-center">
+                  <CalendarFold className="h-5 w-5" />
+                  {it.kind === 'event_visit' ? (
+                    <div className="font-light">
+                      {new Date(it.start_at).toLocaleString()} -{' '}
+                      {new Date(it.end_at).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 text-gray-700">
+                      Duration:
+                      <input
+                        type="number"
+                        min={15}
+                        max={300}
+                        className="border border-blue rounded-xl px-2 py-1 w-24"
+                        value={it.stayMin || 60}
+                        onChange={(e) => updateStay(idx, e.target.value)}
+                      />{' '}
+                      min
+                    </div>
+                  )}
                 </div>
               </div>
-              {it.kind === "event_visit" ? (
-                <div className="text-gray-600">
-                  {new Date(it.start_at).toLocaleString()} -{" "}
-                  {new Date(it.end_at).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 text-gray-700">
-                  Duration:
-                  <input
-                    type="number"
-                    min={15}
-                    max={300}
-                    className="border rounded px-2 py-1 w-24"
-                    value={it.stayMin || 60}
-                    onChange={(e) => updateStay(idx, e.target.value)}
-                  />{" "}
-                  min
-                </div>
-              )}
+              <div className="flex gap-1">
+                <Button
+                  className="border border-blue rounded-xl px-1 py-1 hover:bg-blue-light"
+                  onClick={() => moveUp(idx)}
+                >
+                  <ChevronUp className="w-5 h-5 stroke-blue" />
+                </Button>
+                <Button
+                  className="border border-blue rounded-xl px-1 py-1 hover:bg-blue-light"
+                  onClick={() => moveDown(idx)}
+                >
+                  <ChevronDown className="w-5 h-5 stroke-blue" />
+                </Button>
+                <Button
+                  className="text-blue border border-blue rounded-xl px-1 py-1 hover:bg-blue-light"
+                  onClick={() => removeItem(idx)}
+                >
+                  Delete
+                </Button>
+              </div>
             </div>
           ))}
 
-          <div className="h-px bg-gray-200 my-3" />
+          <div className="h-0.5 bg-gray-200 my-3" />
 
           {/* Calculated timeline (legs + visits) */}
-          <div className="text-gray-600 mb-1">Calculation (legs and visits):</div>
+          <div className="font-medium mb-1">Calculation (legs and visits):</div>
           {timeline.length === 0 && (
-            <div className="text-gray-500">Add items and press "Recalculate"</div>
+            <div className="text-gray-500">
+              Add items and press "Recalculate"
+            </div>
           )}
           {timeline.map((r, i) => (
             <TimelineItem r={r} key={i} />
@@ -88,14 +100,14 @@ export default function Timeline({
         </div>
 
         <div className="col-span-1 border rounded p-2">
-          <div className="text-sm font-semibold mb-2">Summary</div>
+          <div className="text-sm font-medium mb-2">Summary</div>
           <div className="text-sm">Distance: {metrics.distanceKm} km</div>
           <div className="text-sm">On the way: {metrics.travelMin} min</div>
           <div className="text-sm">On site: {metrics.onSiteMin} min</div>
           {metrics.warnings.length > 0 && (
             <div className="mt-2">
-              <div className="text-sm font-semibold text-amber-700">Warnings</div>
-              <ul className="list-disc pl-5 text-sm text-amber-700">
+              <div className="text-sm font-medium text-pink">Warnings</div>
+              <ul className="list-disc pl-5 text-sm text-pink">
                 {metrics.warnings.map((w, idx) => (
                   <li key={idx}>{w}</li>
                 ))}
