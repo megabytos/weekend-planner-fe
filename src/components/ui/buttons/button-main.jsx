@@ -19,6 +19,7 @@ export default function ButtonMain({
       className={cn(
         'flex justify-center items-center w-full bg-orange h-12 text-center rounded-[10px] text-white font-bold px-4',
         className,
+        { 'opacity-50 cursor-not-allowed': isDisabled },
       )}
       aria-label={label ? label : ''}
       isDisabled={isDisabled}

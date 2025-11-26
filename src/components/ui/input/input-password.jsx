@@ -10,6 +10,7 @@ import InputBase from './input-base';
 /**
  * InputPassword component.
  * @param {Object} props - Component props
+ * @param {string} [props.value] - Value of the input field.
  * @param {string} [props.name] - Name attribute for the input field.
  * @param {string} [props.placeholder='Password'] - Placeholder for the input field.
  * @param {string} [props.label=''] - Label for the input field.
@@ -21,6 +22,8 @@ import InputBase from './input-base';
  * @param {string} [props.nestedDivClasses=''] - Classes for the nested div element.
  * @param {string} [props.divClasses=''] - Classes for the outer div element.
  * @param {string} [props.inputClasses=''] - Classes for the input element.
+ * @param {ChangeEventHandler<HTMLInputElement>} [props.onChange] - Change event handler for the input element.
+ * @param {FocusEventHandler<HTMLInputElement>} [props.onBlur] - Blur event handler for the input element.
  * @returns {React.JSX.Element} - JSX element containing the input field and show/hide password button.
  */
 export default function InputPassword({
@@ -35,6 +38,7 @@ export default function InputPassword({
   nestedDivClasses = '',
   divClasses = '',
   inputClasses = '',
+  ...inputProps
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -55,6 +59,7 @@ export default function InputPassword({
         errId={errId}
         divClasses={nestedDivClasses}
         inputClasses={inputClasses}
+        {...inputProps}
       />
 
       <button
