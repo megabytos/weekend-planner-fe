@@ -1,4 +1,7 @@
-import { defaultWindow, tonightRange } from "@/data/demo-data";
+import { defaultWindow, tonightRange } from '@/data/demo-data';
+
+import Button from '../../buttons/button';
+import InputBase from '../../input/input-base';
 
 export default function CandidateFilters({
   mode,
@@ -11,81 +14,85 @@ export default function CandidateFilters({
   setQuery,
 }) {
   return (
-    <div className="grid grid-cols-2 gap-2 text-sm items-center border rounded p-3">
-      <label>Mode</label>
-      <select
-        className="border rounded px-2 py-1"
-        value={mode}
-        onChange={(e) => setMode(e.target.value)}
-      >
-        <option value="walking">On foot</option>
-        <option value="cycling">Bicycle</option>
-        <option value="driving">Car</option>
-      </select>
-      <label>Day window</label>
-      <div className="flex gap-1 flex-col">
-        <input
-          type="datetime-local"
-          className="border rounded px-2 py-1"
-          value={new Date(win.from).toISOString().slice(0, 16)}
-          onChange={(e) =>
-            setWin((w) => ({
-              ...w,
-              from: new Date(e.target.value).toISOString(),
-            }))
-          }
-        />
-        <input
-          type="datetime-local"
-          className="border rounded px-2 py-1"
-          value={new Date(win.to).toISOString().slice(0, 16)}
-          onChange={(e) =>
-            setWin((w) => ({
-              ...w,
-              to: new Date(e.target.value).toISOString(),
-            }))
-          }
-        />
-      </div>
-      <label>Quick</label>
-      <div className="flex gap-2">
-        <button
-          className="px-2 py-1 border rounded"
-          onClick={() => setWin(defaultWindow())}
-        >
-          +6 hours
-        </button>
-        <button
-          className="px-2 py-1 border rounded"
-          onClick={() => setWin(tonightRange())}
-        >
-          Evening
-        </button>
-      </div>
-
-      <div className="flex gap-2 items-center col-span-2">
-        <div className="text-sm text-gray-600">Candidates</div>
-        <div className="ml-auto flex gap-2">
-          {["both", "places", "events"].map((t) => (
-            <button
-              key={t}
-              onClick={() => setFilterType(t)}
-              className={`px-2 py-1 border rounded text-sm ${filterType === t ? "bg-black text-white" : ""}`}
+    <div className="gap-4">
+      <div className="flex flex-col text-medium text-[16px] gap-4 md:flex-wrap lg:flex-row">
+        <div className="flex justify-between gap-2 items-center bg-white-dark rounded-xl p-2">
+          <label>Mode</label>
+          <select
+            className="text-blue border border-blue rounded-xl px-2 py-1 hover:bg-blue-light"
+            value={mode}
+            onChange={(e) => setMode(e.target.value)}
+          >
+            <option value="walking">On foot</option>
+            <option value="cycling">Bicycle</option>
+            <option value="driving">Car</option>
+          </select>
+        </div>
+        <div className="flex justify-between gap-2 items-center bg-white-dark rounded-xl p-2">
+          <label>Day window</label>
+          <div className="flex flex-col gap-2 md:flex-row">
+            <input
+              type="datetime-local"
+              className="text-blue border border-blue rounded-xl px-2 py-1 hover:bg-blue-light"
+              value={new Date(win.from).toISOString().slice(0, 16)}
+              onChange={(e) =>
+                setWin((w) => ({
+                  ...w,
+                  from: new Date(e.target.value).toISOString(),
+                }))
+              }
+            />
+            <input
+              type="datetime-local"
+              className="text-blue border border-blue rounded-xl px-2 py-1 hover:bg-blue-light"
+              value={new Date(win.to).toISOString().slice(0, 16)}
+              onChange={(e) =>
+                setWin((w) => ({
+                  ...w,
+                  to: new Date(e.target.value).toISOString(),
+                }))
+              }
+            />
+          </div>
+        </div>
+        <div className="flex justify-between gap-2 items-center bg-white-dark rounded-xl p-2 ">
+          <label>Quick</label>
+          <div className="flex gap-2">
+            <Button
+              className="px-2 py-1 text-blue border border-blue rounded-xl hover:bg-blue-light"
+              onClick={() => setWin(defaultWindow())}
             >
-              {t}
-            </button>
-          ))}
+              +6 hours
+            </Button>
+            <Button
+              className="px-2 py-1 text-blue border border-blue rounded-xl hover:bg-blue-light"
+              onClick={() => setWin(tonightRange())}
+            >
+              Evening
+            </Button>
+          </div>
+        </div>
+        <div className="flex justify-between gap-2 items-center bg-white-dark rounded-xl p-2">
+          <div>Candidates</div>
+          <div className="flex gap-2">
+            {['both', 'places', 'events'].map((t) => (
+              <Button
+                key={t}
+                onClick={() => setFilterType(t)}
+                className={`px-2 py-1 text-blue border border-blue rounded-xl ${filterType === t ? 'bg-blue-light' : ''} hover:bg-blue-light`}
+              >
+                {t}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
-
-      <div className="col-span-2">
-        <input
-          className="border rounded px-2 py-1 w-full"
-          placeholder="search candidates"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-      </div>
+      <InputBase
+        placeholder="search candidates"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        divClasses="my-4"
+      />
     </div>
   );
 }
