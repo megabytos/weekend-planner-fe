@@ -1,34 +1,39 @@
 'use client';
 
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext } from 'react';
+import toast from 'react-hot-toast';
 
+import apiClient from '@/libs/api/api-client';
+import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
+import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
+import {
+  add,
+  selectRefreshToken,
+} from '@/libs/redux/slices/refresh-token-slice';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const AuthContext = createContext({
   user: null,
-  isLoading: false,
-  login: async () => {},
-  register: async () => {},
-  logout: async () => {},
+  login: {},
+  register: {},
+  logout: {},
 });
 
 export function AuthProvider({ children }) {
   const queryClient = useQueryClient();
-  const [testUser, setTestUser] = useState(null);
   const router = useRouter();
+  const { refreshToken } = useAppSelector(selectRefreshToken);
+  const dispatch = useAppDispatch();
 
-  // ---------------------------------------------------------
-  // 1) Поточний користувач
-  // ---------------------------------------------------------
-
-  const { data: user, isLoading } = useQuery({
+  const { data: user } = useQuery({
     queryKey: ['auth', 'me'],
     queryFn: async () => {
       try {
-        const response = await axios.get('/api/me', { withCredentials: true });
-        return response.data.user || null;
+        const response = await apiClient.post('/auth/refresh', {
+          refreshToken,
+        });
+        return response.data || null;
       } catch (error) {
         if (error.response?.status === 401) {
           return null;
@@ -38,62 +43,60 @@ export function AuthProvider({ children }) {
     },
   });
 
-  // ---------------------------------------------------------
-  // 2) Логін
-  // ---------------------------------------------------------
-
   const loginMutation = useMutation({
+    mutationKey: ['auth', 'me'],
     mutationFn: async (payload) => {
-      try {
-        const response = await axios.post('/api/login', payload, {
-          withCredentials: true,
-        });
-        return response.data.user;
-      } catch (error) {
-        const message = error.response?.data?.message || 'Login failed';
-        throw new Error(message);
-      }
+      const response = await apiClient.post('/auth/login', payload);
+      return response.data;
     },
 
     onSuccess: (userData) => {
-      // оновлюємо кеш
+      dispatch(add(userData.refreshToken));
       queryClient.setQueryData(['auth', 'me'], userData);
-    },
-    onError: () => {
-      setTestUser(true);
       router.push('/user');
     },
+    onError: (error) => {
+      console.error(error);
+      toast.error(
+        error.message ? `Login failed: ${error.message}` : 'Login failed.',
+      );
+    },
   });
 
-  // ---------------------------------------------------------
-  // 3) Реєстрація
-  // ---------------------------------------------------------
-
   const registerMutation = useMutation({
+    mutationKey: ['auth', 'me'],
     mutationFn: async (payload) => {
-      try {
-        const response = await axios.post('/api/register', payload, {
-          withCredentials: true,
-        });
-        return response.data.user;
-      } catch (error) {
-        const message = error.response?.data?.message || 'Register failed';
-        throw new Error(message);
-      }
+      const response = await apiClient.post('/auth/register', payload, {
+        withCredentials: true,
+      });
+      return response.data;
     },
 
     onSuccess: (userData) => {
+      dispatch(add(userData.refreshToken));
       queryClient.setQueryData(['auth', 'me'], userData);
+      router.push('/user');
+    },
+
+    onError: (error) => {
+      console.error(error);
+      toast.error(
+        error.message
+          ? `Registration failed: ${error.message}`
+          : 'Registration failed.',
+      );
     },
   });
-
-  // ---------------------------------------------------------
-  // 4) Логаут
-  // ---------------------------------------------------------
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await axios.post('/api/logout', {}, { withCredentials: true });
+      await apiClient.post(
+        '/auth/logout',
+        {
+          refreshToken,
+        },
+        { withCredentials: true },
+      );
       return null;
     },
 
@@ -101,20 +104,21 @@ export function AuthProvider({ children }) {
       queryClient.setQueryData(['auth', 'me'], null);
       queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
     },
-    onError: () => {
-      setTestUser(null);
-      router.push('/');
+
+    onError: (error) => {
+      toast.error(
+        error.message ? `Logout failed: ${error.message}` : 'Logout failed.',
+      );
     },
   });
 
   return (
     <AuthContext.Provider
       value={{
-        user: testUser,
-        isLoading,
-        login: loginMutation.mutateAsync,
-        register: registerMutation.mutateAsync,
-        logout: logoutMutation.mutateAsync,
+        user,
+        login: loginMutation,
+        register: registerMutation,
+        logout: logoutMutation,
       }}
     >
       {children}

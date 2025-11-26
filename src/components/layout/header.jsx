@@ -2,7 +2,6 @@
 
 import { CircleUser, LogIn, Menu, UserPen } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { useAuth } from '@/context/auth-context';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
@@ -20,7 +19,6 @@ import HeaderNavLink from './header-nav-link';
 export default function Header() {
   const isModalMenuOpen = useAppSelector((state) => state.modalMenu.isOpen);
   const dispatch = useAppDispatch();
-  const router = useRouter();
   const { user } = useAuth();
 
   const handleOpenModal = () => {

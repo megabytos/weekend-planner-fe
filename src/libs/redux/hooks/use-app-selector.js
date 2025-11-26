@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 import { store } from '../store';
 
 /**
- * @typedef {Object} CounterState
- * @property {number} counter
+ * @typedef {Object} RefreshTokenState
+ * @property {string|null} refreshToken
  */
 
 /**
