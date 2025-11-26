@@ -18,7 +18,7 @@ export default function UserPage() {
   };
 
   return (
-    <ProtectedRoute>
+    <ProtectedRoute isPrivate>
       <Section>
         <Container className="py-12 md:py-5 lg:py-8">
           <h1 className="text-center text-3xl font-bold">User Profile</h1>

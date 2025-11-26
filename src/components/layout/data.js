@@ -10,6 +10,7 @@ export const footerNavLinks = {
   services: [
     { href: '/search', text: 'Search Events' },
     { href: '/ideas', text: 'Generate Ideas' },
+    { href: '/partner-sign-up', text: 'Become a Partner' },
     { href: '/add-event', text: 'Add Event' },
   ],
   events: [
