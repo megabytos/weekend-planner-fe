@@ -4,7 +4,7 @@ import Button from '../../buttons/button';
 
 export default function CandidateList({ candidates, addCandidate }) {
   return (
-    <div className="flex flex-col gap-4 max-h-[637px] overflow-auto md:w-[354px] lg:gap-4 lg:w-[408px]">
+    <div className="flex flex-col gap-4 max-h-[637px] overflow-auto md:w-[354px] lg:gap-4 lg:w-[408px] pr-2 ">
       {candidates.map((c) => (
         <div
           key={c.type + '_' + c.id}
