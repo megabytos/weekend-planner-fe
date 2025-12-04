@@ -5,12 +5,39 @@ import Link from 'next/link';
 import Address from './address';
 
 export default function EventCardPreview({ item }) {
+  if (!item) return null;
+
+  const imageSrc =
+    item.imageUrl ||
+    (Array.isArray(item.photos) ? item.photos[0] : null) ||
+    item.url ||
+    '/images/event-placeholder.jpg';
+  const title = item.title || item.name || 'Event';
+  const locationLabel =
+    item.address ||
+    [item.city?.name, item.city?.countryCode].filter(Boolean).join(', ') ||
+    null;
+  const startsAt =
+    item.nextOccurrence?.startsAt ||
+    item.occurrences?.[0]?.start ||
+    item.occurrences?.[0]?.startDate ||
+    null;
+  const dateLabel = startsAt
+    ? new Date(startsAt).toLocaleDateString('en-GB')
+    : null;
+
+  const priceLabel = item.isFree
+    ? 'Free'
+    : item.priceFrom
+      ? `${item.priceFrom}${item.currency ? ` ${item.currency}` : ''}`
+      : null;
+
   return (
     <div className="font-medium rounded-xl overflow-hidden">
       <Link href="#">
         <div className="w-[335px] h-[200px] md:w-[354px] lg:w-[320px]">
           <Image
-            src={item.url}
+            src={imageSrc}
             alt="Event"
             width={300}
             height={200}
@@ -18,16 +45,21 @@ export default function EventCardPreview({ item }) {
             className="w-full h-full object-cover"
           />
         </div>
-        <footer className="flex flex-col gap-2 p-2 bg-white-dark">
-          <h1 className="text-[22px] leading-7">Event Title</h1>
-          <div className="flex items-center gap-2">
-            <CalendarFold size={20} />
-            <span>31.12.2025</span>
-          </div>
-          <Address address="123 Main St, City, Country" />
-          <div>
-            <span>Price</span> <span>Currency</span>
-          </div>
+        <footer className="flex w-[335px] md:w-[354px] lg:w-[320px] min-w-0 flex-col gap-2 p-2 bg-white-dark">
+          <h1 className="text-[22px] leading-7 min-w-0 truncate ">{title}</h1>
+          {dateLabel && (
+            <div className="flex items-center gap-2">
+              <CalendarFold size={20} />
+              <span>{dateLabel}</span>
+            </div>
+          )}
+          {locationLabel && <Address address={locationLabel} />}
+          {(priceLabel || item.type) && (
+            <div className="flex items-center gap-2">
+              {priceLabel && <span>{priceLabel}</span>}
+              {item.type && <span className="text-orange">{item.type}</span>}
+            </div>
+          )}
         </footer>
       </Link>
     </div>

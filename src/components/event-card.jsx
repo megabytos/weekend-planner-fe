@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-useless-fragment */
 'use client';
 
 import Image from 'next/image';
@@ -17,12 +16,6 @@ import ShareButton from './ui/buttons/share-button';
 import EventDate from './ui/event-date';
 import EventPrice from './ui/event-price';
 import Viewers from './ui/viewers';
-
-/* eslint-disable react/jsx-no-useless-fragment */
-
-/* eslint-disable react/jsx-no-useless-fragment */
-
-/* eslint-disable react/jsx-no-useless-fragment */
 
 export default function EventCard({ event }) {
   if (!event) return null;

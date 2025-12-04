@@ -1,5 +1,5 @@
 const PAGE_SIZE = 10;
-const DEFAULT_BBOX = { south: -90, west: -180, north: 90, east: 180 };
+const DEFAULT_CITY = { city: { id: 40, name: 'London', countryCode: 'GB' } };
 
 const sanitizeString = (value) =>
   typeof value === 'string' ? value.trim() : undefined;
@@ -84,17 +84,24 @@ const buildWhere = (filter) => {
     return {
       city: {
         id: city.id,
-        code: city.code,
         name: city.name,
         countryCode: city.countryCode,
       },
     };
   }
 
-  return { bbox: DEFAULT_BBOX };
+  return DEFAULT_CITY;
 };
 
-const buildSearchParams = ({ page, searchQuery, filter }) => {
+const normalizeLimit = (limit) => {
+  if (!Number.isFinite(Number(limit))) {
+    return PAGE_SIZE;
+  }
+  const value = Number(limit);
+  return value > 0 ? value : PAGE_SIZE;
+};
+
+const buildSearchParams = ({ page, searchQuery, filter, limit } = {}) => {
   const result = {
     target: sanitizeString(filter?.target) || 'events',
   };
@@ -128,8 +135,8 @@ const buildSearchParams = ({ page, searchQuery, filter }) => {
   }
 
   const pageNumber = Number.isFinite(Number(page)) ? Number(page) : 1;
-  const limit = PAGE_SIZE;
-  result.pagination = { limit, page: pageNumber };
+  const pageLimit = normalizeLimit(limit);
+  result.pagination = { limit: pageLimit, page: pageNumber };
 
   return result;
 };
