@@ -10,14 +10,19 @@ import EventCardPreview from '@/components/ui/event-card-preview';
 import EventPoster from '@/components/ui/event-poster';
 import InputButton from '@/components/ui/input/input-button';
 import useHomeData from '@/hooks/use-home-data';
+import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
+import { selectFilter } from '@/libs/redux/slices/filter-slice';
+import { DEFAULT_CITY } from '@/utils/params-builder';
 
 export default function Home() {
   const router = useRouter();
+  const filter = useAppSelector(selectFilter);
   const { featured, popularEvents, popularPlaces, isLoading, isError } =
-    useHomeData();
+    useHomeData(filter);
+  const cityName = filter.city?.name || DEFAULT_CITY.city.name;
 
   const handleMainButton = () => {
-    router.push('/search');
+    router.push('/planner');
   };
   const handleSearch = () => {};
 
@@ -39,7 +44,7 @@ export default function Home() {
         )}
         <div>
           <h1 className="text-[22px] leading-7 mb-4 lg:text-[28px]">
-            Top picks nearby
+            Top picks in {cityName}
           </h1>
           {isError && (
             <p className="text-red">Failed to load items. Please try again.</p>
@@ -54,12 +59,12 @@ export default function Home() {
             className="w-[335px] md:w-[354px] lg:w-2xl"
             onClick={handleMainButton}
           >
-            Ideas generation
+            Generate Ideas
           </ButtonMain>
         </div>
         <div className="">
           <h1 className="text-[22px] leading-7 mb-4 lg:text-[28px]">
-            Popular events
+            Popular events in {cityName}
           </h1>
           {isLoading && !popularEvents.length && (
             <p className="text-gray">Loading events…</p>
@@ -76,7 +81,9 @@ export default function Home() {
           </div>
         </div>
         <div className="">
-          <h1 className="text-[22px] leading-7 mb-4">Popular places</h1>
+          <h1 className="text-[22px] leading-7 mb-4">
+            Popular places in {cityName}
+          </h1>
           {isLoading && !popularPlaces.length && (
             <p className="text-gray">Loading places…</p>
           )}

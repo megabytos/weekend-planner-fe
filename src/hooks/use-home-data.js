@@ -10,25 +10,34 @@ const DEFAULT_LIMIT = 12;
 const extractItems = (data) =>
   Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
 
-const useHomeData = () => {
+const useHomeData = (filter = {}) => {
+  const eventsFilter = useMemo(
+    () => ({ ...filter, target: 'events' }),
+    [filter],
+  );
+  const placesFilter = useMemo(
+    () => ({ ...filter, target: 'places' }),
+    [filter],
+  );
+
   const eventsParams = useMemo(
     () =>
       buildSearchParams({
         page: 1,
-        filter: { target: 'events' },
+        filter: eventsFilter,
         limit: DEFAULT_LIMIT,
       }),
-    [],
+    [eventsFilter],
   );
 
   const placesParams = useMemo(
     () =>
       buildSearchParams({
         page: 1,
-        filter: { target: 'places' },
+        filter: placesFilter,
         limit: DEFAULT_LIMIT,
       }),
-    [],
+    [placesFilter],
   );
 
   const eventsQuery = useSearchQuery(eventsParams, {

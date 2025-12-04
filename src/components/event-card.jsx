@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
@@ -61,10 +61,11 @@ export default function EventCard({ event }) {
 
   const isEvent = type === 'event';
 
-  const imageSrc =
-    imageUrl ||
-    (Array.isArray(photos) && photos[0]) ||
-    '/images/event-placeholder.jpg';
+  const primaryImage =
+    imageUrl || (Array.isArray(photos) && photos[0]) || null;
+  const [imageSrc, setImageSrc] = useState(
+    primaryImage || '/images/event-placeholder.jpg',
+  );
 
   const locationLabel =
     address ||
@@ -98,6 +99,7 @@ export default function EventCard({ event }) {
           width={335}
           height={200}
           className="w-[335px] h-[200px] md:w-[280px] object-cover"
+          onError={() => setImageSrc('/images/event-placeholder.jpg')}
         />
       </div>
       <div className="flex flex-col gap-2 md:grow p-2 md:p-0 md:pl-5">

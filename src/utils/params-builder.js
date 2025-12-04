@@ -1,5 +1,7 @@
 const PAGE_SIZE = 10;
-const DEFAULT_CITY = { city: { id: 40, name: 'London', countryCode: 'GB' } };
+export const DEFAULT_CITY = {
+  city: { id: 40, name: 'London', countryCode: 'GB' },
+};
 
 const sanitizeString = (value) =>
   typeof value === 'string' ? value.trim() : undefined;

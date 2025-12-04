@@ -12,6 +12,7 @@ import InputButton from '@/components/ui/input/input-button';
 import Map from '@/components/ui/map';
 import Tabs from '@/components/ui/tabs';
 import DEFAULT_TABS from '@/constants/tabs';
+import { DEFAULT_CITY } from '@/utils/params-builder';
 import useSearchData from '@/hooks/use-search-data';
 import useSearchTabs from '@/hooks/use-search-tabs';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
@@ -50,7 +51,7 @@ export default function SearchPage() {
   } = useSearchData({ searchValue, filter });
 
   // ! Temporary
-  const address = filter.city?.name || 'city';
+  const address = filter.city?.name || DEFAULT_CITY.city.name;
   const pathname = usePathname();
   const linkAddress = pathname.split('/');
 

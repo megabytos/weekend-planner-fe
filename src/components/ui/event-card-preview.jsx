@@ -1,17 +1,20 @@
 import { CalendarFold } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 
 import Address from './address';
 
 export default function EventCardPreview({ item }) {
   if (!item) return null;
 
-  const imageSrc =
+  const primaryImage =
     item.imageUrl ||
     (Array.isArray(item.photos) ? item.photos[0] : null) ||
-    item.url ||
-    '/images/event-placeholder.jpg';
+    item.url;
+  const [imageSrc, setImageSrc] = useState(
+    primaryImage || '/images/event-placeholder.jpg',
+  );
   const title = item.title || item.name || 'Event';
   const locationLabel =
     item.address ||
@@ -43,6 +46,7 @@ export default function EventCardPreview({ item }) {
             height={200}
             loading="eager"
             className="w-full h-full object-cover"
+            onError={() => setImageSrc('/images/event-placeholder.jpg')}
           />
         </div>
         <footer className="flex w-[335px] md:w-[354px] lg:w-[320px] min-w-0 flex-col gap-2 p-2 bg-white-dark">
