@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { DEFAULT_CITY } from '@/utils/params-builder';
+
 const initialState = {
-  city: null,
+  city: DEFAULT_CITY.city,
   categories: [],
   date: '',
   customDate: '',

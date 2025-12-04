@@ -1,8 +1,7 @@
-/* eslint-disable react/jsx-no-useless-fragment */
 'use client';
 
 import Image from 'next/image';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
@@ -17,8 +16,6 @@ import ShareButton from './ui/buttons/share-button';
 import EventDate from './ui/event-date';
 import EventPrice from './ui/event-price';
 import Viewers from './ui/viewers';
-
-/* eslint-disable react/jsx-no-useless-fragment */
 
 export default function EventCard({ event }) {
   if (!event) return null;
@@ -64,10 +61,11 @@ export default function EventCard({ event }) {
 
   const isEvent = type === 'event';
 
-  const imageSrc =
-    imageUrl ||
-    (Array.isArray(photos) && photos[0]) ||
-    '/images/event-placeholder.jpg';
+  const primaryImage =
+    imageUrl || (Array.isArray(photos) && photos[0]) || null;
+  const [imageSrc, setImageSrc] = useState(
+    primaryImage || '/images/event-placeholder.jpg',
+  );
 
   const locationLabel =
     address ||
@@ -94,13 +92,14 @@ export default function EventCard({ event }) {
 
   return (
     <div className="font-medium md:flex md:items-stretch">
-      <div className="rounded-xl overflow-hidden">
+      <div className="rounded-xl overflow-hidden w-[335px] h-[200px] md:w-[280px] md:h-[180px] shrink-0">
         <Image
           src={imageSrc}
           alt={title || 'Event'}
           width={335}
           height={200}
-          className="w-[335px] h-[200px] md:w-[280px] object-cover"
+          className="w-full h-full object-cover"
+          onError={() => setImageSrc('/images/event-placeholder.jpg')}
         />
       </div>
       <div className="flex flex-col gap-2 md:grow p-2 md:p-0 md:pl-5">

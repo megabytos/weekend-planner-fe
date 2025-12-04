@@ -237,6 +237,18 @@ export default function Filter() {
         ))}
       </FilterSection>
 
+      <FilterSection label="Target">
+        {TARGETS.map(({ value, label }) => (
+          <Fragment key={value}>
+            <FilterButton
+              value={value}
+              filterType={FILTER_TYPES.target}
+              label={label}
+            />
+          </Fragment>
+        ))}
+      </FilterSection>
+
       <FilterSection label="Category">
         <InputBase
           value={categorySearch}
@@ -337,18 +349,6 @@ export default function Filter() {
           ))}
         </FilterSection>
       )}
-
-      <FilterSection label="Target">
-        {TARGETS.map(({ value, label }) => (
-          <Fragment key={value}>
-            <FilterButton
-              value={value}
-              filterType={FILTER_TYPES.target}
-              label={label}
-            />
-          </Fragment>
-        ))}
-      </FilterSection>
 
       <FilterSection label="Transport">
         {TRANSPORT_MODES.map(({ value, label }) => (

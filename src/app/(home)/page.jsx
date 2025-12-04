@@ -9,15 +9,20 @@ import ButtonMain from '@/components/ui/buttons/button-main';
 import EventCardPreview from '@/components/ui/event-card-preview';
 import EventPoster from '@/components/ui/event-poster';
 import InputButton from '@/components/ui/input/input-button';
+import useHomeData from '@/hooks/use-home-data';
+import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
+import { selectFilter } from '@/libs/redux/slices/filter-slice';
+import { DEFAULT_CITY } from '@/utils/params-builder';
 
 export default function Home() {
   const router = useRouter();
-  const events = Array(5).fill({
-    url: '/images/event-placeholder.jpg',
-  });
+  const filter = useAppSelector(selectFilter);
+  const { featured, popularEvents, popularPlaces, isLoading, isError } =
+    useHomeData(filter);
+  const cityName = filter.city?.name || DEFAULT_CITY.city.name;
 
   const handleMainButton = () => {
-    router.push('/search');
+    router.push('/planner');
   };
   const handleSearch = () => {};
 
@@ -37,24 +42,35 @@ export default function Home() {
             <div className="flex justify-center items-center">Filters</div>
           </>
         )}
+        <div>
+          <h1 className="text-[22px] leading-7 mb-4 lg:text-[28px]">
+            Top picks in {cityName}
+          </h1>
+          {isError && (
+            <p className="text-red">Failed to load items. Please try again.</p>
+          )}
+          <SliderContainer
+            items={featured}
+            renderItem={(itemObject) => <EventPoster item={itemObject} />}
+          />
+        </div>
         <div className="flex justify-center items-center">
           <ButtonMain
             className="w-[335px] md:w-[354px] lg:w-2xl"
             onClick={handleMainButton}
           >
-            Ideas generation
+            Generate Ideas
           </ButtonMain>
         </div>
-        <div>
-          <SliderContainer
-            items={events}
-            renderItem={(itemObject) => <EventPoster item={itemObject} />}
-          />
-        </div>
         <div className="">
-          <h1 className="text-[22px] leading-7 mb-4 lg:text-[28px]">Popular</h1>
+          <h1 className="text-[22px] leading-7 mb-4 lg:text-[28px]">
+            Popular events in {cityName}
+          </h1>
+          {isLoading && !popularEvents.length && (
+            <p className="text-gray">Loading events…</p>
+          )}
           <SliderContainer
-            items={events}
+            items={popularEvents}
             renderItem={(itemObject) => <EventCardPreview item={itemObject} />}
             isCardPreview={true}
           />
@@ -65,9 +81,14 @@ export default function Home() {
           </div>
         </div>
         <div className="">
-          <h1 className="text-[22px] leading-7 mb-4">New</h1>
+          <h1 className="text-[22px] leading-7 mb-4">
+            Popular places in {cityName}
+          </h1>
+          {isLoading && !popularPlaces.length && (
+            <p className="text-gray">Loading places…</p>
+          )}
           <SliderContainer
-            items={events}
+            items={popularPlaces}
             renderItem={(itemObject) => <EventCardPreview item={itemObject} />}
             isCardPreview={true}
           />
