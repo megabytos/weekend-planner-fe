@@ -92,13 +92,13 @@ export default function EventCard({ event }) {
 
   return (
     <div className="font-medium md:flex md:items-stretch">
-      <div className="rounded-xl overflow-hidden">
+      <div className="rounded-xl overflow-hidden w-[335px] h-[200px] md:w-[280px] md:h-[180px] shrink-0">
         <Image
           src={imageSrc}
           alt={title || 'Event'}
           width={335}
           height={200}
-          className="w-[335px] h-[200px] md:w-[280px] object-cover"
+          className="w-full h-full object-cover"
           onError={() => setImageSrc('/images/event-placeholder.jpg')}
         />
       </div>
