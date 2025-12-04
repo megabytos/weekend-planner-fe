@@ -1,7 +1,6 @@
 export const headerNavLinks = [
   { href: '/search', text: 'Search Events' },
   { href: '/planner', text: 'Planner' },
-  { href: '/ideas', text: 'Generate Ideas' },
   { href: '/about', text: 'About' },
   { href: '/add-event', text: 'Add Event' },
   { href: '/favorites', text: 'Favorites' },
@@ -11,7 +10,6 @@ export const footerNavLinks = {
   services: [
     { href: '/search', text: 'Search Events' },
     { href: '/planner', text: 'Planner' },
-    { href: '/ideas', text: 'Generate Ideas' },
     { href: '/partner-sign-up', text: 'Become a Partner' },
     { href: '/add-event', text: 'Add Event' },
   ],
