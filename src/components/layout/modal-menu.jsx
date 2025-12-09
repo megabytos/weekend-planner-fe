@@ -2,7 +2,7 @@
 
 import { X } from 'lucide-react';
 
-import Button from './buttons/button';
+import Button from '../ui/buttons/button';
 import ModalMenuItems from './modal-menu-items';
 
 export default function ModalMenu({ onClose }) {
@@ -15,7 +15,7 @@ export default function ModalMenu({ onClose }) {
         <Button className="absolute top-5 right-5" onClick={onClose}>
           <X className="w-6 h-6 stroke-blue" />
         </Button>
-        <ModalMenuItems />
+        <ModalMenuItems onClose={onClose} />
       </div>
     </div>
   );

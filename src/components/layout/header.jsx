@@ -11,10 +11,10 @@ import { closeModal, openModal } from '@/libs/redux/slices/modal-menu-slice';
 import Button from '../ui/buttons/button';
 import Logo from '../ui/logo';
 import Modal from '../ui/modal';
-import ModalMenu from '../ui/modal-menu';
 import Container from './container';
 import { headerNavLinks } from './data';
 import HeaderNavLink from './header-nav-link';
+import ModalMenu from './modal-menu';
 
 export default function Header() {
   const isModalMenuOpen = useAppSelector((state) => state.modalMenu.isOpen);
