@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -13,19 +15,25 @@ export default function SliderContainer({
   isCardPreview = false,
 }) {
   const [swiper, setSwiper] = useState(null);
+  const hasSlides = items && items.length > 0;
 
   return (
     <div
       className={cn(
-        'max-w-[335px] md:max-w-[728px] lg:max-w-[1376px] w-full mx-auto relative',
+        hasSlides
+          ? 'max-w-[335px] md:max-w-[728px] lg:max-w-[1376px] w-full mx-auto relative'
+          : 'w-[335px] h-[266px] md:w-[728px] lg:w-[1376px] lg:h-[1376px] mx-auto relative',
       )}
     >
       <Swiper
         onSwiper={(swiper) => {
+          swiper.update();
           setSwiper(swiper);
         }}
+        observer
+        observeParents
         slidesPerView="auto"
-        loop={true}
+        loop={items.length > 1}
         watchSlidesProgress
         watchOverflow
         spaceBetween={20}
@@ -41,7 +49,9 @@ export default function SliderContainer({
           </SwiperSlide>
         ))}
       </Swiper>
-      <SliderNavigation swiper={swiper} isCardPreview={isCardPreview} />
+      {hasSlides && (
+        <SliderNavigation swiper={swiper} isCardPreview={isCardPreview} />
+      )}
     </div>
   );
 }
