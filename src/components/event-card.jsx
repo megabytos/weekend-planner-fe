@@ -12,6 +12,7 @@ import {
 
 import Address from './ui/address';
 import FavoriteButton from './ui/buttons/favorite-button';
+import PlannerButton from './ui/buttons/planner-button';
 import ShareButton from './ui/buttons/share-button';
 import EventDate from './ui/event-date';
 import EventPrice from './ui/event-price';
@@ -61,8 +62,7 @@ export default function EventCard({ event }) {
 
   const isEvent = type === 'event';
 
-  const primaryImage =
-    imageUrl || (Array.isArray(photos) && photos[0]) || null;
+  const primaryImage = imageUrl || (Array.isArray(photos) && photos[0]) || null;
   const [imageSrc, setImageSrc] = useState(
     primaryImage || '/images/event-placeholder.jpg',
   );
@@ -92,7 +92,11 @@ export default function EventCard({ event }) {
 
   return (
     <div className="font-medium md:flex md:items-stretch">
-      <div className="rounded-xl overflow-hidden w-[335px] h-[200px] md:w-[280px] md:h-[180px] shrink-0">
+      <div className="rounded-xl overflow-hidden w-[335px] h-[200px] md:w-[280px] md:h-[180px] shrink-0 relative">
+        <PlannerButton
+          className="absolute right-4 bottom-4"
+          onClick={() => {}}
+        />
         <Image
           src={imageSrc}
           alt={title || 'Event'}

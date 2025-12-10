@@ -12,13 +12,13 @@ import InputButton from '@/components/ui/input/input-button';
 import Map from '@/components/ui/map';
 import Tabs from '@/components/ui/tabs';
 import DEFAULT_TABS from '@/constants/tabs';
-import { DEFAULT_CITY } from '@/utils/params-builder';
 import useSearchData from '@/hooks/use-search-data';
 import useSearchTabs from '@/hooks/use-search-tabs';
 import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { selectFilter } from '@/libs/redux/slices/filter-slice';
 import { selectSearch, setSearch } from '@/libs/redux/slices/search-slice';
+import { DEFAULT_CITY } from '@/utils/params-builder';
 
 /**
  * SearchPage
@@ -64,7 +64,7 @@ export default function SearchPage() {
   );
 
   return (
-    <Container className="flex flex-col gap-5 pb-5 md:min-h-[800px] lg:min-h-[1038px]">
+    <Container className="flex flex-col gap-5 pb-5 max-w-[375px] md:min-h-[800px] lg:min-h-[1038px]">
       <InputButton
         placeholder="Search"
         divClasses="mt-5"
@@ -99,7 +99,7 @@ export default function SearchPage() {
         <section
           className={checkActiveTab(DEFAULT_TABS.EVENTS) ? 'block' : 'hidden'}
         >
-          <div className="space-y-4">
+          <div className="md:min-w-[545px] lg:min-w-[526px] space-y-4">
             {isLoading && <p>Loading events…</p>}
             {isError && (
               <p className="text-red">Failed to load events. Try again.</p>

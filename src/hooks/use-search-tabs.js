@@ -4,12 +4,13 @@ import { useCallback, useEffect, useState } from 'react';
 
 import DEFAULT_TABS from '@/constants/tabs';
 import VIEWPORT from '@/constants/viewport';
+import activeDefaultTabs from '@/utils/get-default-tabs';
 import getViewportType from '@/utils/get-view-port';
 import normalizeTabs from '@/utils/normalize-tabs';
 
 const useSearchTabs = () => {
   const [viewport, setViewport] = useState(getViewportType());
-  const [activeTab, setActiveTab] = useState([DEFAULT_TABS.EVENTS]);
+  const [activeTab, setActiveTab] = useState(activeDefaultTabs());
 
   useEffect(() => {
     const handleResize = () => setViewport(getViewportType());
