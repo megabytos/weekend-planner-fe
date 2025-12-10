@@ -40,24 +40,25 @@ export default function Timeline({
                   <CalendarFold className="h-5 w-5" />
                   {it.kind === 'event_visit' ? (
                     <div className="font-light">
-                      {new Date(it.start_at).toLocaleString()} -{' '}
-                      {new Date(it.end_at).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
+                      {it.start_at && it.end_at ? (() => {
+                        const startDate = new Date(it.start_at);
+                        const endDate = new Date(it.end_at);
+                        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                          return 'Invalid date';
+                        }
+                        return `${startDate.toLocaleString()} - ${endDate.toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}`;
+                      })() : 'No time info'}
                     </div>
                   ) : (
                     <div className="flex items-center gap-2 text-gray-700">
-                      Duration:
-                      <input
-                        type="number"
-                        min={15}
-                        max={300}
-                        className="border border-blue rounded-xl px-2 py-1 w-24"
-                        value={it.stayMin || 60}
-                        onChange={(e) => updateStay(idx, e.target.value)}
-                      />{' '}
-                      min
+                      <span>Duration:</span>
+                      <span
+                        className="font-light">
+                        {it.stayMin ?? 60} min
+                      </span>
                     </div>
                   )}
                 </div>

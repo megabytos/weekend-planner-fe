@@ -24,6 +24,7 @@ export function usePlannerLogic({ origin, win, mode }) {
           name: c.name,
           geo: c.geo,
           stayMin: c.defaultStayMin,
+          city: c.city,
         },
       ]);
     } else {
@@ -36,6 +37,7 @@ export function usePlannerLogic({ origin, win, mode }) {
           geo: c.geo,
           start_at: c.start_at,
           end_at: c.end_at,
+          city: c.city,
         },
       ]);
     }

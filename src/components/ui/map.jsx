@@ -15,6 +15,18 @@ const GEOAPIFY_KEY =
 
 const EVENT_COLOR = '#8b5cf6';
 const PLACE_COLOR = '#2563eb';
+const ROUTE_COLORS = [
+  '#2563eb', // blue
+  '#8b5cf6', // purple
+  '#10b981', // green
+  '#f59e0b', // amber
+  '#06b6d4', // cyan
+  '#6366f1', // indigo
+  '#ec4899', // pink
+  '#14b8a6', // teal
+  '#f97316', // orange
+  '#84cc16', // lime
+];
 const MODE_MAP = {
   walking: 'walk',
   cycling: 'bicycle',
@@ -57,6 +69,7 @@ export default function Map({
   items = [],
   origin = null,
   mode = 'walking',
+  useClustering = true,
 }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -64,7 +77,7 @@ export default function Map({
   const routeLayerRef = useRef(null);
 
   const [isClient, setIsClient] = useState(false);
-  const [routeShape, setRouteShape] = useState(null);
+  const [routeShapes, setRouteShapes] = useState([]);
 
   useEffect(() => {
     setIsClient(true);
@@ -130,8 +143,18 @@ export default function Map({
       ).addTo(mapRef.current);
     }
 
-    if (!markersRef.current) {
-      markersRef.current = L.markerClusterGroup();
+    const needsClustering = useClustering;
+    const isClusterGroup = markersRef.current instanceof L.MarkerClusterGroup;
+    
+    if (!markersRef.current || (needsClustering && !isClusterGroup) || (!needsClustering && isClusterGroup)) {
+      if (markersRef.current) {
+        mapRef.current.removeLayer(markersRef.current);
+      }
+      if (useClustering) {
+        markersRef.current = L.markerClusterGroup();
+      } else {
+        markersRef.current = L.layerGroup();
+      }
       mapRef.current.addLayer(markersRef.current);
     }
 
@@ -139,7 +162,7 @@ export default function Map({
       routeLayerRef.current = L.layerGroup();
       mapRef.current.addLayer(routeLayerRef.current);
     }
-  }, [isClient, resolvedOrigin.lat, resolvedOrigin.lon]);
+  }, [isClient, resolvedOrigin.lat, resolvedOrigin.lon, useClustering]);
 
   useEffect(() => {
     if (!mapRef.current || !markersRef.current) return;
@@ -166,39 +189,56 @@ export default function Map({
 
   useEffect(() => {
     if (!hasRoute) {
-      setRouteShape(null);
+      setRouteShapes([]);
       return;
     }
 
-    const allWaypoints = [
-      `${resolvedOrigin.lat},${resolvedOrigin.lon}`,
-      ...routePoints.map((point) => `${point.lat},${point.lon}`),
-    ];
-
-    if (allWaypoints.length < 2) {
-      setRouteShape(null);
+    if (routePoints.length === 0) {
+      setRouteShapes([]);
       return;
     }
 
-    const controller = new AbortController();
+    const controllers = [];
     const apiMode = MODE_MAP[mode] || MODE_MAP.walking;
+    const promises = [];
 
-    const url = `https://api.geoapify.com/v1/routing?waypoints=${allWaypoints.join('|')}&mode=${apiMode}&apiKey=${GEOAPIFY_KEY}`;
+    for (let i = 0; i < routePoints.length; i++) {
+      const from = i === 0 ? resolvedOrigin : routePoints[i - 1];
+      const to = routePoints[i];
+      
+      const waypoints = [
+        `${from.lat},${from.lon}`,
+        `${to.lat},${to.lon}`,
+      ];
 
-    fetch(url, { signal: controller.signal })
-      .then((res) => res.json())
-      .then((data) => {
-        const geometry = data?.features?.[0]?.geometry;
-        const pairs = geometryToLatLngPairs(geometry);
-        setRouteShape(pairs.length > 1 ? pairs : null);
-      })
-      .catch((err) => {
-        if (err?.name === 'AbortError') return;
-        console.warn('Failed to fetch routed path', err);
-        setRouteShape(null);
-      });
+      const controller = new AbortController();
+      controllers.push(controller);
 
-    return () => controller.abort();
+      const url = `https://api.geoapify.com/v1/routing?waypoints=${waypoints.join('|')}&mode=${apiMode}&apiKey=${GEOAPIFY_KEY}`;
+
+      promises.push(
+        fetch(url, { signal: controller.signal })
+          .then((res) => res.json())
+          .then((data) => {
+            const geometry = data?.features?.[0]?.geometry;
+            const pairs = geometryToLatLngPairs(geometry);
+            return pairs.length > 1 ? pairs : null;
+          })
+          .catch((err) => {
+            if (err?.name === 'AbortError') return null;
+            console.warn('Failed to fetch routed path segment', err);
+            return null;
+          })
+      );
+    }
+
+    Promise.all(promises).then((shapes) => {
+      setRouteShapes(shapes.filter(Boolean));
+    });
+
+    return () => {
+      controllers.forEach((c) => c.abort());
+    };
   }, [hasRoute, routePoints, resolvedOrigin, mode]);
 
   useEffect(() => {
@@ -214,7 +254,7 @@ export default function Map({
     markersRef.current.clearLayers();
 
     const startLatLng = L.latLng(resolvedOrigin.lat, resolvedOrigin.lon);
-    const latLngs = [startLatLng];
+    const allLatLngs = [startLatLng];
 
     const startMarker = L.marker(startLatLng, {
       icon: L.divIcon({
@@ -240,7 +280,7 @@ export default function Map({
 
     routePoints.forEach((point, index) => {
       const latLng = L.latLng(point.lat, point.lon);
-      latLngs.push(latLng);
+      allLatLngs.push(latLng);
 
       const color = point.type === 'event' ? EVENT_COLOR : PLACE_COLOR;
 
@@ -267,26 +307,47 @@ export default function Map({
       markersRef.current.addLayer(marker);
     });
 
-    const polylinePoints =
-      routeShape && routeShape.length > 1
-        ? routeShape.map(([lat, lon]) => L.latLng(lat, lon))
-        : latLngs;
-
-    if (polylinePoints.length > 1) {
-      const polyline = L.polyline(polylinePoints, {
-        color: PLACE_COLOR,
-        weight: 4,
-        smoothFactor: 1,
+    if (routeShapes.length > 0) {
+      routeShapes.forEach((shape, index) => {
+        if (shape && shape.length > 1) {
+          const color = ROUTE_COLORS[index % ROUTE_COLORS.length];
+          const polyline = L.polyline(
+            shape.map(([lat, lon]) => L.latLng(lat, lon)),
+            {
+              color,
+              weight: 4,
+              smoothFactor: 1,
+            },
+          );
+          routeLayerRef.current.addLayer(polyline);
+        }
       });
 
-      routeLayerRef.current.addLayer(polyline);
-      mapRef.current.fitBounds(L.latLngBounds(polylinePoints), {
-        padding: [40, 40],
-      });
+      const allRoutePoints = routeShapes.flat().map(([lat, lon]) =>
+        L.latLng(lat, lon),
+      );
+      if (allRoutePoints.length > 0) {
+        mapRef.current.fitBounds(L.latLngBounds(allRoutePoints), {
+          padding: [40, 40],
+        });
+      }
     } else {
-      mapRef.current.setView(startLatLng, 12);
+      if (allLatLngs.length > 1) {
+        const color = ROUTE_COLORS[0];
+        const polyline = L.polyline(allLatLngs, {
+          color,
+          weight: 4,
+          smoothFactor: 1,
+        });
+        routeLayerRef.current.addLayer(polyline);
+        mapRef.current.fitBounds(L.latLngBounds(allLatLngs), {
+          padding: [40, 40],
+        });
+      } else {
+        mapRef.current.setView(startLatLng, 12);
+      }
     }
-  }, [hasRoute, routePoints, resolvedOrigin, routeShape]);
+  }, [hasRoute, routePoints, resolvedOrigin, routeShapes]);
 
   useEffect(() => {
     const handler = () => {

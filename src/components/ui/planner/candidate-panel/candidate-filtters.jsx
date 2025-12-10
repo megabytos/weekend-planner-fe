@@ -12,6 +12,9 @@ export default function CandidateFilters({
   setFilterType,
   query,
   setQuery,
+  selectedCity,
+  setSelectedCity,
+  availableCities,
 }) {
   return (
     <div className="gap-4">
@@ -86,6 +89,29 @@ export default function CandidateFilters({
             ))}
           </div>
         </div>
+        {(availableCities && availableCities.length > 0) && (
+          <div className="flex justify-between gap-2 items-center bg-white-dark rounded-xl p-2">
+            <div>City</div>
+            <div className="flex gap-2 flex-wrap">
+              {availableCities.map((city) => {
+                const cityKey = city.id || city.name;
+                const isSelected = selectedCity && (
+                  (selectedCity.id && city.id === selectedCity.id) ||
+                  (selectedCity.name && city.name === selectedCity.name)
+                );
+                return (
+                  <Button
+                    key={cityKey}
+                    onClick={() => setSelectedCity(city)}
+                    className={`px-2 py-1 text-blue border border-blue rounded-xl ${isSelected ? 'bg-blue-light' : ''} hover:bg-blue-light`}
+                  >
+                    {city.name || `City ${city.id}`}
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
       <InputBase
         placeholder="search candidates"
