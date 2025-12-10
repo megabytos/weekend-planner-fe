@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import Address from './address';
+import PlannerButton from './buttons/planner-button';
 
 export default function EventCardPreview({ item }) {
   if (!item) return null;
@@ -64,6 +65,7 @@ export default function EventCardPreview({ item }) {
               {item.type && <span className="text-orange">{item.type}</span>}
             </div>
           )}
+          <PlannerButton onClick={() => {}} />
         </footer>
       </Link>
     </div>

@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
+import PlannerButton from './buttons/planner-button';
+
 export default function EventPoster({ item }) {
   if (!item) return null;
 
@@ -15,7 +17,8 @@ export default function EventPoster({ item }) {
   const alt = item.title || item.name || 'Event';
 
   return (
-    <div className="poster-container w-[335px] h-[266px] md:w-[246px] lg:w-[496px]">
+    <div className="poster-container w-[335px] h-[266px] md:w-[246px] lg:w-[496px] relative">
+      <PlannerButton className="absolute right-4 bottom-4" onClick={() => {}} />
       <Link href="#">
         <Image
           src={imageSrc}
