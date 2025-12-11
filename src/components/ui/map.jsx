@@ -1,13 +1,10 @@
 'use client';
 
 import L from 'leaflet';
-import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
-
-// @ts-nocheck
 
 const DEFAULT_ORIGIN = { lat: 50.45, lon: 30.52 };
 const GEOAPIFY_KEY =
@@ -66,7 +63,7 @@ function geometryToLatLngPairs(geometry) {
 
 export default function Map({
   places = [],
-  items = [],
+  items = null,
   origin = null,
   mode = 'walking',
   useClustering = true,
@@ -77,11 +74,57 @@ export default function Map({
   const routeLayerRef = useRef(null);
 
   const [isClient, setIsClient] = useState(false);
+  const [isClusterReady, setIsClusterReady] = useState(false);
   const [routeShapes, setRouteShapes] = useState([]);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadClusterPlugin = async () => {
+      if (!isClient) return;
+
+      if (typeof window !== 'undefined') {
+        window.L = window.L || L;
+      }
+
+      if (!useClustering) {
+        if (isMounted) setIsClusterReady(false);
+        return;
+      }
+
+      const tryLoad = async () => {
+        try {
+          await import('leaflet.markercluster/dist/leaflet.markercluster');
+          return true;
+        } catch (error) {
+          console.warn('Primary markercluster load failed, retrying...', error);
+        }
+
+        try {
+          await import('leaflet.markercluster');
+          return true;
+        } catch (error) {
+          console.error('Failed to load marker cluster plugin', error);
+          return false;
+        }
+      };
+
+      const loaded = await tryLoad();
+      if (isMounted) {
+        setIsClusterReady(Boolean(loaded));
+      }
+    };
+
+    loadClusterPlugin();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isClient, useClustering]);
 
   const resolvedOrigin = useMemo(() => {
     if (isValidCoord(origin?.lat, origin?.lon)) {
@@ -117,6 +160,7 @@ export default function Map({
 
   useEffect(() => {
     if (!isClient || !mapContainerRef.current) return;
+    if (useClustering && !isClusterReady) return;
 
     L.Icon.Default.mergeOptions({
       iconRetinaUrl:
@@ -143,18 +187,26 @@ export default function Map({
       ).addTo(mapRef.current);
     }
 
-    const needsClustering = useClustering;
-    const isClusterGroup = markersRef.current instanceof L.MarkerClusterGroup;
-    
-    if (!markersRef.current || (needsClustering && !isClusterGroup) || (!needsClustering && isClusterGroup)) {
+    const needsClustering = useClustering && isClusterReady;
+    const isClusterCtor =
+      typeof L.MarkerClusterGroup === 'function' ? L.MarkerClusterGroup : null;
+    const isClusterGroup =
+      isClusterCtor && markersRef.current instanceof isClusterCtor;
+
+    if (
+      !markersRef.current ||
+      (needsClustering && !isClusterGroup) ||
+      (!needsClustering && isClusterGroup)
+    ) {
       if (markersRef.current) {
         mapRef.current.removeLayer(markersRef.current);
       }
-      if (useClustering) {
-        markersRef.current = L.markerClusterGroup();
-      } else {
-        markersRef.current = L.layerGroup();
-      }
+      const createGroup =
+        needsClustering && typeof L.markerClusterGroup === 'function'
+          ? () => L.markerClusterGroup()
+          : () => L.layerGroup();
+
+      markersRef.current = createGroup();
       mapRef.current.addLayer(markersRef.current);
     }
 
@@ -162,7 +214,13 @@ export default function Map({
       routeLayerRef.current = L.layerGroup();
       mapRef.current.addLayer(routeLayerRef.current);
     }
-  }, [isClient, resolvedOrigin.lat, resolvedOrigin.lon, useClustering]);
+  }, [
+    isClient,
+    isClusterReady,
+    resolvedOrigin.lat,
+    resolvedOrigin.lon,
+    useClustering,
+  ]);
 
   useEffect(() => {
     if (!mapRef.current || !markersRef.current) return;
@@ -188,13 +246,8 @@ export default function Map({
   }, [places, hasRoute]);
 
   useEffect(() => {
-    if (!hasRoute) {
-      setRouteShapes([]);
-      return;
-    }
-
-    if (routePoints.length === 0) {
-      setRouteShapes([]);
+    if (!hasRoute || routePoints.length === 0) {
+      setRouteShapes((prev) => (prev.length ? [] : prev));
       return;
     }
 
@@ -205,11 +258,8 @@ export default function Map({
     for (let i = 0; i < routePoints.length; i++) {
       const from = i === 0 ? resolvedOrigin : routePoints[i - 1];
       const to = routePoints[i];
-      
-      const waypoints = [
-        `${from.lat},${from.lon}`,
-        `${to.lat},${to.lon}`,
-      ];
+
+      const waypoints = [`${from.lat},${from.lon}`, `${to.lat},${to.lon}`];
 
       const controller = new AbortController();
       controllers.push(controller);
@@ -228,7 +278,7 @@ export default function Map({
             if (err?.name === 'AbortError') return null;
             console.warn('Failed to fetch routed path segment', err);
             return null;
-          })
+          }),
       );
     }
 
@@ -323,9 +373,9 @@ export default function Map({
         }
       });
 
-      const allRoutePoints = routeShapes.flat().map(([lat, lon]) =>
-        L.latLng(lat, lon),
-      );
+      const allRoutePoints = routeShapes
+        .flat()
+        .map(([lat, lon]) => L.latLng(lat, lon));
       if (allRoutePoints.length > 0) {
         mapRef.current.fitBounds(L.latLngBounds(allRoutePoints), {
           padding: [40, 40],

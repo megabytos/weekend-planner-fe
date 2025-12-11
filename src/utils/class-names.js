@@ -1,3 +1,6 @@
+/**
+ * Tailwind + clsx helper to merge conditional class names.
+ */
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 

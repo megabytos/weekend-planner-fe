@@ -1,3 +1,9 @@
+/**
+ * Search slice
+ * - State: `{ search }`
+ * - Actions: `setSearch(value)`
+ * - Purpose: hold the current search query text.
+ */
 import { createSlice } from '@reduxjs/toolkit';
 
 const getInitialState = () => ({
@@ -11,11 +17,10 @@ const searchSlice = createSlice({
     setSearch: (state, { payload = '' }) => {
       state.search = payload;
     },
-    resetSearch: () => getInitialState(),
   },
 });
 
-export const { setSearch, resetSearch } = searchSlice.actions;
+export const { setSearch } = searchSlice.actions;
 
 export default searchSlice.reducer;
 

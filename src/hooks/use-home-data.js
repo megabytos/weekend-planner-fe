@@ -10,6 +10,19 @@ const DEFAULT_LIMIT = 12;
 const extractItems = (data) =>
   Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
 
+/**
+ * Hook to fetch popular events and places on the home page.
+ *
+ * @param {Object} filter - Filter object to apply to the search query.
+ * @returns {Object} An object containing the popular events, popular places, and loading state.
+ *
+ * The returned object has the following properties:
+ * - featured: An array containing the top 3 popular events and places.
+ * - popularEvents: An array containing the popular events.
+ * - popularPlaces: An array containing the popular places.
+ * - isLoading: A boolean indicating whether the data is loading.
+ * - isError: A boolean indicating whether there was an error while fetching the data.
+ */
 const useHomeData = (filter = {}) => {
   const eventsFilter = useMemo(
     () => ({ ...filter, target: 'events' }),

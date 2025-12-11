@@ -1,11 +1,23 @@
+/** @jsxImportSource react */
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
+import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
+import {
+  selectIsFavorite,
+  toggleFavorite,
+} from '@/libs/redux/slices/favorites-slice';
 
 import PlannerButton from './buttons/planner-button';
 
 export default function EventPoster({ item }) {
   if (!item) return null;
+
+  const dispatch = useAppDispatch();
 
   const primaryImage =
     item.imageUrl ||
@@ -16,9 +28,34 @@ export default function EventPoster({ item }) {
   );
   const alt = item.title || item.name || 'Event';
 
+  const favoriteKey = useMemo(
+    () =>
+      item.__key ||
+      item.id ||
+      item.sources?.[0]?.externalId ||
+      item.url ||
+      item.title,
+    [item],
+  );
+
+  const isFavorite = useAppSelector((state) =>
+    selectIsFavorite(state, favoriteKey),
+  );
+
+  const handleFavorite = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!favoriteKey) return;
+    dispatch(toggleFavorite({ key: favoriteKey, item }));
+  };
+
   return (
     <div className="poster-container w-[335px] h-[266px] md:w-[246px] lg:w-[496px] relative">
-      <PlannerButton className="absolute right-4 bottom-4" onClick={() => {}} />
+      <PlannerButton
+        className="absolute right-4 bottom-4"
+        onClick={handleFavorite}
+        isActive={isFavorite}
+      />
       <Link href="#">
         <Image
           src={imageSrc}

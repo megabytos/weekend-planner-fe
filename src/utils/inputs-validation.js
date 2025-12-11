@@ -1,3 +1,8 @@
+/**
+ * Basic input validators for auth forms.
+ * - `validateEmail(value)`: required, simple pattern.
+ * - `validatePassword(value)`: required, min 8 chars, must include letters and numbers.
+ */
 export const validateEmail = (value) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

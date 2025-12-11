@@ -4,16 +4,23 @@ import cn from '@/utils/class-names';
 
 import Button from './button';
 
-export default function PlannerButton({ onClick = () => {}, className = '' }) {
+export default function PlannerButton({
+  onClick = () => {},
+  isActive = false,
+  className = '',
+}) {
   return (
     <Button
       onClick={onClick}
       className={cn(
-        'text-blue bg-white-dark border border-blue rounded-xl px-2 py-1 hover:bg-blue-light',
+        ' border rounded-xl px-2 py-1 hover:bg-blue-light',
+        isActive
+          ? 'text-white bg-blue border-blue'
+          : 'border-blue bg-white-dark text-blue',
         className,
       )}
     >
-      Add to planner
+      {isActive ? 'Added' : 'Add to planner'}
     </Button>
   );
 }

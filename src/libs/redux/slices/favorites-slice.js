@@ -1,3 +1,9 @@
+/**
+ * Favorites slice
+ * - State: `items` dictionary keyed by favorite id.
+ * - Actions: `toggleFavorite({ key, item })`, `clearFavorites()`.
+ * - Purpose: track saved events/places and expose selectors for lookup.
+ */
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {

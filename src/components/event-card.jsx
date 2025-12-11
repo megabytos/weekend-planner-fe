@@ -11,9 +11,7 @@ import {
 } from '@/libs/redux/slices/favorites-slice';
 
 import Address from './ui/address';
-import FavoriteButton from './ui/buttons/favorite-button';
 import PlannerButton from './ui/buttons/planner-button';
-import ShareButton from './ui/buttons/share-button';
 import EventDate from './ui/event-date';
 import EventPrice from './ui/event-price';
 import Viewers from './ui/viewers';
@@ -43,7 +41,6 @@ export default function EventCard({ event }) {
     rating,
     primaryCategory,
     categories,
-    isFavorite: initialFavorite,
   } = event;
 
   const favoriteKey = useMemo(
@@ -82,10 +79,6 @@ export default function EventCard({ event }) {
   const categoryLabel =
     primaryCategory?.name || primaryCategory?.slug || categories?.[0]?.name;
 
-  const handleShare = () => {
-    // Implement share functionality here
-  };
-
   const handleFavorite = () => {
     dispatch(toggleFavorite({ key: favoriteKey, item: event }));
   };
@@ -95,7 +88,8 @@ export default function EventCard({ event }) {
       <div className="rounded-xl overflow-hidden w-[335px] h-[200px] md:w-[280px] md:h-[180px] shrink-0 relative">
         <PlannerButton
           className="absolute right-4 bottom-4"
-          onClick={() => {}}
+          onClick={handleFavorite}
+          isActive={isFavorite}
         />
         <Image
           src={imageSrc}
@@ -138,13 +132,6 @@ export default function EventCard({ event }) {
           {typeof reviewCount === 'number' && reviewCount > 0 && (
             <Viewers viewers={reviewCount} />
           )}
-          <div className="flex items-center gap-2 ">
-            <ShareButton handleShare={handleShare} />
-            <FavoriteButton
-              isFavorite={isFavorite}
-              handleFavorite={handleFavorite}
-            />
-          </div>
         </footer>
       </div>
     </div>

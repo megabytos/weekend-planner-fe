@@ -1,3 +1,8 @@
+/**
+ * Time helpers
+ * - `fmtTime(d)`: format date/time to HH:MM or return fallback.
+ * - `addMinutes(iso, minutes)`: add minutes to ISO string and return ISO.
+ */
 export function fmtTime(d) {
     if (!d) return 'N/A';
     const date = new Date(d);

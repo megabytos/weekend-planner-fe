@@ -6,6 +6,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchQuery } from '@/hooks/use-search-query';
 import buildSearchParams from '@/utils/params-builder';
 
+/**
+ * A hook that fetches events based on the search query and filters.
+ *
+ * @param {Object} props - An object with the search value and filter.
+ * @param {string} props.searchValue - The search value.
+ * @param {Object} props.filter - An object with the filter options.
+ * @returns {Object} An object with the events, hasMore, handleSearchSubmit, isError, isFetching, isLoading, and loadMoreRef.
+ */
 const useSearchData = ({ searchValue, filter }) => {
   const [page, setPage] = useState(1);
   const [events, setEvents] = useState([]);

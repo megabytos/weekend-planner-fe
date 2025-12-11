@@ -1,3 +1,9 @@
+/**
+ * Refresh token slice
+ * - State: `{ refreshToken }`
+ * - Actions: `add(token)`, `clearRefreshToken()`
+ * - Purpose: store refresh token for auth flows.
+ */
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {

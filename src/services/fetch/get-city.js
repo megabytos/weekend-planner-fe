@@ -1,3 +1,11 @@
+/**
+ * City API helpers
+ * - Endpoints: `/geo/cities`, `/geo/cities/:id`
+ * - Functions:
+ *    - `getCities()`: fetch all cities.
+ *    - `getCityById(id)`: fetch city by numeric id.
+ *    - `getCityByName(name)`: client-side lookup by name using `getCities`.
+ */
 import apiClient from '@/libs/api/api-client';
 
 const CITIES_ENDPOINT = '/geo/cities';

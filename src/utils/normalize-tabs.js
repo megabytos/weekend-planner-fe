@@ -1,3 +1,9 @@
+/**
+ * Normalize active tabs based on viewport:
+ * - Mobile: keep only the first tab.
+ * - Tablet: allow only events/map, keep the last one.
+ * - Desktop: allow events/map, default to both if empty.
+ */
 import DEFAULT_TABS from '@/constants/tabs';
 import VIEWPORT from '@/constants/viewport';
 
