@@ -57,14 +57,6 @@ const useSearchTabs = () => {
     [viewport],
   );
 
-  useEffect(() => {
-    if (checkActiveTab(DEFAULT_TABS.MAP)) {
-      setTimeout(() => {
-        window.dispatchEvent(new Event('map-visible'));
-      }, 50);
-    }
-  }, [activeTab, checkActiveTab]);
-
   return { checkActiveTab, handleTabClick, viewport };
 };
 

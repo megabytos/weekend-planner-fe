@@ -2,7 +2,7 @@
 
 import { Search } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import EventCard from '@/components/event-card';
 import Container from '@/components/layout/container';
@@ -54,6 +54,7 @@ export default function SearchPage() {
   const address = filter.city?.name || DEFAULT_CITY.city.name;
   const pathname = usePathname();
   const linkAddress = pathname.split('/');
+  const isMapReady = !isLoading;
 
   const breadcrumbs = useMemo(
     () => [
@@ -63,8 +64,18 @@ export default function SearchPage() {
     [linkAddress],
   );
 
+  useEffect(() => {
+    if (isMapReady && checkActiveTab(DEFAULT_TABS.MAP)) {
+      const timer = setTimeout(() => {
+        window.dispatchEvent(new Event('map-visible'));
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [isMapReady, checkActiveTab]);
+
   return (
-    <Container className="flex flex-col gap-5 pb-5 max-w-[375px] md:min-h-[800px] lg:min-h-[1038px]">
+    <Container className="flex flex-col gap-5 pb-5 md:min-h-[800px] lg:min-h-[1038px]">
       <InputButton
         placeholder="Search"
         divClasses="mt-5"
@@ -99,7 +110,7 @@ export default function SearchPage() {
         <section
           className={checkActiveTab(DEFAULT_TABS.EVENTS) ? 'block' : 'hidden'}
         >
-          <div className="md:min-w-[545px] lg:min-w-[526px] space-y-4">
+          <div className="space-y-4">
             {isLoading && <p>Loading events…</p>}
             {isError && (
               <p className="text-red">Failed to load events. Try again.</p>
@@ -119,7 +130,9 @@ export default function SearchPage() {
         </section>
 
         <section
-          className={checkActiveTab(DEFAULT_TABS.MAP) ? 'block' : 'hidden'}
+          className={
+            checkActiveTab(DEFAULT_TABS.MAP) && isMapReady ? 'block' : 'hidden'
+          }
         >
           <div className="rounded-xl border w-full flex justify-center">
             <Map places={events} />
