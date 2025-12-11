@@ -1,3 +1,9 @@
+/**
+ * Filter slice
+ * - State: search filters (city, categories, date presets, budgets, moods, etc).
+ * - Actions: toggle setters per filter, clear via `resetFilters`.
+ * - Purpose: centralize filter state for search queries and UI.
+ */
 import { createSlice } from '@reduxjs/toolkit';
 
 import { DEFAULT_CITY } from '@/utils/params-builder';

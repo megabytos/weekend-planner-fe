@@ -1,3 +1,9 @@
+/**
+ * Modal menu slice
+ * - State: `{ isOpen }`
+ * - Actions: `openModal`, `closeModal`, `toggleModal`
+ * - Purpose: control the mobile/menu modal visibility.
+ */
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {

@@ -1,3 +1,9 @@
+/**
+ * Determine viewport category using breakpoints.
+ * - DESKTOP >= DESKTOP_BREAKPOINT
+ * - TABLET >= TABLET_BREAKPOINT
+ * - else MOBILE
+ */
 import VIEWPORT from '@/constants/viewport';
 import {
   DESKTOP_BREAKPOINT,

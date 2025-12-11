@@ -8,6 +8,16 @@ import activeDefaultTabs from '@/utils/get-default-tabs';
 import getViewportType from '@/utils/get-view-port';
 import normalizeTabs from '@/utils/normalize-tabs';
 
+/**
+ * Returns an object containing the current viewport, active tabs, and functions to check if a tab is active and to handle tab clicks.
+ *
+ * @returns {Object} An object containing the current viewport, active tabs, and functions to check if a tab is active and to handle tab clicks.
+ *
+ * @property {string} viewport - The current viewport (mobile, tablet, or desktop).
+ * @property {string[]} activeTab - The currently active tabs.
+ * @property {function} checkActiveTab - A function to check if a tab is active.
+ * @property {function} handleTabClick - A function to handle tab clicks.
+ */
 const useSearchTabs = () => {
   const [viewport, setViewport] = useState(getViewportType());
   const [activeTab, setActiveTab] = useState(activeDefaultTabs());

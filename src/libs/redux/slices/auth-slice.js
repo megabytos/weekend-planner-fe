@@ -1,3 +1,9 @@
+/**
+ * Auth slice
+ * - State: `{ name, email, password }`
+ * - Actions: `setAuthField(field,value)`, `resetAuth()`
+ * - Purpose: track auth form fields/client-side auth data.
+ */
 import { createSlice } from '@reduxjs/toolkit';
 
 const getInitialState = () => ({

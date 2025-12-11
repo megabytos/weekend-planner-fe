@@ -1,3 +1,8 @@
+/**
+ * Build search API payload from UI state.
+ * - Defaults: target=events, page=1, limit=10, where=DEFAULT_CITY, when preset=this_weekend.
+ * - Normalizes strings, slugs categories, builds when/who/budget/filters/pagination.
+ */
 const PAGE_SIZE = 10;
 export const DEFAULT_CITY = {
   city: { id: 40, name: 'London', countryCode: 'GB' },

@@ -1,3 +1,8 @@
+/**
+ * Returns default active tabs based on viewport.
+ * - Mobile: [events]
+ * - Tablet/Desktop: [map, events]
+ */
 import DEFAULT_TABS from '@/constants/tabs';
 
 import getViewportType from './get-view-port';

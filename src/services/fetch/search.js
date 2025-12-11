@@ -1,3 +1,8 @@
+/**
+ * Search API helper
+ * - Endpoint: `/search`
+ * - `searchEventsAndPlaces(params)`: POST filtered payload (filters out undefined) and returns data.
+ */
 import apiClient from '@/libs/api/api-client';
 
 const SEARCH_ENDPOINT = '/search';

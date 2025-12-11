@@ -1,3 +1,13 @@
+/**
+ * Shared Axios instance for backend requests.
+ *
+ * - Base URL: `NEXT_PUBLIC_API_BASE_URL` env or the default Render backend.
+ * - Timeout: 30s.
+ * - Interceptors:
+ *    - request: pass-through, logs request errors.
+ *    - response: logs structured errors and normalizes the thrown Error message
+ *      to `response.data.message` when available.
+ */
 import axios from 'axios';
 
 const API_BASE_URL =
@@ -17,7 +27,6 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error('[apiClient][request error]', error);
     return Promise.reject(error);
   },
 );
@@ -27,12 +36,6 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error('[apiClient][response error]', {
-      url: error.config?.url,
-      status: error.response?.status,
-      data: error.response?.data,
-      message: error.message,
-    });
     const message =
       error.response?.data?.message || error.message || 'Request failed';
     return Promise.reject(new Error(message));

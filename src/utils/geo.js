@@ -1,3 +1,8 @@
+/**
+ * Geo utilities
+ * - `haversineKm(a, b)`: distance in km between two {lat, lon} points.
+ * - `clamp(v, min, max)`: clamp numeric value.
+ */
 export const R_EARTH_KM = 6371;
 export function haversineKm(a, b) {
   const dLat = ((b.lat - a.lat) * Math.PI) / 180;

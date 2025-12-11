@@ -1,3 +1,10 @@
+/**
+ * Taxonomy API helpers
+ * - Endpoint base: `/taxonomy`
+ * - Functions:
+ *    - `getEventsCategories()`: fetch categories with type=EVENT.
+ *    - `getPlacesCategories()`: fetch categories with type=PLACE.
+ */
 import apiClient from '@/libs/api/api-client';
 
 const TAXONOMY_ENDPOINT = '/taxonomy';
