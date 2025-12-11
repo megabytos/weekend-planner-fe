@@ -22,7 +22,7 @@ export default function Home() {
   const cityName = filter.city?.name || DEFAULT_CITY.city.name;
 
   const handleMainButton = () => {
-    router.push('/planner');
+    router.push('/search');
   };
   const handleSearch = () => {};
 

@@ -50,7 +50,6 @@ export default function SearchPage() {
     loadMoreRef,
   } = useSearchData({ searchValue, filter });
 
-  // ! Temporary
   const address = filter.city?.name || DEFAULT_CITY.city.name;
   const pathname = usePathname();
   const linkAddress = pathname.split('/');

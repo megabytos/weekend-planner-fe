@@ -1,13 +1,25 @@
+/** @jsxImportSource react */
+'use client';
+
 import { CalendarFold } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
+import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
+import {
+  selectIsFavorite,
+  toggleFavorite,
+} from '@/libs/redux/slices/favorites-slice';
 
 import Address from './address';
 import PlannerButton from './buttons/planner-button';
 
 export default function EventCardPreview({ item }) {
   if (!item) return null;
+
+  const dispatch = useAppDispatch();
 
   const primaryImage =
     item.imageUrl ||
@@ -35,6 +47,27 @@ export default function EventCardPreview({ item }) {
     : item.priceFrom
       ? `${item.priceFrom}${item.currency ? ` ${item.currency}` : ''}`
       : null;
+
+  const favoriteKey = useMemo(
+    () =>
+      item.__key ||
+      item.id ||
+      item.sources?.[0]?.externalId ||
+      item.url ||
+      item.title,
+    [item],
+  );
+
+  const isFavorite = useAppSelector((state) =>
+    selectIsFavorite(state, favoriteKey),
+  );
+
+  const handleFavorite = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!favoriteKey) return;
+    dispatch(toggleFavorite({ key: favoriteKey, item }));
+  };
 
   return (
     <div className="font-medium rounded-xl overflow-hidden">
@@ -65,7 +98,7 @@ export default function EventCardPreview({ item }) {
               {item.type && <span className="text-orange">{item.type}</span>}
             </div>
           )}
-          <PlannerButton onClick={() => {}} />
+          <PlannerButton onClick={handleFavorite} isActive={isFavorite} />
         </footer>
       </Link>
     </div>
