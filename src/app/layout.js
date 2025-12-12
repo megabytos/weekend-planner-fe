@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 
 import Footer from '@/components/layout/footer';
 import Header from '@/components/layout/header';
+import CitiesBootstrapper from '@/components/layout/cities-bootstrapper';
 import { AuthProvider } from '@/context/auth-context';
 import ReduxProvider from '@/libs/redux/redux-provider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
           <ReduxProvider>
             <AuthProvider>
               <Toaster position="top-right" />
+              <CitiesBootstrapper />
               <Header />
               <main>{children}</main>
               <Footer />

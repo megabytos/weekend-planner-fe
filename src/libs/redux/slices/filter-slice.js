@@ -27,6 +27,9 @@ const filterSlice = createSlice({
   name: 'filter',
   initialState,
   reducers: {
+    setCity: (state, { payload }) => {
+      state.city = payload || null;
+    },
     toggleCity: (state, { payload }) => {
       state.city =
         state.city?.id && payload?.id && state.city.id === payload.id
@@ -88,6 +91,7 @@ const filterSlice = createSlice({
 });
 
 export const {
+  setCity,
   toggleCity,
   toggleCategory,
   setDate,

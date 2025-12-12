@@ -2,6 +2,7 @@
 
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 import Container from '@/components/layout/container';
 import SliderContainer from '@/components/layout/slider-container';
@@ -10,16 +11,24 @@ import EventCardPreview from '@/components/ui/event-card-preview';
 import EventPoster from '@/components/ui/event-poster';
 import InputButton from '@/components/ui/input/input-button';
 import useHomeData from '@/hooks/use-home-data';
+import { useAppDispatch } from '@/libs/redux/hooks/use-app-dispatch';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { selectFilter } from '@/libs/redux/slices/filter-slice';
+import { fetchCitiesIfNeeded } from '@/libs/redux/slices/cities-slice';
 import { DEFAULT_CITY } from '@/utils/params-builder';
 
 export default function Home() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const filter = useAppSelector(selectFilter);
   const { featured, popularEvents, popularPlaces, isLoading, isError } =
     useHomeData(filter);
   const cityName = filter.city?.name || DEFAULT_CITY.city.name;
+
+  // Trigger home refresh for cities (throttled 60s)
+  useEffect(() => {
+    dispatch(fetchCitiesIfNeeded({ reason: 'home' }));
+  }, [dispatch]);
 
   const handleMainButton = () => {
     router.push('/search');
