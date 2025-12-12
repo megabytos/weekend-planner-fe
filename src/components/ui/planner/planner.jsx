@@ -31,7 +31,7 @@ const isPointInBoundingBox = (point, bbox) => {
   );
 };
 
-const isWithinCityRadius = (point, cityCenter, maxRadiusKm = 50) => {
+const isWithinCityRadius = (point, cityCenter, maxRadiusKm = 25) => {
   if (!point || !cityCenter || !point.lat || !point.lon || 
       !cityCenter.lat || !cityCenter.lon) return false;
   try {
@@ -354,22 +354,26 @@ export default function PlannerPrototype() {
         if (filterType === 'events' && itemType !== 'event') return null;
         if (filterType === 'places' && itemType !== 'place') return null;
         
+        let itemCity = null;
+        
+        if (item.city && typeof item.city === 'object') {
+          itemCity = {
+            id: item.city.id || null,
+            name: item.city.name || null,
+            countryCode: item.city.countryCode || null,
+          };
+        } else if (item.city_id) {
+          itemCity = {
+            id: item.city_id,
+            name: item.city_name || null,
+            countryCode: null,
+          };
+        }
+        
         if (selectedCity) {
-          let itemCity = null;
-          
-          if (item.city && typeof item.city === 'object') {
-            itemCity = {
-              id: item.city.id || null,
-              name: item.city.name || null,
-            };
-          } else if (item.city_id) {
-            itemCity = {
-              id: item.city_id,
-              name: item.city_name || null,
-            };
-          }
-
           let matchesCity = false;
+          let matchedByCoordinates = false;
+          
           if (itemCity) {
             if (itemCity.id && selectedCity.id && itemCity.id === selectedCity.id) {
               matchesCity = true;
@@ -391,6 +395,7 @@ export default function PlannerPrototype() {
                 maxLon: bbox.maxLon
               })) {
                 matchesCity = true;
+                matchedByCoordinates = true;
               }
             }
             
@@ -400,23 +405,27 @@ export default function PlannerPrototype() {
                 lon: selectedCityData.coordinates.lon
               };
 
-              if (isWithinCityRadius(placeCoords, cityCenter, 50)) {
+              if (isWithinCityRadius(placeCoords, cityCenter, 25)) {
                 matchesCity = true;
+                matchedByCoordinates = true;
               }
             }
             
             if (!matchesCity && origin && typeof origin.lat === 'number' && typeof origin.lon === 'number') {
-              if (isWithinCityRadius(placeCoords, origin, 50)) {
+              if (isWithinCityRadius(placeCoords, origin, 25)) {
                 matchesCity = true;
+                matchedByCoordinates = true;
               }
             }
           }
 
           if (!matchesCity) {
-            if (itemType === 'place') {
-              console.log('Place filtered out by city:', item.name || item.title || 'unnamed');
-            }
             return null;
+          }
+          
+
+          if (matchedByCoordinates && !itemCity) {
+            itemCity = selectedCity;
           }
         }    
         
@@ -436,15 +445,14 @@ export default function PlannerPrototype() {
             category: item.category_code || item.primaryCategory?.name || item.categories?.[0]?.name || 'place',
             geo: item.location ? { lat: item.location.lat, lon: item.location.lon } : null,
             defaultStayMin: item.defaultStayMin || 60,
-            city: item.city || (item.city_id ? { id: item.city_id, name: item.city_name || null } : null),
+            city: itemCity || item.city || (item.city_id ? { id: item.city_id, name: item.city_name || null } : null) || selectedCity,
             __cityKey: getCityKey(
-            item.city ||
+            itemCity || item.city ||
             (item.city_id ? { id: item.city_id, name: item.city_name || null } : null) ||
             selectedCity 
           ),
           };
           
-          console.log('Place candidate created:', placeCandidate);
           return placeCandidate;
 
         } else {
@@ -463,6 +471,11 @@ export default function PlannerPrototype() {
 
           if (!startAt || !endAt) return null;
 
+          const eventCity = itemCity || 
+                           item.city || 
+                           (item.city_id ? { id: item.city_id, name: item.city_name || null } : null) ||
+                           selectedCity;
+          
           return {
             type: 'event',
             id: item.id || item.event_id || item.__key,
@@ -472,23 +485,18 @@ export default function PlannerPrototype() {
             start_at: startAt,
             end_at: endAt,
             place_id: item.place_id,
-            city: item.city || (item.city_id ? { id: item.city_id, name: item.city_name } : null),
-            __cityKey: getCityKey(
-            item.city ||
-            (item.city_id ? { id: item.city_id, name: item.city_name } : null)
-          ),
+            city: eventCity,
+            __cityKey: getCityKey(eventCity),
           };
         }
       })
       .filter((item) => {
         if (item === null) return false;
         if (item.type === 'place' && !item.geo) {
-          console.warn('Place without geo:', item);
           return false;
         }
         return item.geo !== null;
       });
-    console.log('Filtered candidates result:', res);
     return res.sort((a, b) =>
       (a.type === 'event') === (b.type === 'event')
         ? (a.name || '').localeCompare(b.name || '')

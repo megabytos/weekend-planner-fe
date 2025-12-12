@@ -133,7 +133,7 @@ export default function SearchPage() {
             checkActiveTab(DEFAULT_TABS.MAP) && isMapReady ? 'block' : 'hidden'
           }
         >
-          <div className="rounded-xl border w-full flex justify-center">
+          <div className="rounded-xl overflow-hidden w-full flex justify-center">
             <Map places={events} />
           </div>
         </section>

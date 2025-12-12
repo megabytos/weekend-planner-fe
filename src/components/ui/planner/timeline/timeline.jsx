@@ -46,10 +46,16 @@ export default function Timeline({
                         if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
                           return 'Invalid date';
                         }
-                        return `${startDate.toLocaleString()} - ${endDate.toLocaleTimeString([], {
+                        const dateStr = startDate.toLocaleDateString();
+                        const startTime = startDate.toLocaleTimeString([], {
                           hour: '2-digit',
                           minute: '2-digit',
-                        })}`;
+                        });
+                        const endTime = endDate.toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        });
+                        return `${dateStr}, ${startTime} - ${endTime}`;
                       })() : 'No time info'}
                     </div>
                   ) : (
