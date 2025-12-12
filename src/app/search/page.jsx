@@ -9,6 +9,7 @@ import Container from '@/components/layout/container';
 import Breadcrumbs from '@/components/ui/breadcrumbs';
 import Filter from '@/components/ui/filter/filter';
 import InputButton from '@/components/ui/input/input-button';
+import Loader from '@/components/ui/loader';
 import Map from '@/components/ui/map';
 import Tabs from '@/components/ui/tabs';
 import DEFAULT_TABS from '@/constants/tabs';
@@ -109,8 +110,13 @@ export default function SearchPage() {
         <section
           className={checkActiveTab(DEFAULT_TABS.EVENTS) ? 'block' : 'hidden'}
         >
+          {isLoading && (
+            <div className="flex items-center justify-center md:min-w-[545px] lg:min-w-[526px]">
+              <Loader />
+              <p className=" text-center text-gray">Loading events…</p>
+            </div>
+          )}
           <div className="space-y-4">
-            {isLoading && <p>Loading events…</p>}
             {isError && (
               <p className="text-red">Failed to load events. Try again.</p>
             )}

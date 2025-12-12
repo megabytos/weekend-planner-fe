@@ -22,7 +22,7 @@ export default function SliderContainer({
       className={cn(
         hasSlides
           ? 'max-w-[335px] md:max-w-[728px] lg:max-w-[1376px] w-full mx-auto relative'
-          : 'w-[335px] h-[266px] md:w-[728px] lg:w-[1376px] lg:h-[1376px] mx-auto relative',
+          : 'w-[335px] md:w-[728px] lg:w-[1376px] mx-auto relative',
       )}
     >
       <Swiper
