@@ -15,6 +15,7 @@ import Container from './container';
 import { headerNavLinks } from './data';
 import HeaderNavLink from './header-nav-link';
 import ModalMenu from './modal-menu';
+import CitySelect from './city-select';
 
 export default function Header() {
   const isModalMenuOpen = useAppSelector((state) => state.modalMenu.isOpen);
@@ -34,6 +35,10 @@ export default function Header() {
       <Container>
         <div className="flex justify-between items-center h-[68px]">
           <Logo />
+          {/* Desktop city select */}
+          <div className="hidden md:block ml-6 mr-2">
+            <CitySelect />
+          </div>
           <nav className="hidden md:flex gap-4 ml-auto mr-4">
             <ul className="flex gap-4">
               {headerNavLinks.map((link) => (
