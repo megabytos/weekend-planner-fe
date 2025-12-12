@@ -51,6 +51,7 @@ export default function SearchPage() {
     loadMoreRef,
   } = useSearchData({ searchValue, filter });
 
+  // * Map and breadcrumbs logic
   const address = filter.city?.name || DEFAULT_CITY.city.name;
   const pathname = usePathname();
   const linkAddress = pathname.split('/');
@@ -121,7 +122,7 @@ export default function SearchPage() {
               <p className="text-red">Failed to load events. Try again.</p>
             )}
             {!isLoading && !isError && events.length === 0 && (
-              <p>No events found for selected filters.</p>
+              <p>No results found for selected filters.</p>
             )}
             {events.map((event, index) => {
               const key = event?.__key;
@@ -136,7 +137,9 @@ export default function SearchPage() {
 
         <section
           className={
-            checkActiveTab(DEFAULT_TABS.MAP) && isMapReady ? 'block' : 'hidden'
+            checkActiveTab(DEFAULT_TABS.MAP) && isMapReady && events.length > 0
+              ? 'block'
+              : 'hidden'
           }
         >
           <div className="rounded-xl overflow-hidden w-full flex justify-center">

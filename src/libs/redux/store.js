@@ -5,13 +5,12 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import { configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
 
 import authReducer from './slices/auth-slice';
+import citiesReducer, { setCurrentCityId } from './slices/cities-slice';
 import favoritesReducer from './slices/favorites-slice';
-import filterReducer from './slices/filter-slice';
+import filterReducer, { toggleCity } from './slices/filter-slice';
 import modalMenuReducer from './slices/modal-menu-slice';
 import refreshTokenReducer from './slices/refresh-token-slice';
 import searchReducer from './slices/search-slice';
-import citiesReducer, { setCurrentCityId } from './slices/cities-slice';
-import { setCity } from './slices/filter-slice';
 
 const createNoopStorage = () => ({
   getItem: () => Promise.resolve(null),
@@ -54,8 +53,18 @@ listenerMiddleware.startListening({
     const state = api.getState();
     const id = state.cities.currentCityId ?? null;
     const items = Array.isArray(state.cities.items) ? state.cities.items : [];
-    const nextCity = id != null ? items.find((c) => Number(c.id) === Number(id)) || null : null;
-    api.dispatch(setCity(nextCity));
+    const currentFilterCityId = state.filter?.city?.id ?? null;
+    const nextCity =
+      id != null
+        ? items.find((c) => Number(c.id) === Number(id)) || null
+        : null;
+
+    // Avoid toggling off when the filter already holds this city
+    if (Number(currentFilterCityId) === (id != null ? Number(id) : null)) {
+      return;
+    }
+
+    api.dispatch(toggleCity(nextCity));
   },
 });
 // Sync: when filter.city changes -> update cities.currentCityId

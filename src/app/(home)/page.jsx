@@ -25,8 +25,6 @@ export default function Home() {
   const { featured, popularEvents, popularPlaces, isLoading, isError } =
     useHomeData(filter);
   const cityName = filter.city?.name || DEFAULT_CITY.city.name;
-  const popular = popularEvents.length;
-  console.log(popular);
   // Trigger home refresh for cities (throttled 60s)
   useEffect(() => {
     dispatch(fetchCitiesIfNeeded({ reason: 'home' }));
@@ -91,7 +89,7 @@ export default function Home() {
             <p className=" text-center text-gray">Loading events…</p>
           </div>
         )}
-        {popularEvents.length < 0 && (
+        {popularEvents.length > 0 && (
           <div>
             <h1 className="text-[22px] leading-7 mb-4 lg:text-[28px]">
               Popular events in {cityName}

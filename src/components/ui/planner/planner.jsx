@@ -1,15 +1,14 @@
 'use client';
 
-import { useMemo, useState, useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import {
-  KYIV,
-  defaultWindow,
-  tonightRange,
-} from '@/data/demo-data';
+import { KYIV, defaultWindow } from '@/data/demo-data';
 import { usePlannerLogic } from '@/hooks/use-planner-logic';
-import { fmtTime } from '@/utils/time';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
+import {
+  selectCitiesItems,
+  selectCurrentCityId,
+} from '@/libs/redux/slices/cities-slice';
 import { selectFavorites } from '@/libs/redux/slices/favorites-slice';
 import { selectFilter } from '@/libs/redux/slices/filter-slice';
 
@@ -18,9 +17,6 @@ import Map from '../map';
 import CandidateFilters from './candidate-panel/candidate-filtters';
 import CandidatePanel from './candidate-panel/candidate-panel';
 import Timeline from './timeline/timeline';
-import { getCityByName, getCityById } from '@/services/fetch/get-city';
-import { haversineKm } from '@/utils/geo';
-
 
 const isPointInBoundingBox = (point, bbox) => {
   if (!bbox || !point || !point.lat || !point.lon) return false;
@@ -33,8 +29,15 @@ const isPointInBoundingBox = (point, bbox) => {
 };
 
 const isWithinCityRadius = (point, cityCenter, maxRadiusKm = 25) => {
-  if (!point || !cityCenter || !point.lat || !point.lon || 
-      !cityCenter.lat || !cityCenter.lon) return false;
+  if (
+    !point ||
+    !cityCenter ||
+    !point.lat ||
+    !point.lon ||
+    !cityCenter.lat ||
+    !cityCenter.lon
+  )
+    return false;
   try {
     const distance = haversineKm(point, cityCenter);
     return distance <= maxRadiusKm;
@@ -43,11 +46,9 @@ const isWithinCityRadius = (point, cityCenter, maxRadiusKm = 25) => {
   }
 };
 
-
 export default function PlannerPrototype() {
   const lockedCityKeyRef = useRef(null);
 
-  const [city, setCity] = useState('Kyiv');
   const [mode, setMode] = useState('walking');
   const [origin, setOrigin] = useState(KYIV);
   const [win, setWin] = useState(defaultWindow());
@@ -56,64 +57,77 @@ export default function PlannerPrototype() {
   const [query, setQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState(null);
 
+  const cities = useAppSelector(selectCitiesItems);
+  const currentCityId = useAppSelector(selectCurrentCityId);
   const favorites = useAppSelector(selectFavorites);
   const filter = useAppSelector(selectFilter);
-  
+
   const headerCity = filter?.city;
 
   const detectedCity = useMemo(() => {
     const favoritesArray = Object.values(favorites).filter(Boolean);
     if (favoritesArray.length === 0) return null;
-    
+
     const firstItem = favoritesArray[0];
-    
+
     if (firstItem.city && typeof firstItem.city === 'object') {
       return firstItem.city;
     }
-    
-    if (firstItem.city_id) {
-      return { id: firstItem.city_id };
+    if (currentCityId != null) {
+      const match = cities.find((c) => Number(c.id) === Number(currentCityId));
+      if (match) return match;
     }
-    
     return null;
-  }, [favorites]);
+  }, [cities, currentCityId, filterCity]);
 
   const availableCities = useMemo(() => {
-    if (!favorites) return [];
-    const favoritesArray = Object.values(favorites).filter(Boolean);
     const citiesMapObj = new globalThis.Map();
 
-    favoritesArray.forEach((item) => {
-      let cityInfo = null;
-      
-      if (item.city && typeof item.city === 'object') {
-        cityInfo = {
-          id: item.city.id || null,
-          name: item.city.name || null,
-          countryCode: item.city.countryCode || null,
-        };
-      } else if (item.city_id) {
-        cityInfo = {
-          id: item.city_id,
-          name: item.city_name || `City ${item.city_id}`,
-          countryCode: null,
-        };
-      }
+    const addCity = (cityInfo) => {
+      if (!cityInfo) return;
+      const key =
+        cityInfo.id != null
+          ? `id:${cityInfo.id}`
+          : cityInfo.name
+            ? `name:${cityInfo.name.toLowerCase()}`
+            : null;
+      if (!key || citiesMapObj.has(key)) return;
+      citiesMapObj.set(key, cityInfo);
+    };
 
-      if (cityInfo) {
-        const key = cityInfo.id || cityInfo.name;
-        if (key && !citiesMapObj.has(key)) {
-          citiesMapObj.set(key, cityInfo);
+    // Include the city picked in the header selector
+    addCity(headerCity);
+
+    if (favorites) {
+      const favoritesArray = Object.values(favorites).filter(Boolean);
+
+      favoritesArray.forEach((item) => {
+        let cityInfo = null;
+
+        if (item.city && typeof item.city === 'object') {
+          cityInfo = {
+            id: item.city.id || null,
+            name: item.city.name || null,
+            countryCode: item.city.countryCode || null,
+          };
+        } else if (item.city_id) {
+          cityInfo = {
+            id: item.city_id,
+            name: item.city_name || `City ${item.city_id}`,
+            countryCode: null,
+          };
         }
-      }
-    });
+
+        addCity(cityInfo);
+      });
+    }
 
     return Array.from(citiesMapObj.values()).sort((a, b) => {
       const nameA = a.name || '';
       const nameB = b.name || '';
       return nameA.localeCompare(nameB);
     });
-  }, [favorites]);
+  }, [favorites, headerCity]);
 
   const effectiveCity = headerCity || selectedCity;
 
@@ -139,11 +153,18 @@ export default function PlannerPrototype() {
         return;
       }
 
-      if (headerCity && (headerCity.coordinates || headerCity.center || headerCity.location || headerCity.geo || headerCity.boundingBox)) {
+      if (
+        headerCity &&
+        (headerCity.coordinates ||
+          headerCity.center ||
+          headerCity.location ||
+          headerCity.geo ||
+          headerCity.boundingBox)
+      ) {
         setSelectedCityData(headerCity);
         return;
       }
-      
+
       try {
         let cityData = null;
         if (targetCity.id) {
@@ -151,7 +172,7 @@ export default function PlannerPrototype() {
         } else if (targetCity.name) {
           cityData = await getCityByName(targetCity.name);
         }
-        
+
         if (cityData) {
           setSelectedCityData(cityData);
         }
@@ -165,14 +186,16 @@ export default function PlannerPrototype() {
         }
       }
     };
-    
+
     loadCityData();
   }, [effectiveCity, headerCity]);
 
   useEffect(() => {
     const setCityOrigin = () => {
-      const targetCity = effectiveCity || (availableCities.length > 0 ? availableCities[0] : null);
-      
+      const targetCity =
+        effectiveCity ||
+        (availableCities.length > 0 ? availableCities[0] : null);
+
       if (!targetCity) {
         return;
       }
@@ -186,7 +209,10 @@ export default function PlannerPrototype() {
       }
 
       if (cityData?.coordinates?.lat && cityData?.coordinates?.lon) {
-        setOrigin({ lat: cityData.coordinates.lat, lon: cityData.coordinates.lon });
+        setOrigin({
+          lat: cityData.coordinates.lat,
+          lon: cityData.coordinates.lon,
+        });
       } else if (cityData?.center) {
         setOrigin({ lat: cityData.center.lat, lon: cityData.center.lon });
       } else if (cityData?.location) {
@@ -194,59 +220,74 @@ export default function PlannerPrototype() {
       } else if (cityData?.geo) {
         setOrigin({ lat: cityData.geo.lat, lon: cityData.geo.lon });
       } else if (targetCity?.coordinates?.lat && targetCity?.coordinates?.lon) {
-        setOrigin({ lat: targetCity.coordinates.lat, lon: targetCity.coordinates.lon });
+        setOrigin({
+          lat: targetCity.coordinates.lat,
+          lon: targetCity.coordinates.lon,
+        });
       } else if (targetCity?.center) {
         setOrigin({ lat: targetCity.center.lat, lon: targetCity.center.lon });
       } else if (targetCity?.location) {
-        setOrigin({ lat: targetCity.location.lat, lon: targetCity.location.lon });
+        setOrigin({
+          lat: targetCity.location.lat,
+          lon: targetCity.location.lon,
+        });
       } else if (targetCity?.geo) {
         setOrigin({ lat: targetCity.geo.lat, lon: targetCity.geo.lon });
       } else {
-          const calculateCenterFromCityFavorites = () => {
-            if (!favorites) return null;
-            const favoritesArray = Object.values(favorites).filter(Boolean);
-            
-            const cityItems = favoritesArray.filter((item) => {
-              let itemCity = null;
-              
-              if (item.city && typeof item.city === 'object') {
-                itemCity = {
-                  id: item.city.id || null,
-                  name: item.city.name || null,
-                };
-              } else if (item.city_id) {
-                itemCity = {
-                  id: item.city_id,
-                  name: item.city_name || null,
-                };
-              }
+        const calculateCenterFromCityFavorites = () => {
+          if (!favorites) return null;
+          const favoritesArray = Object.values(favorites).filter(Boolean);
 
-              if (!itemCity) return false;
+          const cityItems = favoritesArray.filter((item) => {
+            let itemCity = null;
 
-              return (
-                (targetCity.id && itemCity.id === targetCity.id) ||
-                (targetCity.name && itemCity.name === targetCity.name)
-              );
-            });
-
-            const validLocations = cityItems
-              .map(item => item.location || item.geo)
-              .filter(loc => loc && typeof loc.lat === 'number' && typeof loc.lon === 'number');
-
-            if (validLocations.length > 0) {
-              const avgLat = validLocations.reduce((sum, loc) => sum + loc.lat, 0) / validLocations.length;
-              const avgLon = validLocations.reduce((sum, loc) => sum + loc.lon, 0) / validLocations.length;
-              return { lat: avgLat, lon: avgLon };
+            if (item.city && typeof item.city === 'object') {
+              itemCity = {
+                id: item.city.id || null,
+                name: item.city.name || null,
+              };
+            } else if (item.city_id) {
+              itemCity = {
+                id: item.city_id,
+                name: item.city_name || null,
+              };
             }
 
-            return null;
-          };
+            if (!itemCity) return false;
 
-          const centerFromFavorites = calculateCenterFromCityFavorites();
-          if (centerFromFavorites) {
-            setOrigin(centerFromFavorites);
+            return (
+              (targetCity.id && itemCity.id === targetCity.id) ||
+              (targetCity.name && itemCity.name === targetCity.name)
+            );
+          });
+
+          const validLocations = cityItems
+            .map((item) => item.location || item.geo)
+            .filter(
+              (loc) =>
+                loc &&
+                typeof loc.lat === 'number' &&
+                typeof loc.lon === 'number',
+            );
+
+          if (validLocations.length > 0) {
+            const avgLat =
+              validLocations.reduce((sum, loc) => sum + loc.lat, 0) /
+              validLocations.length;
+            const avgLon =
+              validLocations.reduce((sum, loc) => sum + loc.lon, 0) /
+              validLocations.length;
+            return { lat: avgLat, lon: avgLon };
           }
+
+          return null;
+        };
+
+        const centerFromFavorites = calculateCenterFromCityFavorites();
+        if (centerFromFavorites) {
+          setOrigin(centerFromFavorites);
         }
+      }
     };
 
     setCityOrigin();
@@ -256,28 +297,28 @@ export default function PlannerPrototype() {
 
   useEffect(() => {
     if (logic.items.length === 0) {
-      lockedCityKeyRef.current =null;
+      lockedCityKeyRef.current = null;
     }
   }, [logic.items.length]);
-  
+
   const hasMixedCities = useMemo(() => {
     if (logic.items.length <= 1) return false;
-  
+
     const cityKey = logic.items[0].__cityKey;
-    return logic.items.some(item => item.__cityKey !== cityKey);
+    return logic.items.some((item) => item.__cityKey !== cityKey);
   }, [logic.items]);
 
   const getCityKey = (city) => {
     if (!city) return null;
-  
+
     if (city.id !== undefined && city.id !== null) {
       return `id:${String(city.id)}`;
     }
-  
+
     if (city.name) {
       return `name:${city.name.toLowerCase()}`;
     }
-  
+
     return null;
   };
 
@@ -285,22 +326,22 @@ export default function PlannerPrototype() {
     if (candidate.city) {
       return getCityKey(candidate.city);
     }
-  
+
     return getCityKey(selectedCity);
   };
 
   const handleAddCandidate = (candidate) => {
     const cityKey = resolveCandidateCityKey(candidate);
-    
+
     if (!cityKey) {
       alert('Cannot determine city for this place');
       return;
     }
-  
+
     if (!lockedCityKeyRef.current) {
       lockedCityKeyRef.current = cityKey;
     }
-    
+
     if (lockedCityKeyRef.current !== cityKey) {
       alert('Cannot add items from different cities');
       return;
@@ -308,23 +349,21 @@ export default function PlannerPrototype() {
     logic.addCandidate(candidate);
   };
 
-
-
   const filteredCandidates = useMemo(() => {
     if (!favorites) return [];
     const favoritesArray = Object.values(favorites).filter(Boolean);
-    
+
     const cityForFiltering = effectiveCity;
-    
+
     const res = favoritesArray
       .map((item) => {
         const itemType = item.type === 'event' ? 'event' : 'place';
-        
+
         if (filterType === 'events' && itemType !== 'event') return null;
         if (filterType === 'places' && itemType !== 'place') return null;
-        
+
         let itemCity = null;
-        
+
         if (item.city && typeof item.city === 'object') {
           itemCity = {
             id: item.city.id || null,
@@ -338,41 +377,59 @@ export default function PlannerPrototype() {
             countryCode: null,
           };
         }
-        
+
         if (cityForFiltering) {
           let matchesCity = false;
           let matchedByCoordinates = false;
-          
+
           if (itemCity) {
-            if (itemCity.id && cityForFiltering.id && itemCity.id === cityForFiltering.id) {
+            if (
+              itemCity.id &&
+              cityForFiltering.id &&
+              itemCity.id === cityForFiltering.id
+            ) {
               matchesCity = true;
-            } else if (itemCity.name && cityForFiltering.name && 
-                     itemCity.name.toLowerCase() === cityForFiltering.name.toLowerCase()) {
+            } else if (
+              itemCity.name &&
+              cityForFiltering.name &&
+              itemCity.name.toLowerCase() ===
+                cityForFiltering.name.toLowerCase()
+            ) {
               matchesCity = true;
             }
           }
-          
-          if (!matchesCity && item.location && item.location.lat && item.location.lon) {
-            const placeCoords = { lat: item.location.lat, lon: item.location.lon };
+
+          if (
+            !matchesCity &&
+            item.location &&
+            item.location.lat &&
+            item.location.lon
+          ) {
+            const placeCoords = {
+              lat: item.location.lat,
+              lon: item.location.lon,
+            };
             const cityDataForCheck = selectedCityData || headerCity;
-            
+
             if (cityDataForCheck?.boundingBox) {
               const bbox = cityDataForCheck.boundingBox;
-              if (isPointInBoundingBox(placeCoords, {
-                minLat: bbox.minLat,
-                maxLat: bbox.maxLat,
-                minLon: bbox.minLon,
-                maxLon: bbox.maxLon
-              })) {
+              if (
+                isPointInBoundingBox(placeCoords, {
+                  minLat: bbox.minLat,
+                  maxLat: bbox.maxLat,
+                  minLon: bbox.minLon,
+                  maxLon: bbox.maxLon,
+                })
+              ) {
                 matchesCity = true;
                 matchedByCoordinates = true;
               }
             }
-            
+
             if (!matchesCity && cityDataForCheck?.coordinates) {
               const cityCenter = {
                 lat: cityDataForCheck.coordinates.lat,
-                lon: cityDataForCheck.coordinates.lon
+                lon: cityDataForCheck.coordinates.lon,
               };
 
               if (isWithinCityRadius(placeCoords, cityCenter, 25)) {
@@ -380,8 +437,13 @@ export default function PlannerPrototype() {
                 matchedByCoordinates = true;
               }
             }
-            
-            if (!matchesCity && origin && typeof origin.lat === 'number' && typeof origin.lon === 'number') {
+
+            if (
+              !matchesCity &&
+              origin &&
+              typeof origin.lat === 'number' &&
+              typeof origin.lon === 'number'
+            ) {
               if (isWithinCityRadius(placeCoords, origin, 25)) {
                 matchesCity = true;
                 matchedByCoordinates = true;
@@ -392,39 +454,53 @@ export default function PlannerPrototype() {
           if (!matchesCity) {
             return null;
           }
-          
 
           if (matchedByCoordinates && !itemCity) {
             itemCity = cityForFiltering;
           }
-        }    
-        
-        const searchText = itemType === 'event' 
-          ? `${item.title || item.name || ''} ${item.category_code || item.primaryCategory?.name || item.categories?.[0]?.name || ''}`
-          : `${item.name || item.title || ''} ${item.category_code || item.primaryCategory?.name || item.categories?.[0]?.name || ''}`;
-        
+        }
+
+        const searchText =
+          itemType === 'event'
+            ? `${item.title || item.name || ''} ${item.category_code || item.primaryCategory?.name || item.categories?.[0]?.name || ''}`
+            : `${item.name || item.title || ''} ${item.category_code || item.primaryCategory?.name || item.categories?.[0]?.name || ''}`;
+
         if (query && !searchText.toLowerCase().includes(query.toLowerCase())) {
           return null;
         }
-        
+
         if (itemType === 'place') {
           const placeCandidate = {
             type: 'place',
             id: item.id || item.__key,
             name: item.name || item.title,
-            category: item.category_code || item.primaryCategory?.name || item.categories?.[0]?.name || 'place',
-            geo: item.location ? { lat: item.location.lat, lon: item.location.lon } : null,
+            category:
+              item.category_code ||
+              item.primaryCategory?.name ||
+              item.categories?.[0]?.name ||
+              'place',
+            geo: item.location
+              ? { lat: item.location.lat, lon: item.location.lon }
+              : null,
             defaultStayMin: item.defaultStayMin || 60,
-            city: itemCity || item.city || (item.city_id ? { id: item.city_id, name: item.city_name || null } : null) || cityForFiltering,
+            city:
+              itemCity ||
+              item.city ||
+              (item.city_id
+                ? { id: item.city_id, name: item.city_name || null }
+                : null) ||
+              cityForFiltering,
             __cityKey: getCityKey(
-            itemCity || item.city ||
-            (item.city_id ? { id: item.city_id, name: item.city_name || null } : null) ||
-            cityForFiltering 
-          ),
+              itemCity ||
+                item.city ||
+                (item.city_id
+                  ? { id: item.city_id, name: item.city_name || null }
+                  : null) ||
+                cityForFiltering,
+            ),
           };
-          
-          return placeCandidate;
 
+          return placeCandidate;
         } else {
           const normalizeDate = (dateValue) => {
             if (!dateValue) return null;
@@ -433,25 +509,38 @@ export default function PlannerPrototype() {
           };
 
           const startAt = normalizeDate(
-            item.start_at || item.nextOccurrence?.startsAt || item.occurrences?.[0]?.start
+            item.start_at ||
+              item.nextOccurrence?.startsAt ||
+              item.occurrences?.[0]?.start,
           );
           const endAt = normalizeDate(
-            item.end_at || item.nextOccurrence?.endsAt || item.occurrences?.[0]?.end
+            item.end_at ||
+              item.nextOccurrence?.endsAt ||
+              item.occurrences?.[0]?.end,
           );
 
           if (!startAt || !endAt) return null;
 
-          const eventCity = itemCity || 
-                           item.city || 
-                           (item.city_id ? { id: item.city_id, name: item.city_name || null } : null) ||
-                           cityForFiltering;
-          
+          const eventCity =
+            itemCity ||
+            item.city ||
+            (item.city_id
+              ? { id: item.city_id, name: item.city_name || null }
+              : null) ||
+            cityForFiltering;
+
           return {
             type: 'event',
             id: item.id || item.event_id || item.__key,
             name: item.title || item.name,
-            category: item.category_code || item.primaryCategory?.name || item.categories?.[0]?.name || 'event',
-            geo: item.location ? { lat: item.location.lat, lon: item.location.lon } : null,
+            category:
+              item.category_code ||
+              item.primaryCategory?.name ||
+              item.categories?.[0]?.name ||
+              'event',
+            geo: item.location
+              ? { lat: item.location.lat, lon: item.location.lon }
+              : null,
             start_at: startAt,
             end_at: endAt,
             place_id: item.place_id,
@@ -502,7 +591,7 @@ export default function PlannerPrototype() {
         setSelectedCity={setSelectedCity}
         availableCities={availableCities || []}
       />
-      <div className="flex flex-col gap-4 lg:flex-row lg:gap-8">
+      <div className="flex flex-col gap-4 lg:flex-row lg:gap-8 mt-8">
         <div className="flex flex-col gap-4 md:flex-row lg:flex-row lg:gap-8">
           <CandidatePanel
             lockedCityKey={lockedCityKeyRef.current}
@@ -552,7 +641,13 @@ export default function PlannerPrototype() {
             <div className="absolute top-2 left-2 bg-white/90 rounded-xl shadow px-3 py-2 text-sm">
               Map (demo). Pin order matches timeline. Mode: {mode}
             </div>
-            <Map key={logic.items.length === 0 ? 'empty-map' : 'map-with-items'}origin={origin} items={logic.items} mode={mode} useClustering={false} />
+            <Map
+              key={logic.items.length === 0 ? 'empty-map' : 'map-with-items'}
+              origin={origin}
+              items={logic.items}
+              mode={mode}
+              useClustering={false}
+            />
           </div>
         </div>
       </div>
