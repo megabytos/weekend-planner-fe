@@ -11,6 +11,7 @@ import { usePlannerLogic } from '@/hooks/use-planner-logic';
 import { fmtTime } from '@/utils/time';
 import { useAppSelector } from '@/libs/redux/hooks/use-app-selector';
 import { selectFavorites } from '@/libs/redux/slices/favorites-slice';
+import { selectFilter } from '@/libs/redux/slices/filter-slice';
 
 import Button from '../buttons/button';
 import Map from '../map';
@@ -56,6 +57,9 @@ export default function PlannerPrototype() {
   const [selectedCity, setSelectedCity] = useState(null);
 
   const favorites = useAppSelector(selectFavorites);
+  const filter = useAppSelector(selectFilter);
+  
+  const headerCity = filter?.city;
 
   const detectedCity = useMemo(() => {
     const favoritesArray = Object.values(favorites).filter(Boolean);
@@ -111,28 +115,41 @@ export default function PlannerPrototype() {
     });
   }, [favorites]);
 
-  
+  const effectiveCity = headerCity || selectedCity;
+
   useEffect(() => {
-    if (!selectedCity && availableCities.length > 0) {
+    if (headerCity) {
+      setSelectedCity({
+        id: headerCity.id || null,
+        name: headerCity.name || null,
+        countryCode: headerCity.countryCode || null,
+      });
+    } else if (!selectedCity && availableCities.length > 0) {
       setSelectedCity(availableCities[0]);
     }
-  }, [availableCities, selectedCity]);
+  }, [headerCity, availableCities]);
 
   const [selectedCityData, setSelectedCityData] = useState(null);
 
   useEffect(() => {
     const loadCityData = async () => {
-      if (!selectedCity) {
+      const targetCity = effectiveCity;
+      if (!targetCity) {
         setSelectedCityData(null);
+        return;
+      }
+
+      if (headerCity && (headerCity.coordinates || headerCity.center || headerCity.location || headerCity.geo || headerCity.boundingBox)) {
+        setSelectedCityData(headerCity);
         return;
       }
       
       try {
         let cityData = null;
-        if (selectedCity.name) {
-          cityData = await getCityByName(selectedCity.name);
-        } else if (selectedCity.id) {
-          cityData = await getCityById(selectedCity.id);
+        if (targetCity.id) {
+          cityData = await getCityById(targetCity.id);
+        } else if (targetCity.name) {
+          cityData = await getCityByName(targetCity.name);
         }
         
         if (cityData) {
@@ -140,54 +157,51 @@ export default function PlannerPrototype() {
         }
       } catch (error) {
         console.error('Failed to load city data:', error);
-        setSelectedCityData(null);
+
+        if (headerCity) {
+          setSelectedCityData(headerCity);
+        } else {
+          setSelectedCityData(null);
+        }
       }
     };
     
     loadCityData();
-  }, [selectedCity]);
+  }, [effectiveCity, headerCity]);
 
   useEffect(() => {
-    const setCityOrigin = async () => {
-      const targetCity = selectedCity || (availableCities.length > 0 ? availableCities[0] : null);
+    const setCityOrigin = () => {
+      const targetCity = effectiveCity || (availableCities.length > 0 ? availableCities[0] : null);
       
       if (!targetCity) {
         return;
       }
 
-      try {
-        let cityData = null;
+      const cityData = selectedCityData || headerCity || targetCity;
 
-        if (targetCity.name) {
-          cityData = await getCityByName(targetCity.name);
-          if (cityData?.name) {
-            setCity(cityData.name);
-          }
-        } 
-        else if (targetCity.id) {
-          cityData = await getCityById(targetCity.id);
-          if (cityData?.name) {
-            setCity(cityData.name);
-          }
-        }
+      if (cityData?.name) {
+        setCity(cityData.name);
+      } else if (targetCity?.name) {
+        setCity(targetCity.name);
+      }
 
-        if (cityData?.coordinates?.lat && cityData?.coordinates?.lon) {
-          setOrigin({ lat: cityData.coordinates.lat, lon: cityData.coordinates.lon });
-        } else if (cityData?.center) {
-          setOrigin({ lat: cityData.center.lat, lon: cityData.center.lon });
-        } else if (cityData?.location) {
-          setOrigin({ lat: cityData.location.lat, lon: cityData.location.lon });
-        } else if (cityData?.geo) {
-          setOrigin({ lat: cityData.geo.lat, lon: cityData.geo.lon });
-        } else if (targetCity.coordinates?.lat && targetCity.coordinates?.lon) {
-          setOrigin({ lat: targetCity.coordinates.lat, lon: targetCity.coordinates.lon });
-        } else if (targetCity.center) {
-          setOrigin({ lat: targetCity.center.lat, lon: targetCity.center.lon });
-        } else if (targetCity.location) {
-          setOrigin({ lat: targetCity.location.lat, lon: targetCity.location.lon });
-        } else if (targetCity.geo) {
-          setOrigin({ lat: targetCity.geo.lat, lon: targetCity.geo.lon });
-        } else {
+      if (cityData?.coordinates?.lat && cityData?.coordinates?.lon) {
+        setOrigin({ lat: cityData.coordinates.lat, lon: cityData.coordinates.lon });
+      } else if (cityData?.center) {
+        setOrigin({ lat: cityData.center.lat, lon: cityData.center.lon });
+      } else if (cityData?.location) {
+        setOrigin({ lat: cityData.location.lat, lon: cityData.location.lon });
+      } else if (cityData?.geo) {
+        setOrigin({ lat: cityData.geo.lat, lon: cityData.geo.lon });
+      } else if (targetCity?.coordinates?.lat && targetCity?.coordinates?.lon) {
+        setOrigin({ lat: targetCity.coordinates.lat, lon: targetCity.coordinates.lon });
+      } else if (targetCity?.center) {
+        setOrigin({ lat: targetCity.center.lat, lon: targetCity.center.lon });
+      } else if (targetCity?.location) {
+        setOrigin({ lat: targetCity.location.lat, lon: targetCity.location.lon });
+      } else if (targetCity?.geo) {
+        setOrigin({ lat: targetCity.geo.lat, lon: targetCity.geo.lon });
+      } else {
           const calculateCenterFromCityFavorites = () => {
             if (!favorites) return null;
             const favoritesArray = Object.values(favorites).filter(Boolean);
@@ -233,57 +247,10 @@ export default function PlannerPrototype() {
             setOrigin(centerFromFavorites);
           }
         }
-      } catch (error) {
-        console.error('Failed to fetch city data:', error);
-        const calculateCenterFromCityFavorites = () => {
-          if (!favorites) return null;
-          const favoritesArray = Object.values(favorites).filter(Boolean);
-          
-          const cityItems = favoritesArray.filter((item) => {
-            let itemCity = null;
-            
-            if (item.city && typeof item.city === 'object') {
-              itemCity = {
-                id: item.city.id || null,
-                name: item.city.name || null,
-              };
-            } else if (item.city_id) {
-              itemCity = {
-                id: item.city_id,
-                name: item.city_name || null,
-              };
-            }
-
-            if (!itemCity) return false;
-
-            return (
-              (targetCity.id && itemCity.id === targetCity.id) ||
-              (targetCity.name && itemCity.name === targetCity.name)
-            );
-          });
-
-          const validLocations = cityItems
-            .map(item => item.location || item.geo)
-            .filter(loc => loc && typeof loc.lat === 'number' && typeof loc.lon === 'number');
-
-          if (validLocations.length > 0) {
-            const avgLat = validLocations.reduce((sum, loc) => sum + loc.lat, 0) / validLocations.length;
-            const avgLon = validLocations.reduce((sum, loc) => sum + loc.lon, 0) / validLocations.length;
-            return { lat: avgLat, lon: avgLon };
-          }
-
-          return null;
-        };
-
-        const centerFromFavorites = calculateCenterFromCityFavorites();
-        if (centerFromFavorites) {
-          setOrigin(centerFromFavorites);
-        }
-      }
     };
 
     setCityOrigin();
-  }, [selectedCity, availableCities, favorites]);
+  }, [effectiveCity, availableCities, favorites, selectedCityData, headerCity]);
 
   const logic = usePlannerLogic({ origin, win, mode });
 
@@ -347,6 +314,8 @@ export default function PlannerPrototype() {
     if (!favorites) return [];
     const favoritesArray = Object.values(favorites).filter(Boolean);
     
+    const cityForFiltering = effectiveCity;
+    
     const res = favoritesArray
       .map((item) => {
         const itemType = item.type === 'event' ? 'event' : 'place';
@@ -370,24 +339,25 @@ export default function PlannerPrototype() {
           };
         }
         
-        if (selectedCity) {
+        if (cityForFiltering) {
           let matchesCity = false;
           let matchedByCoordinates = false;
           
           if (itemCity) {
-            if (itemCity.id && selectedCity.id && itemCity.id === selectedCity.id) {
+            if (itemCity.id && cityForFiltering.id && itemCity.id === cityForFiltering.id) {
               matchesCity = true;
-            } else if (itemCity.name && selectedCity.name && 
-                     itemCity.name.toLowerCase() === selectedCity.name.toLowerCase()) {
+            } else if (itemCity.name && cityForFiltering.name && 
+                     itemCity.name.toLowerCase() === cityForFiltering.name.toLowerCase()) {
               matchesCity = true;
             }
           }
           
           if (!matchesCity && item.location && item.location.lat && item.location.lon) {
             const placeCoords = { lat: item.location.lat, lon: item.location.lon };
+            const cityDataForCheck = selectedCityData || headerCity;
             
-            if (selectedCityData?.boundingBox) {
-              const bbox = selectedCityData.boundingBox;
+            if (cityDataForCheck?.boundingBox) {
+              const bbox = cityDataForCheck.boundingBox;
               if (isPointInBoundingBox(placeCoords, {
                 minLat: bbox.minLat,
                 maxLat: bbox.maxLat,
@@ -399,10 +369,10 @@ export default function PlannerPrototype() {
               }
             }
             
-            if (!matchesCity && selectedCityData?.coordinates) {
+            if (!matchesCity && cityDataForCheck?.coordinates) {
               const cityCenter = {
-                lat: selectedCityData.coordinates.lat,
-                lon: selectedCityData.coordinates.lon
+                lat: cityDataForCheck.coordinates.lat,
+                lon: cityDataForCheck.coordinates.lon
               };
 
               if (isWithinCityRadius(placeCoords, cityCenter, 25)) {
@@ -425,7 +395,7 @@ export default function PlannerPrototype() {
           
 
           if (matchedByCoordinates && !itemCity) {
-            itemCity = selectedCity;
+            itemCity = cityForFiltering;
           }
         }    
         
@@ -445,11 +415,11 @@ export default function PlannerPrototype() {
             category: item.category_code || item.primaryCategory?.name || item.categories?.[0]?.name || 'place',
             geo: item.location ? { lat: item.location.lat, lon: item.location.lon } : null,
             defaultStayMin: item.defaultStayMin || 60,
-            city: itemCity || item.city || (item.city_id ? { id: item.city_id, name: item.city_name || null } : null) || selectedCity,
+            city: itemCity || item.city || (item.city_id ? { id: item.city_id, name: item.city_name || null } : null) || cityForFiltering,
             __cityKey: getCityKey(
             itemCity || item.city ||
             (item.city_id ? { id: item.city_id, name: item.city_name || null } : null) ||
-            selectedCity 
+            cityForFiltering 
           ),
           };
           
@@ -474,7 +444,7 @@ export default function PlannerPrototype() {
           const eventCity = itemCity || 
                            item.city || 
                            (item.city_id ? { id: item.city_id, name: item.city_name || null } : null) ||
-                           selectedCity;
+                           cityForFiltering;
           
           return {
             type: 'event',
@@ -508,8 +478,9 @@ export default function PlannerPrototype() {
     filterType,
     query,
     favorites,
-    selectedCity,
+    effectiveCity,
     selectedCityData,
+    headerCity,
     origin,
   ]);
 
