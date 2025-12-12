@@ -17,7 +17,7 @@ export default function CandidateFilters({
   availableCities,
 }) {
   return (
-    <div className="gap-4">
+    <div className="gap-4 mb-4">
       <div className="flex flex-col text-medium text-[16px] gap-4 md:flex-wrap lg:flex-row">
         <div className="flex justify-between gap-2 items-center bg-white-dark rounded-xl p-2">
           <label>Mode</label>
@@ -89,7 +89,7 @@ export default function CandidateFilters({
             ))}
           </div>
         </div>
-        {(availableCities && availableCities.length > 0) && (
+        {false && (availableCities && availableCities.length > 0) && (
           <div className="flex justify-between gap-2 items-center bg-white-dark rounded-xl p-2">
             <div>City</div>
             <div className="flex gap-2 flex-wrap">
@@ -113,12 +113,14 @@ export default function CandidateFilters({
           </div>
         )}
       </div>
-      <InputBase
-        placeholder="search candidates"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        divClasses="my-4"
-      />
+      {false && (
+        <InputBase
+          placeholder="search candidates"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          divClasses="my-4"
+        />
+      )}
     </div>
   );
 }
