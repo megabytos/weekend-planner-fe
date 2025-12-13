@@ -78,7 +78,7 @@ export default function PlannerPrototype() {
       if (match) return match;
     }
     return null;
-  }, [cities, currentCityId, filterCity]);
+  }, [cities, currentCityId, favorites]);
 
   const availableCities = useMemo(() => {
     const citiesMapObj = new globalThis.Map();
@@ -201,12 +201,6 @@ export default function PlannerPrototype() {
       }
 
       const cityData = selectedCityData || headerCity || targetCity;
-
-      if (cityData?.name) {
-        setCity(cityData.name);
-      } else if (targetCity?.name) {
-        setCity(targetCity.name);
-      }
 
       if (cityData?.coordinates?.lat && cityData?.coordinates?.lon) {
         setOrigin({
