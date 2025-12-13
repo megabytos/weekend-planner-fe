@@ -21,6 +21,7 @@ const useSearchData = ({ searchValue, filter }) => {
   const [hasMore, setHasMore] = useState(false);
   const loadMoreRef = useRef(null);
 
+  // Handle input search submit
   const handleSearchSubmit = useCallback(() => {
     setPage(1);
     setEvents([]);
@@ -34,6 +35,13 @@ const useSearchData = ({ searchValue, filter }) => {
   );
 
   const { data, isLoading, isError, isFetching } = useSearchQuery(searchParams);
+
+  useEffect(() => {
+    // Reset when filter or searchQuery changes
+    setPage(1);
+    setEvents([]);
+    setHasMore(false);
+  }, [filter, searchQuery]);
 
   // Generate a safe unique key
   const ensureKey = useCallback((item) => {
@@ -56,7 +64,10 @@ const useSearchData = ({ searchValue, filter }) => {
       return;
     }
 
-    const fetchedEvents = data.items ?? [];
+    const fetchedEvents =
+      (Array.isArray(data?.items) && data.items) ||
+      (Array.isArray(data?.data?.items) && data.data.items) ||
+      [];
     const withKeys = fetchedEvents
       .map((item) => ensureKey(item))
       .filter(Boolean);
@@ -73,10 +84,11 @@ const useSearchData = ({ searchValue, filter }) => {
     } else {
       setHasMore(false);
     }
-  }, [data, page]);
+  }, [data, page, ensureKey]);
 
   const isInitialLoading = isLoading && page === 1;
 
+  // pagination - load more on intersection
   useEffect(() => {
     const node = loadMoreRef.current;
     if (!node || !hasMore || isInitialLoading) {

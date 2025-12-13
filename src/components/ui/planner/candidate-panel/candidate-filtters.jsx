@@ -89,16 +89,16 @@ export default function CandidateFilters({
             ))}
           </div>
         </div>
-        {false && (availableCities && availableCities.length > 0) && (
+        {false && availableCities && availableCities.length > 0 && (
           <div className="flex justify-between gap-2 items-center bg-white-dark rounded-xl p-2">
             <div>City</div>
             <div className="flex gap-2 flex-wrap">
               {availableCities.map((city) => {
                 const cityKey = city.id || city.name;
-                const isSelected = selectedCity && (
-                  (selectedCity.id && city.id === selectedCity.id) ||
-                  (selectedCity.name && city.name === selectedCity.name)
-                );
+                const isSelected =
+                  selectedCity &&
+                  ((selectedCity.id && city.id === selectedCity.id) ||
+                    (selectedCity.name && city.name === selectedCity.name));
                 return (
                   <Button
                     key={cityKey}

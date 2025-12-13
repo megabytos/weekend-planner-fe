@@ -2,13 +2,19 @@
 
 import { useMemo } from 'react';
 
-import { useSearchQuery } from '@/hooks/use-search-query';
-import buildSearchParams from '@/utils/params-builder';
+import { useQuery } from '@tanstack/react-query';
+
+import { getPopularEvents, getPopularPlaces } from '@/services/fetch/get-popular';
+import { DEFAULT_CITY } from '@/utils/params-builder';
 
 const DEFAULT_LIMIT = 12;
 
-const extractItems = (data) =>
-  Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
+const extractItems = (data) => {
+  if (!data) return [];
+  if (Array.isArray(data?.items)) return data.items;
+  if (Array.isArray(data)) return data;
+  return [];
+};
 
 /**
  * Hook to fetch popular events and places on the home page.
@@ -24,48 +30,31 @@ const extractItems = (data) =>
  * - isError: A boolean indicating whether there was an error while fetching the data.
  */
 const useHomeData = (filter = {}) => {
-  const eventsFilter = useMemo(
-    () => ({ ...filter, target: 'events' }),
-    [filter],
-  );
-  const placesFilter = useMemo(
-    () => ({ ...filter, target: 'places' }),
-    [filter],
-  );
+  const cityId = useMemo(() => {
+    const id = filter?.city?.id ?? DEFAULT_CITY.city.id;
+    return Number.isFinite(Number(id)) ? Number(id) : DEFAULT_CITY.city.id;
+  }, [filter]);
 
-  const eventsParams = useMemo(
-    () =>
-      buildSearchParams({
-        page: 1,
-        filter: eventsFilter,
-        limit: DEFAULT_LIMIT,
-      }),
-    [eventsFilter],
-  );
-
-  const placesParams = useMemo(
-    () =>
-      buildSearchParams({
-        page: 1,
-        filter: placesFilter,
-        limit: DEFAULT_LIMIT,
-      }),
-    [placesFilter],
-  );
-
-  const eventsQuery = useSearchQuery(eventsParams, {
+  const eventsQuery = useQuery({
+    queryKey: ['popular-events', cityId],
+    queryFn: () => getPopularEvents(cityId),
     staleTime: 1000 * 60 * 5,
+    select: (data) => extractItems(data).slice(0, DEFAULT_LIMIT),
   });
-  const placesQuery = useSearchQuery(placesParams, {
+
+  const placesQuery = useQuery({
+    queryKey: ['popular-places', cityId],
+    queryFn: () => getPopularPlaces(cityId),
     staleTime: 1000 * 60 * 5,
+    select: (data) => extractItems(data).slice(0, DEFAULT_LIMIT),
   });
 
   const popularEvents = useMemo(
-    () => extractItems(eventsQuery.data),
+    () => eventsQuery.data || [],
     [eventsQuery.data],
   );
   const popularPlaces = useMemo(
-    () => extractItems(placesQuery.data),
+    () => placesQuery.data || [],
     [placesQuery.data],
   );
 

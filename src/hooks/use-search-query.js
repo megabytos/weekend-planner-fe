@@ -20,18 +20,34 @@ const sanitizeParams = (params = {}) => {
  */
 export const useSearchQuery = (params = {}, options = {}) => {
   const payload = useMemo(() => sanitizeParams(params), [params]);
+  const {
+    onSuccess: userOnSuccess,
+    onError: userOnError,
+    ...restOptions
+  } = options || {};
 
   return useQuery({
     queryKey: ['search', payload],
-    queryFn: () => searchEventsAndPlaces(payload),
+    // Protect against accidentally receiving a full Axios response instead of plain data
+    queryFn: async () => {
+      const resp = await searchEventsAndPlaces(payload);
+      if (
+        resp &&
+        typeof resp === 'object' &&
+        'data' in resp &&
+        !('items' in resp)
+      ) {
+        return resp.data;
+      }
+      return resp;
+    },
     staleTime: 1000 * 60,
     onSuccess: (data) => {
-      options?.onSuccess?.(data);
+      userOnSuccess?.(data);
     },
     onError: (error) => {
-      console.error('[useSearchQuery] error:', error);
-      options?.onError?.(error);
+      userOnError?.(error);
     },
-    ...options,
+    ...restOptions,
   });
 };

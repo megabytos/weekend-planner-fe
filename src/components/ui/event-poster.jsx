@@ -14,6 +14,8 @@ import {
 
 import PlannerButton from './buttons/planner-button';
 
+/** @jsxImportSource react */
+
 export default function EventPoster({ item }) {
   if (!item) return null;
 
@@ -27,6 +29,7 @@ export default function EventPoster({ item }) {
     primaryImage || '/images/event-placeholder.jpg',
   );
   const alt = item.title || item.name || 'Event';
+  const shortTitle = item.shortTitle || item.title || item.name || 'Event';
 
   const favoriteKey = useMemo(
     () =>
@@ -52,7 +55,7 @@ export default function EventPoster({ item }) {
   return (
     <div className="poster-container w-[335px] h-[266px] md:w-[246px] lg:w-[496px] relative">
       <PlannerButton
-        className="absolute right-4 bottom-4"
+        className="absolute right-4 bottom-4 z-1"
         onClick={handleFavorite}
         isActive={isFavorite}
       />
@@ -66,6 +69,9 @@ export default function EventPoster({ item }) {
           loading="eager"
           onError={() => setImageSrc('/images/event-placeholder.jpg')}
         />
+        <div className="absolute left-0 right-0 bottom-0 rounded-b-xl bg-gradient-to-t from-black/70 via-black/40 to-transparent px-4 py-3 text-white text-base font-medium">
+          {shortTitle}
+        </div>
       </Link>
     </div>
   );
